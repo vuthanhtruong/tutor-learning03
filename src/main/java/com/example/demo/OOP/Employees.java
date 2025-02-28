@@ -11,7 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @PrimaryKeyJoinColumn(name = "ID") // Liên kết với khóa chính từ Person
 @Getter
 @Setter
-public class Employees {
+public class Employees extends Person {
 
     @Column(name = "Password", nullable = true, length = 255)
     private String password;
