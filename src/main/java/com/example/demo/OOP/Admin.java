@@ -1,7 +1,6 @@
 package com.example.demo.OOP;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +12,7 @@ import java.util.Set;
 @PrimaryKeyJoinColumn(name = "ID") // Liên kết với khóa chính của Person
 @Getter
 @Setter
-public class Admin extends Person {
+public class Admin {
 
     @Column(name = "Password", nullable = false, length = 255)
     private String password;
