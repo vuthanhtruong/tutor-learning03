@@ -155,7 +155,39 @@ public class GiaoVienGet {
         return "ChiTietLopHocGiaoVien";
     }
 
+    @GetMapping("/ThanhVienTrongLopGiaoVien/{id}")
+    public String ThanhVienTrongLopHoc(HttpSession session, @PathVariable String id, ModelMap model) {
+        // Lấy đối tượng Room từ ID
+        Room room = entityManager.find(Room.class, id);
+        if (room == null) {
+            throw new IllegalArgumentException("Không tìm thấy phòng với ID: " + id);
+        }
 
+        // Truy vấn danh sách thành viên trong lớp
+        List<ClassroomDetails> classroomDetails = entityManager.createQuery(
+                        "FROM ClassroomDetails WHERE room = :room", ClassroomDetails.class)
+                .setParameter("room", room)
+                .getResultList();
+
+        List<Students> students = new ArrayList<>();
+        List<Teachers> teachers = new ArrayList<>();
+        for (ClassroomDetails classroomDetail : classroomDetails) {
+            Person member = classroomDetail.getMember();  // Lấy đối tượng Person thay vì String ID
+
+            if (member instanceof Students) {
+                students.add((Students) member);
+            } else if (member instanceof Teachers) {
+                teachers.add((Teachers) member);
+            }
+        }
+
+        // Log danh sách sinh viên để kiểm tra
+        System.out.println("Students List: " + students);
+
+        model.addAttribute("students", students);
+        model.addAttribute("teachers", teachers);
+        return "ThanhVienTrongLopGiaoVien";
+    }
 
 
     @GetMapping("/TinNhanCuaGiaoVien")
