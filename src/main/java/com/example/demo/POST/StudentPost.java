@@ -152,6 +152,141 @@ public class StudentPost {
         return "redirect:/ChiTietLopHocHocSinh/" + post.getRoom().getRoomId();
     }
 
+    @Transactional
+    @PostMapping("/BaiPostHocSinh")
+    public String handleStudentPost(@RequestParam("postContent") String postContent,
+                                    @RequestParam(value = "file", required = false) MultipartFile file,
+                                    @RequestParam("roomId") String roomId,
+                                    RedirectAttributes redirectAttributes,
+                                    HttpSession session) {
+        try {
+            log.info("🔍 Xử lý bài đăng của học sinh. Nội dung: {}", postContent);
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String studentId = authentication.getName();
+            Person person = entityManager.find(Person.class, studentId);
+            Students student = (Students) person;
+
+            // 📝 Tạo bài đăng mới
+            Posts newPost = new Posts();
+            newPost.setContent(postContent);
+            newPost.setCreator(student);
+            newPost.setCreatedAt(LocalDateTime.now());
+
+            // 🏫 Lấy phòng học
+            Rooms room = entityManager.find(Rooms.class, roomId);
+            if (room == null) {
+                throw new IllegalArgumentException("Không tìm thấy phòng học với ID: " + roomId);
+            }
+            newPost.setRoom(room);
+
+            // 💾 Lưu bài post vào DB
+            Events event1 = entityManager.find(Events.class, 3);
+            newPost.setEvent(event1);
+            entityManager.persist(newPost);
+            log.info("✅ Bài đăng đã được lưu với ID: {}", newPost.getPostId());
+
+            // 📂 Xử lý tệp đính kèm (nếu có)
+            if (file != null && !file.isEmpty()) {
+                byte[] fileData = file.getBytes();
+                log.info("📏 Kích thước tệp (bytes): {}", fileData.length);
+
+                if (fileData.length == 0) {
+                    throw new IOException("❌ Tệp rỗng hoặc không đọc được.");
+                }
+
+                // Lưu tệp vào DB
+                Documents document = new Documents();
+                document.setDocumentTitle(file.getOriginalFilename());
+                document.setFileData(fileData);  // 🟢 Lưu byte[] vào DB
+                document.setFilePath(uploadDir + File.separator + file.getOriginalFilename());
+                document.setCreator(student);
+                document.setPost(newPost);
+                Events event = entityManager.find(Events.class, 4);
+                document.setEvent(event);
+
+                entityManager.persist(document);
+                log.info("✅ Document đã lưu với ID: {}", document.getDocumentId());
+            }
+
+            redirectAttributes.addFlashAttribute("message", "Bài đăng đã được tạo thành công!");
+
+        } catch (IOException e) {
+            log.error("❌ Lỗi khi xử lý tệp: {}", e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "Lỗi khi xử lý tệp: " + e.getMessage());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        } catch (Exception e) {
+            log.error("🚫 Lỗi không mong muốn: {}", e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "Lỗi hệ thống: " + e.getMessage());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        }
+
+        return "redirect:/ChiTietLopHocHocSinh/" + roomId;
+    }
+
+    @PostMapping("/GuiNhanXetGiaoVien")
+    @Transactional
+    public String guiNhanXetGiaoVien(@RequestParam("teacherId") String teacherId,
+                                     @RequestParam("text") String text,
+                                     HttpSession session,
+                                     RedirectAttributes redirectAttributes) {
+        try {
+            log.info("📝 Nhận xét giáo viên với ID: {}", teacherId);
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String studentId = authentication.getName();
+            Person person = entityManager.find(Person.class, studentId);
+            Students student = (Students) person; // Lấy ID học sinh từ session
+
+
+            // Lấy thông tin giáo viên từ database
+            Teachers teacher = entityManager.find(Teachers.class, teacherId);
+            if (teacher == null) {
+                throw new IllegalArgumentException("Không tìm thấy giáo viên với ID: " + teacherId);
+            }
+            // Tạo nhận xét mới
+            Feedbacks feedback = new Feedbacks();
+            feedback.setReviewer(student);
+            feedback.setTeacher(teacher);
+            feedback.setReceiver(student.getEmployee());
+            feedback.setText(text);
+            feedback.setCreatedAt(LocalDateTime.now());
+
+            // Lưu vào database
+            entityManager.persist(feedback);
+            log.info("✅ Nhận xét đã được lưu thành công.");
+
+            // Gửi thông báo về giao diện
+            redirectAttributes.addFlashAttribute("message", "Nhận xét của bạn đã được gửi!");
+
+        } catch (Exception e) {
+            log.error("❌ Lỗi khi gửi nhận xét: {}", e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra, vui lòng thử lại.");
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        }
+        return "redirect:/TrangChuHocSinh";
+    }
+
+    @PostMapping("/LuuThongTinHocSinh")
+    public String luuThongTinHocSinh(@RequestParam String firstName,
+                                     @RequestParam String lastName,
+                                     @RequestParam String email,
+                                     @RequestParam String phoneNumber,
+                                     HttpSession session) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String studentId = authentication.getName();
+        Person person = entityManager.find(Person.class, studentId);
+        Students student = (Students) person;
+
+        // Cập nhật thông tin học sinh
+        student.setFirstName(firstName);
+        student.setLastName(lastName);
+        student.setEmail(email);
+        student.setPhoneNumber(phoneNumber);
+        entityManager.merge(student);
+
+        return "redirect:/TrangChuHocSinh"; // Tải lại trang cá nhân với thông tin mới
+    }
 
 
 }
