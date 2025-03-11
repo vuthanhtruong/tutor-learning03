@@ -31,22 +31,32 @@ public class Posts {
 
     @Column(name = "Content", nullable = false, columnDefinition = "TEXT")
     private String content;
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "RoomID", nullable = false, foreignKey = @ForeignKey(name = "FK_Posts_Room"))
+    @OnDelete(action = OnDeleteAction.CASCADE) // Đảm bảo DB cũng xóa bài viết khi phòng bị xóa
     private Room room;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Documents> documents;
+
+    @ManyToOne
+    @JoinColumn(name = "EventID", nullable = false, foreignKey = @ForeignKey(name = "FK_Posts_Event"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Events event; // Sự kiện liên quan đến bài viết
 
     @Column(name = "CreatedAt", updatable = false, nullable = true)
     @CreationTimestamp
     private LocalDateTime createdAt;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comments> comments = new ArrayList<>();
 
-
-    public Posts(Person creator, String content) {
+    public Posts(Person creator, String content, Room room, Events event) {
         this.creator = creator;
         this.content = content;
+        this.room = room;
+        this.event = event;
     }
-
 }

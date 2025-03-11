@@ -3,20 +3,24 @@ package com.example.demo.GET;
 import com.example.demo.OOP.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/")
@@ -28,83 +32,259 @@ public class NhanVienGet {
     @Autowired
     private JavaMailSender mailSender; // Không khai báo lại ở nơi khác
 
-
     @GetMapping("/DangKyNhanVien")
     public String DangKyNhanVien() {
         return "DangKyNhanVien";
     }
+
     @GetMapping("/TrangChuNhanVien")
     public String TrangChuNhanVien(ModelMap model, HttpSession session) {
-        if(session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
-        }
-        Employees employee = entityManager.find(Employees.class, session.getAttribute("EmployeeID"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String employeeId = authentication.getName(); // AdminID đã đăng nhập
+
+        // Tìm Admin trong database bằng EntityManager
+        Employees employee = entityManager.find(Employees.class, employeeId);
+
         model.addAttribute("employee", employee);
         return "TrangChuNhanVien";
     }
-    @GetMapping("/DangXuatNhanVien")
-    public String DangXuatGiaoVien(HttpSession session) {
-        session.invalidate();
-        return "redirect:/DangNhapNhanVien";
+
+    @GetMapping("/TrangCaNhanNhanVien")
+    public String TrangCaNhanNhanVien(HttpSession session, ModelMap model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String employeeId = authentication.getName(); // AdminID đã đăng nhập
+
+        // Tìm Admin trong database bằng EntityManager
+        Employees employee = entityManager.find(Employees.class, employeeId);
+        model.addAttribute("employee", employee);
+        return "TrangCaNhanNhanVien";
     }
+
     @GetMapping("/DanhSachGiaoVienCuaBan")
-    public String DanhSachGiaoVienCuaBan(ModelMap model, HttpSession session) {
-        if(session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
+    public String DanhSachGiaoVienCuaBan(
+            ModelMap model,
+            HttpSession session,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(required = false) Integer pageSizeParam
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String employeeId = authentication.getName(); // AdminID đã đăng nhập
+
+        // Tìm Admin trong database bằng EntityManager
+        Employees employee = entityManager.find(Employees.class, employeeId);
+
+        // Lấy pageSize từ session nếu chưa có thì mặc định 5
+        Integer pageSize = (Integer) session.getAttribute("pageSize2");
+        if (pageSizeParam != null) {
+            pageSize = pageSizeParam;
+            session.setAttribute("pageSize2", pageSize);
         }
-        List<Teachers> teachers = entityManager.createQuery("from Teachers").getResultList();
+        if (pageSize == null || pageSize < 1) pageSize = 5;
+
+        // Đếm tổng số giáo viên
+        Long totalTeachers = (Long) entityManager.createQuery(
+                        "SELECT COUNT(t) FROM Teachers t WHERE t.employee.id = :employeeId")
+                .setParameter("employeeId", employee.getId())
+                .getSingleResult();
+
+        // Tránh lỗi chia cho 0
+        if (totalTeachers == 0) {
+            model.addAttribute("teachers", new ArrayList<>());
+            model.addAttribute("currentPage", 1);
+            model.addAttribute("totalPages", 1);
+            model.addAttribute("pageSize", pageSize);
+            return "DanhSachGiaoVienCuaBan";
+        }
+
+        // Tính số trang hợp lệ
+        int totalPages = (int) Math.ceil((double) totalTeachers / pageSize);
+        if (page < 1) page = 1;
+        if (page > totalPages) page = totalPages;
+
+        // Vị trí bắt đầu
+        int firstResult = (page - 1) * pageSize;
+
+        // Lấy danh sách giáo viên có sắp xếp theo ID
+        List<Teachers> teachers = entityManager.createQuery(
+                        "FROM Teachers t WHERE t.employee.id = :employeeId ORDER BY t.id ASC", Teachers.class)
+                .setParameter("employeeId", session.getAttribute("EmployeeID"))
+                .setFirstResult(firstResult)
+                .setMaxResults(pageSize)
+                .getResultList();
+        // Gửi dữ liệu sang view
         model.addAttribute("teachers", teachers);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("pageSize", pageSize);
+
         return "DanhSachGiaoVienCuaBan";
     }
+
+
     @GetMapping("/ThemGiaoVienCuaBan")
     public String ThemGiaoVienCuaBan(HttpSession session, ModelMap model) {
-        if(session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
-        }
         return "ThemGiaoVienCuaBan";
     }
+
     @GetMapping("/DanhSachHocSinhCuaBan")
-    public String DanhSachHocSinhCuaBan(ModelMap model, HttpSession session) {
-        if(session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
+    public String DanhSachHocSinhCuaBan(
+            ModelMap model,
+            HttpSession session,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(required = false) Integer pageSize // Cho phép null
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String employeeId = authentication.getName(); // AdminID đã đăng nhập
+
+        // Tìm Admin trong database bằng EntityManager
+        Employees employee = entityManager.find(Employees.class, employeeId);
+
+        // Nếu pageSize là null, lấy từ session hoặc đặt mặc định là 5
+        if (pageSize == null) {
+            pageSize = (Integer) session.getAttribute("pageSize");
+            if (pageSize == null) {
+                pageSize = 5; // Mặc định 5 nếu chưa có
+            }
         }
-        List<Students> students = entityManager.createQuery("from Students ").getResultList();
+
+        // Lưu pageSize vào session để dùng trong lần sau
+        session.setAttribute("pageSize", pageSize);
+
+        // Đếm tổng số học sinh thuộc nhân viên hiện tại
+        Long totalStudents = (Long) entityManager.createQuery(
+                        "SELECT COUNT(s) FROM Students s WHERE s.employee.id = :employeeId")
+                .setParameter("employeeId", employee.getId())
+                .getSingleResult();
+
+        if (totalStudents == 0) {
+            model.addAttribute("students", new ArrayList<>());
+            model.addAttribute("currentPage", 1);
+            model.addAttribute("totalPages", 1);
+            model.addAttribute("pageSize", pageSize);
+            return "DanhSachHocSinhCuaBan";
+        }
+
+        // Tính tổng số trang
+        int totalPages = (int) Math.ceil((double) totalStudents / pageSize);
+        if (page < 1) page = 1;
+        if (page > totalPages) page = totalPages;
+
+        // Tính vị trí bắt đầu lấy dữ liệu
+        int firstResult = (page - 1) * pageSize;
+
+        // Truy vấn danh sách học sinh có phân trang
+        List<Students> students = entityManager.createQuery(
+                        "FROM Students s WHERE s.employee.id = :employeeId ORDER BY s.id ASC", Students.class)
+                .setParameter("employeeId", session.getAttribute("EmployeeID"))
+                .setFirstResult(firstResult)
+                .setMaxResults(pageSize)
+                .getResultList();
+
+        // Đưa dữ liệu lên giao diện
         model.addAttribute("students", students);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("pageSize", pageSize);
+
         return "DanhSachHocSinhCuaBan";
     }
+
     @GetMapping("/ThemHocSinhCuaBan")
     public String ThemHocSinhCuaBan(ModelMap model, HttpSession session) {
-        if(session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
-        }
+
         return "ThemHocSinhCuaBan";
     }
+
     @GetMapping("/DanhSachNguoiDungHeThong")
-    public String DanhSachNguoiDungHeThong(HttpSession session, ModelMap model) {
-        if(session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
+    public String DanhSachNguoiDungHeThong(
+            HttpSession session,
+            ModelMap model,
+            @RequestParam(defaultValue = "1") int pageEmployees,
+            @RequestParam(defaultValue = "1") int pageTeachers,
+            @RequestParam(defaultValue = "1") int pageStudents,
+            @RequestParam(required = false) Integer pageSize // Cho phép null
+    ) {
+        if (pageSize == null) {
+            pageSize = (Integer) session.getAttribute("pageSize4");
+            if (pageSize == null) {
+                pageSize = 5; // Mặc định là 5 nếu chưa có
+            }
         }
-        if(session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
-        }
-        List<Employees> employee = entityManager.createQuery("from Employees ").getResultList();
-        List<Teachers> teachers = entityManager.createQuery("from Teachers ").getResultList();
-        List<Students> students = entityManager.createQuery("from Students ").getResultList();
-        Employees employee1 = entityManager.find(Employees.class, session.getAttribute("EmployeeID"));
+        session.setAttribute("pageSize4", pageSize); // Lưu pageSize vào session
+
+        // ========== PHÂN TRANG CHO EMPLOYEES ==========
+        Long totalEmployees = (Long) entityManager.createQuery("SELECT COUNT(e) FROM Employees e")
+                .getSingleResult();
+        int totalPagesEmployees = (int) Math.ceil((double) totalEmployees / pageSize);
+        totalPagesEmployees = Math.max(totalPagesEmployees, 1);
+        pageEmployees = Math.max(1, Math.min(pageEmployees, totalPagesEmployees));
+
+        int firstEmployeeResult = (pageEmployees - 1) * pageSize;
+        List<Employees> employeeList = entityManager.createQuery("FROM Employees", Employees.class)
+                .setFirstResult(firstEmployeeResult)
+                .setMaxResults(pageSize)
+                .getResultList();
+
+        // ========== PHÂN TRANG CHO TEACHERS ==========
+        Long totalTeachers = (Long) entityManager.createQuery("SELECT COUNT(t) FROM Teachers t")
+                .getSingleResult();
+        int totalPagesTeachers = (int) Math.ceil((double) totalTeachers / pageSize);
+        totalPagesTeachers = Math.max(totalPagesTeachers, 1);
+        pageTeachers = Math.max(1, Math.min(pageTeachers, totalPagesTeachers));
+
+        int firstTeacherResult = (pageTeachers - 1) * pageSize;
+        List<Teachers> teacherList = entityManager.createQuery("FROM Teachers", Teachers.class)
+                .setFirstResult(firstTeacherResult)
+                .setMaxResults(pageSize)
+                .getResultList();
+
+        // ========== PHÂN TRANG CHO STUDENTS ==========
+        Long totalStudents = (Long) entityManager.createQuery("SELECT COUNT(s) FROM Students s")
+                .getSingleResult();
+        int totalPagesStudents = (int) Math.ceil((double) totalStudents / pageSize);
+        totalPagesStudents = Math.max(totalPagesStudents, 1);
+        pageStudents = Math.max(1, Math.min(pageStudents, totalPagesStudents));
+
+        int firstStudentResult = (pageStudents - 1) * pageSize;
+        List<Students> studentList = entityManager.createQuery("FROM Students", Students.class)
+                .setFirstResult(firstStudentResult)
+                .setMaxResults(pageSize)
+                .getResultList();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String employeeId = authentication.getName(); // AdminID đã đăng nhập
+
+        // Tìm Admin trong database bằng EntityManager
+        Employees employee = entityManager.find(Employees.class, employeeId);
+
+        // Lấy thông tin admin từ EmployeeID
+        Employees employee1 = entityManager.find(Employees.class, employee.getId());
         Admin admin = employee1.getAdmin();
-        model.addAttribute("employee", employee);
-        model.addAttribute("teachers", teachers);
-        model.addAttribute("students", students);
-        model.addAttribute("employee", employee);
+
+        // ========== ĐƯA DỮ LIỆU LÊN GIAO DIỆN ==========
+        model.addAttribute("employees", employeeList);
+        model.addAttribute("teachers", teacherList);
+        model.addAttribute("students", studentList);
         model.addAttribute("admin", admin);
+
+        // Thông tin phân trang
+        model.addAttribute("currentPageEmployees", pageEmployees);
+        model.addAttribute("totalPagesEmployees", totalPagesEmployees);
+
+        model.addAttribute("currentPageTeachers", pageTeachers);
+        model.addAttribute("totalPagesTeachers", totalPagesTeachers);
+
+        model.addAttribute("currentPageStudents", pageStudents);
+        model.addAttribute("totalPagesStudents", totalPagesStudents);
+
+        model.addAttribute("pageSize", pageSize);
+
         return "DanhSachNguoiDungHeThong";
     }
+
     @GetMapping("/XoaGiaoVienCuaBan/{id}")
     @Transactional
     public String XoaGiaoVienCuaBan(@PathVariable String id, ModelMap model, HttpSession session) {
-        if (session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
-        }
 
         Teachers teacher = entityManager.find(Teachers.class, id);
         if (teacher == null) {
@@ -121,10 +301,6 @@ public class NhanVienGet {
     @GetMapping("/XoaHocSinhCuaBan/{id}")
     @Transactional
     public String XoaHocSinhCuaBan(@PathVariable String id, ModelMap model, HttpSession session) {
-        if (session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
-        }
-
         Students student = entityManager.find(Students.class, id);
         if (student == null) {
             model.addAttribute("error", "Không tìm thấy học sinh cần xóa!");
@@ -145,59 +321,90 @@ public class NhanVienGet {
 
     @GetMapping("/SuaGiaoVienCuaBan/{id}")
     public String SuaGiaoVienCuaBan(ModelMap model, @PathVariable("id") String id, HttpSession session) {
-        if(session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
-        }
-        Teachers teachers=entityManager.find(Teachers.class, id);
+        Teachers teachers = entityManager.find(Teachers.class, id);
         model.addAttribute("teachers", teachers);
         return "SuaGiaoVienCuaBan";
     }
+
     @GetMapping("/SuaHocSinhCuaBan/{id}")
     public String SuaHocSinhCuaBan(ModelMap model, @PathVariable("id") String id, HttpSession session) {
-        if(session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
-        }
-        Students students=entityManager.find(Students.class, id);
+        Students students = entityManager.find(Students.class, id);
         model.addAttribute("students", students);
         return "SuaHocSinhCuaBan";
     }
+
     @GetMapping("/DanhSachPhongHoc")
-    public String DanhSachPhongHoc(ModelMap model, HttpSession session) {
-        if (session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
+    public String DanhSachPhongHoc(
+            ModelMap model,
+            HttpSession session,
+            @RequestParam(defaultValue = "1") int pageOffline,
+            @RequestParam(defaultValue = "1") int pageOnline,
+            @RequestParam(required = false) Integer pageSize // Cho phép null
+    ) {
+        if (pageSize == null) {
+            pageSize = (Integer) session.getAttribute("pageSize3");
+            if (pageSize == null) {
+                pageSize = 5; // Mặc định 5 nếu chưa có
+            }
         }
+        session.setAttribute("pageSize3", pageSize); // Lưu pageSize vào session để dùng sau
 
-        // Lấy danh sách phòng học offline
-        List<Rooms> offlineRooms = entityManager.createQuery("from Rooms", Rooms.class).getResultList();
+        // ====== XỬ LÝ PHÂN TRANG CHO PHÒNG HỌC OFFLINE ======
+        Long totalOfflineRooms = (Long) entityManager.createQuery("SELECT COUNT(r) FROM Rooms r")
+                .getSingleResult();
+        int totalOfflinePages = (int) Math.ceil((double) totalOfflineRooms / pageSize);
+        totalOfflinePages = Math.max(totalOfflinePages, 1); // Đảm bảo totalOfflinePages ≥ 1
+        pageOffline = Math.max(1, Math.min(pageOffline, totalOfflinePages)); // Giới hạn trang từ 1 → totalPages
 
-        // Lấy danh sách phòng học online
-        List<OnlineRooms> onlineRooms = entityManager.createQuery("from OnlineRooms", OnlineRooms.class).getResultList();
+        int firstOfflineResult = (pageOffline - 1) * pageSize;
+        List<Rooms> offlineRooms = entityManager.createQuery("FROM Rooms", Rooms.class)
+                .setFirstResult(firstOfflineResult)
+                .setMaxResults(pageSize)
+                .getResultList();
 
+        // ====== XỬ LÝ PHÂN TRANG CHO PHÒNG HỌC ONLINE ======
+        Long totalOnlineRooms = (Long) entityManager.createQuery("SELECT COUNT(r) FROM OnlineRooms r")
+                .getSingleResult();
+        int totalOnlinePages = (int) Math.ceil((double) totalOnlineRooms / pageSize);
+        totalOnlinePages = Math.max(totalOnlinePages, 1); // Đảm bảo totalOnlinePages ≥ 1
+        pageOnline = Math.max(1, Math.min(pageOnline, totalOnlinePages)); // Giới hạn trang từ 1 → totalPages
 
+        int firstOnlineResult = (pageOnline - 1) * pageSize;
+        List<OnlineRooms> onlineRooms = entityManager.createQuery("FROM OnlineRooms", OnlineRooms.class)
+                .setFirstResult(firstOnlineResult)
+                .setMaxResults(pageSize)
+                .getResultList();
+
+        // ====== ĐƯA DỮ LIỆU LÊN GIAO DIỆN ======
         model.addAttribute("rooms", offlineRooms);
         model.addAttribute("roomsonline", onlineRooms);
+
+        // Thông tin phân trang
+        model.addAttribute("currentPageOffline", pageOffline);
+        model.addAttribute("totalPagesOffline", totalOfflinePages);
+        model.addAttribute("currentPageOnline", pageOnline);
+        model.addAttribute("totalPagesOnline", totalOnlinePages);
+        model.addAttribute("pageSize", pageSize);
+
         return "DanhSachPhongHoc";
     }
 
+
     @GetMapping("/ThemPhongHoc")
     public String ThemPhongHoc(ModelMap model, HttpSession session) {
-        if(session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
-        }
+
         return "ThemPhongHoc";
     }
+
     @GetMapping("/ThemPhongHocOnline")
     public String ThemPhongHocOnline(ModelMap model, HttpSession session) {
-        if(session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
-        }
+
         return "ThemPhongHocOnline";
     }
+
     @GetMapping("/SuaPhongHocOffline/{id}")
     public String SuaPhongHoc(ModelMap model, @PathVariable("id") String id, HttpSession session) {
-        if(session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
-        }
+
         Rooms room = entityManager.find(Rooms.class, id);
 
         if (room == null) {
@@ -207,13 +414,10 @@ public class NhanVienGet {
 
         return "SuaPhongHoc";
     }
+
     @GetMapping("/SuaPhongHocOnline/{id}")
     public String SuaPhongHocOnline(@PathVariable("id") String roomId, ModelMap model, HttpSession session) {
-        if (session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
-        }
 
-        // Tìm phòng học online theo ID
         OnlineRooms room = entityManager.find(OnlineRooms.class, roomId);
         if (room == null) {
             return "redirect:/DanhSachPhongHoc?error=RoomNotFound";
@@ -224,16 +428,31 @@ public class NhanVienGet {
     }
 
     @Transactional
-    @GetMapping("/XoaPhongHocOffline/{id}")
-    public String XoaPhongHocOffline(@PathVariable("id") String id) {
-        // Tìm phòng học theo ID
-        Rooms room = entityManager.find(Rooms.class, id);
+    @GetMapping("/XoaPhongHoc/{id}")
+    public String XoaPhongHoc(@PathVariable("id") String id) {
+        // Tìm phòng học offline trước
+        Object room = entityManager.find(Rooms.class, id);
+
+        // Nếu không tìm thấy trong Rooms, thử tìm trong OnlineRooms
+        if (room == null) {
+            room = entityManager.find(OnlineRooms.class, id);
+        }
 
         if (room == null) {
             return "redirect:/DanhSachPhongHoc?error=RoomNotFound";
         }
 
         try {
+            // Xóa documents liên quan đến posts trong phòng học này
+            entityManager.createQuery("DELETE FROM Documents d WHERE d.post IN (SELECT p FROM Posts p WHERE p.room = :room)")
+                    .setParameter("room", room)
+                    .executeUpdate();
+
+            // Xóa posts liên quan đến phòng học này
+            entityManager.createQuery("DELETE FROM Posts p WHERE p.room = :room")
+                    .setParameter("room", room)
+                    .executeUpdate();
+
             // Xóa tất cả ClassroomDetails liên quan đến phòng học này
             int deletedDetails = entityManager.createQuery("DELETE FROM ClassroomDetails c WHERE c.room = :room")
                     .setParameter("room", room)
@@ -256,49 +475,8 @@ public class NhanVienGet {
         }
     }
 
-
-
-    @Transactional
-    @GetMapping("/XoaPhongHocOnline/{id}")
-    public String XoaPhongHocOnline(@PathVariable("id") String id) {
-        // Tìm phòng học online theo ID
-        OnlineRooms room = entityManager.find(OnlineRooms.class, id);
-
-        if (room == null) {
-            return "redirect:/DanhSachPhongHoc?error=RoomNotFound";
-        }
-
-        try {
-            // Xóa tất cả ClassroomDetails liên quan đến phòng học này
-            int deletedDetails = entityManager.createQuery("DELETE FROM ClassroomDetails c WHERE c.room = :room")
-                    .setParameter("room", room)
-                    .executeUpdate();
-
-            System.out.println("Deleted " + deletedDetails + " ClassroomDetails records.");
-
-            // Xóa tất cả ScheduleNotifications liên quan đến phòng học này
-            int deletedNotifications = entityManager.createQuery("DELETE FROM ScheduleNotifications s WHERE s.room = :room")
-                    .setParameter("room", room)
-                    .executeUpdate();
-
-            System.out.println("Deleted " + deletedNotifications + " ScheduleNotifications records.");
-
-            // Xóa phòng học online
-            entityManager.remove(room);
-
-            return "redirect:/DanhSachPhongHoc?success=RoomDeleted";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "redirect:/DanhSachPhongHoc?error=DeleteFailed";
-        }
-    }
-
-
     @GetMapping("/BoTriLopHoc")
     public String BoTriLopHoc(ModelMap model, HttpSession session) {
-        if (session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
-        }
 
         // Lấy danh sách phòng học offline
         List<Rooms> offlineRooms = entityManager.createQuery("FROM Rooms", Rooms.class).getResultList();
@@ -312,12 +490,9 @@ public class NhanVienGet {
 
         return "BoTriLopHoc";
     }
+
     @GetMapping("/ChiTietLopHoc/{id}")
     public String ChiTietLopHoc(ModelMap model, @PathVariable("id") String id, HttpSession session) {
-        // Kiểm tra xem EmployeeID có trong session không
-        if (session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
-        }
 
         // Xác định loại phòng (Online hoặc Offline)
         Room room = entityManager.find(Room.class, id);
@@ -365,11 +540,7 @@ public class NhanVienGet {
     @Transactional
     @GetMapping("/XoaGiaoVienTrongLop")
     public String XoaGiaoVienTrongLop(@RequestParam String teacherId, @RequestParam String roomId, HttpSession session) {
-        if (session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
-        }
 
-        // Tìm đối tượng Room theo ID
         Room room = entityManager.find(Room.class, roomId);
         if (room == null) {
             return "redirect:/ChiTietLopHoc/" + roomId + "?error=RoomNotFound";
@@ -402,9 +573,6 @@ public class NhanVienGet {
     @Transactional
     @GetMapping("/XoaHocSinhTrongLop")
     public String XoaHocSinhTrongLop(@RequestParam String studentId, @RequestParam String roomId, HttpSession session) {
-        if (session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
-        }
 
         Room room = entityManager.find(Room.class, roomId);
         if (room == null) {
@@ -433,4 +601,254 @@ public class NhanVienGet {
             return "redirect:/ChiTietLopHoc/" + roomId + "?error=DeleteFailed";
         }
     }
+
+
+    @GetMapping("/GuiThongBao/{id}")
+    public String GuiThongBao(@PathVariable("id") String id, HttpSession session) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String employeeId = authentication.getName(); // AdminID đã đăng nhập
+
+        // Tìm Admin trong database bằng EntityManager
+        Employees employee = entityManager.find(Employees.class, employeeId);
+
+        // Lấy phòng học theo ID
+        Room room = entityManager.find(Room.class, id);
+        if (room == null) {
+            return "redirect:/BoTriLopHoc?error=RoomNotFound";
+        }
+
+        // Lấy danh sách thành viên trong lớp
+        List<ClassroomDetails> classMembers = entityManager.createQuery(
+                        "FROM ClassroomDetails c WHERE c.room = :room", ClassroomDetails.class)
+                .setParameter("room", room)
+                .getResultList();
+
+        for (ClassroomDetails detail : classMembers) {
+            Person member = detail.getMember();
+            if (member == null) continue;
+
+            // Xác định email người nhận
+            String recipientEmail = null;
+            if (member instanceof Students) {
+                recipientEmail = member.getEmail();
+            } else if (member instanceof Teachers) {
+                recipientEmail = member.getEmail();
+            }
+
+            if (recipientEmail != null) {
+                // Xác định nội dung tin nhắn dựa vào loại phòng học
+                String messageContent;
+                if (room instanceof OnlineRooms onlineRoom) {
+                    messageContent = "Lịch trình học Online của bạn bắt đầu từ " +
+                            onlineRoom.getStartTime() + " đến hết " + onlineRoom.getEndTime();
+                } else {
+                    messageContent = "Lịch trình học của bạn bắt đầu từ " +
+                            room.getStartTime() + " đến hết " + room.getEndTime();
+                }
+
+                // Gửi thông báo
+                sendNotification(member.getId(), room.getRoomId(), messageContent, employee, recipientEmail);
+            }
+        }
+
+        return "redirect:/BoTriLopHoc";
+    }
+
+
+    private void sendNotification(String memberId, String roomId, String message, Employees sender, String email) {
+        // Tìm đối tượng Person từ memberId
+        Person member = entityManager.find(Person.class, memberId);
+        if (member == null) {
+            throw new IllegalArgumentException("Không tìm thấy thành viên với ID: " + memberId);
+        }
+
+        // Tìm đối tượng Room từ roomId
+        Room room = entityManager.find(Room.class, roomId);
+        if (room == null) {
+            throw new IllegalArgumentException("Không tìm thấy phòng với ID: " + roomId);
+        }
+
+        // Tạo thông báo mới
+        ScheduleNotifications scheduleNotifications = new ScheduleNotifications();
+        scheduleNotifications.setMember(member);
+        scheduleNotifications.setRoom(room);
+        scheduleNotifications.setMessage(message);
+        scheduleNotifications.setSender(sender);
+
+        // Lưu vào database
+        entityManager.persist(scheduleNotifications);
+
+        // Gửi email
+        sendEmail(email, "Thông báo lịch trình học", message);
+    }
+
+
+    private void sendEmail(String to, String subject, String body) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(body);
+        mailSender.send(message);
+    }
+
+    @GetMapping("/BangDieuKhienNhanVien/{id}")
+    public String BangDieuKhienNhanVien(@PathVariable("id") String id, ModelMap model) {
+        Employees employee = entityManager.find(Employees.class, id);
+
+        List<Room> room = entityManager.createQuery("from Room r where r.employee=:employee", Room.class).
+                setParameter("employee", employee).getResultList();
+
+        List<Teachers> teachers = entityManager.createQuery("from Teachers t where t.employee=:employee", Teachers.class).
+                setParameter("employee", employee).getResultList();
+
+        List<Students> students = entityManager.createQuery("from Students s where s.employee=:employee", Students.class).
+                setParameter("employee", employee).getResultList();
+        model.addAttribute("room", room);
+        model.addAttribute("teachers", teachers);
+        model.addAttribute("students", students);
+        model.addAttribute("employee", employee);
+        return "BangDieuKhienNhanVien";
+    }
+
+    @GetMapping("/BangDieuKhienHocSinh/{id}")
+    public String BangDieuKhienHocSinh(@PathVariable("id") String id, ModelMap model, HttpSession session) {
+
+        Students student = entityManager.find(Students.class, id);
+        if (student == null) {
+            model.addAttribute("errorMessage", "Student not found");
+            return "errorPage";
+        }
+
+        Employees employee = student.getEmployee();
+        if (employee == null) {
+            model.addAttribute("errorMessage", "No employee associated with the student.");
+            return "errorPage";
+        }
+
+        List<ClassroomDetails> classroomDetails = entityManager.createQuery(
+                        "from ClassroomDetails cd where cd.member = :student", ClassroomDetails.class)
+                .setParameter("student", student)
+                .getResultList();
+
+        Set<Room> roomSet = new HashSet<>();
+        Set<Teachers> teachers = new HashSet<>();
+        Set<Rooms> rooms = new HashSet<>();
+        Set<OnlineRooms> onlineRooms = new HashSet<>();
+
+
+        for (ClassroomDetails classroomDetail : classroomDetails) {
+            roomSet.add(classroomDetail.getRoom());
+        }
+        for (Room room1 : roomSet) {
+            List<ClassroomDetails> classroomDetailsForRoom = entityManager.createQuery(
+                            "from ClassroomDetails cd where cd.room = :room1", ClassroomDetails.class)
+                    .setParameter("room1", room1)
+                    .getResultList();
+
+            for (ClassroomDetails classroomDetail : classroomDetailsForRoom) {
+                Object member = classroomDetail.getMember();
+
+
+                if (member instanceof Teachers) {
+                    teachers.add((Teachers) member);
+                }
+            }
+
+            if (room1 instanceof Rooms) {
+                rooms.add((Rooms) room1);
+            } else if (room1 instanceof OnlineRooms) {
+                onlineRooms.add((OnlineRooms) room1);
+            }
+        }
+
+        model.addAttribute("employee", employee);
+        model.addAttribute("rooms", rooms);
+        model.addAttribute("onlineRooms", onlineRooms);
+        model.addAttribute("teachers", teachers);
+        model.addAttribute("student", student);
+
+        return "BangDieuKhienHocSinh";
+    }
+
+    @GetMapping("/BangDieuKhienGiaoVien/{id}")
+    public String BangDieuKhienGiaoVien(@PathVariable("id") String id, ModelMap model, HttpSession session) {
+
+        Teachers teacher = entityManager.find(Teachers.class, id);
+        if (teacher == null) {
+            model.addAttribute("errorMessage", "Teacher not found");
+            return "errorPage";
+        }
+
+        Employees employee = teacher.getEmployee();
+        if (employee == null) {
+            model.addAttribute("errorMessage", "No employee associated with the teacher.");
+            return "errorPage";
+        }
+
+
+        List<ClassroomDetails> classroomDetails = entityManager.createQuery(
+                        "from ClassroomDetails cd where cd.member = :teacher", ClassroomDetails.class)
+                .setParameter("teacher", teacher)
+                .getResultList();
+
+        Set<Room> roomSet = new HashSet<>();
+        Set<Students> students = new HashSet<>();
+        Set<Rooms> rooms = new HashSet<>();
+        Set<OnlineRooms> onlineRooms = new HashSet<>();
+
+        for (ClassroomDetails classroomDetail : classroomDetails) {
+            roomSet.add(classroomDetail.getRoom());
+        }
+
+        for (Room room1 : roomSet) {
+            List<ClassroomDetails> classroomDetailsForRoom = entityManager.createQuery(
+                            "from ClassroomDetails cd where cd.room = :room1", ClassroomDetails.class)
+                    .setParameter("room1", room1)
+                    .getResultList();
+
+            for (ClassroomDetails classroomDetail : classroomDetailsForRoom) {
+                Object member = classroomDetail.getMember();
+
+                // Check if the member is a student and add them to the students list
+                if (member instanceof Students) {
+                    students.add((Students) member);
+                }
+            }
+
+            // Classify rooms as either physical rooms or online rooms
+            if (room1 instanceof Rooms) {
+                rooms.add((Rooms) room1);
+            } else if (room1 instanceof OnlineRooms) {
+                onlineRooms.add((OnlineRooms) room1);
+            }
+        }
+
+        // Add necessary attributes to the model for the view
+        model.addAttribute("employee", employee);
+        model.addAttribute("rooms", rooms);
+        model.addAttribute("onlineRooms", onlineRooms);
+        model.addAttribute("students", students); // Include the list of students for the teacher
+        model.addAttribute("teacher", teacher); // Include teacher details
+
+        return "BangDieuKhienGiaoVien"; // Ensure this matches the actual view file name
+    }
+
+    @GetMapping("/FeedbackHocSinh")
+    public String FeedbackHocSinh(ModelMap model, HttpSession session) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String employeeId = authentication.getName(); // AdminID đã đăng nhập
+
+        // Tìm Admin trong database bằng EntityManager
+        Employees employee = entityManager.find(Employees.class, employeeId);
+
+        List<Feedbacks> feedbacks = entityManager.createQuery("from Feedbacks f where f.receiver=:receiver", Feedbacks.class).
+                setParameter("receiver", employee).getResultList();
+
+        model.addAttribute("feedbacks", feedbacks);
+
+        return "FeedbackHocSinh";
+    }
+
+
 }

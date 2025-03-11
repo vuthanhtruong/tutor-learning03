@@ -6,6 +6,8 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,10 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @RequestMapping("/")
@@ -33,30 +32,58 @@ public class GiaoVienGet {
         model.addAttribute("employees", employees);
         return "DangKyGiaoVien";
     }
+
     @GetMapping("/TrangChuGiaoVien")
-    public String DangNhapGiaoVien(ModelMap model, HttpSession session) {
-        if(session.getAttribute("TeacherID") == null) {
-            return "DangNhapGiaoVien";
-        }
-        Teachers teacher = entityManager.find(Teachers.class, session.getAttribute("TeacherID"));
-        model.addAttribute("teacher", teacher);
+    public String TrangChuGiaoVien(ModelMap model) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String teacherId = authentication.getName();
+        Person person = entityManager.find(Person.class, teacherId);
+        Teachers teachers = (Teachers) person;
+        // Lấy danh sách tài liệu từ cơ sở dữ liệu
+        List<Documents> documents = entityManager.createQuery(
+                        "SELECT d FROM Documents d " +
+                                "WHERE d.creator != :teacher AND EXISTS ( " +
+                                "   SELECT 1 FROM ClassroomDetails cd " +
+                                "   WHERE cd.member = d.creator AND cd.room IN ( " +
+                                "       SELECT cd2.room FROM ClassroomDetails cd2 WHERE cd2.member = :teacher " +
+                                "   ) " +
+                                ")", Documents.class)
+                .setParameter("teacher", teachers)
+                .getResultList();
+        Collections.reverse(documents);
+        List<Posts> posts = entityManager.createQuery(
+                        "SELECT p FROM Posts p " +
+                                "WHERE p.creator != :teacher AND EXISTS ( " +
+                                "   SELECT 1 FROM ClassroomDetails cd " +
+                                "   WHERE cd.member = p.creator AND cd.room IN ( " +
+                                "       SELECT cd2.room FROM ClassroomDetails cd2 WHERE cd2.member = :teacher " +
+                                "   ) " +
+                                ")", Posts.class)
+                .setParameter("teacher", teachers)
+                .getResultList();
+        Collections.reverse(posts);
+
+        List<Messages> messagesList = entityManager.createQuery(
+                        "SELECT m FROM Messages m " +
+                                "WHERE m.sender != :teacher AND m.recipient = :teacher", Messages.class)
+                .setParameter("teacher", teachers)
+                .getResultList();
+        Collections.reverse(messagesList);
+        model.addAttribute("teacher", teachers);
+        model.addAttribute("documents", documents);
+        model.addAttribute("posts", posts);
+        model.addAttribute("messagesList", messagesList);
         return "TrangChuGiaoVien";
     }
-    @GetMapping("/DangXuatGiaoVien")
-    public String DangXuatGiaoVien(HttpSession session) {
-        session.invalidate();
-        return "redirect:/DangNhapGiaoVien";
-    }
-    @GetMapping("/DanhSachLopHocGiaoVien")
-    public String DanhSachLopHocGiaoVien(HttpSession session, ModelMap model) {
-        // Lấy TeacherID từ session
-        String teacherId = (String) session.getAttribute("TeacherID");
-        if (teacherId == null) {
-            throw new IllegalArgumentException("Không tìm thấy TeacherID trong session.");
-        }
 
-        // Tìm đối tượng Person theo ID
-        Person teacher = entityManager.find(Person.class, teacherId);
+    @GetMapping("/DanhSachLopHocGiaoVien")
+    public String DanhSachLopHocGiaoVien(ModelMap model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String teacherId = authentication.getName();
+        Person person = entityManager.find(Person.class, teacherId);
+        Teachers teacher = (Teachers) person;
+
         if (teacher == null || !(teacher instanceof Teachers)) {
             throw new IllegalArgumentException("Không tìm thấy giáo viên với ID: " + teacherId);
         }
@@ -89,6 +116,7 @@ public class GiaoVienGet {
 
     @GetMapping("ChiTietLopHocGiaoVien/{id}")
     public String ChiTietLopHocGiaoVien(@PathVariable String id, ModelMap model) {
+        // Tìm lớp học (có thể là Rooms hoặc OnlineRooms)
         Object room = entityManager.find(Rooms.class, id);
         if (room == null) {
             room = entityManager.find(OnlineRooms.class, id);
@@ -101,23 +129,31 @@ public class GiaoVienGet {
         String roomId;
         if (room instanceof Rooms) {
             roomId = ((Rooms) room).getRoomId();
-            model.addAttribute("room", room);
         } else if (room instanceof OnlineRooms) {
             roomId = ((OnlineRooms) room).getRoomId();
-            model.addAttribute("room", room);
         } else {
             throw new IllegalArgumentException("Loại phòng không hợp lệ!");
         }
 
-        // Lấy bài đăng
+        model.addAttribute("room", room);
+
+        // Lấy danh sách bài đăng trong lớp
         List<Posts> posts = entityManager.createQuery("SELECT p FROM Posts p WHERE p.room.roomId = :roomId", Posts.class)
                 .setParameter("roomId", roomId)
                 .getResultList();
-        model.addAttribute("posts", posts);
 
+
+        // Lấy danh sách bình luận cho từng bài đăng
+        for (Posts post : posts) {
+            List<Comments> comments = entityManager.createQuery("SELECT c FROM Comments c WHERE c.post.postId = :postId", Comments.class)
+                    .setParameter("postId", post.getPostId())
+                    .getResultList();
+            post.setComments(comments);
+        }
+
+        model.addAttribute("posts", posts);
         return "ChiTietLopHocGiaoVien";
     }
-
 
     @GetMapping("/ThanhVienTrongLopGiaoVien/{id}")
     public String ThanhVienTrongLopHoc(HttpSession session, @PathVariable String id, ModelMap model) {
@@ -156,11 +192,10 @@ public class GiaoVienGet {
 
     @GetMapping("/TinNhanCuaGiaoVien")
     public String TinNhanCuaGiaoVien(HttpSession session, ModelMap model) {
-        Person teacher = entityManager.find(Person.class, session.getAttribute("TeacherID"));
-
-        if (teacher == null) {
-            return "redirect:/DangNhapGiaoVien";
-        }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String teacherId = authentication.getName();
+        Person person = entityManager.find(Person.class, teacherId);
+        Teachers teacher = (Teachers) person;
 
         // Truy vấn tin nhắn liên quan đến giáo viên
         List<Messages> messages = entityManager.createQuery(
@@ -190,14 +225,11 @@ public class GiaoVienGet {
             return "redirect:/TinNhanCuaGiaoVien?error=StudentNotFound";
         }
 
-        // Kiểm tra xem giáo viên đã đăng nhập chưa
-        String teacherID = (String) session.getAttribute("TeacherID");
-        if (teacherID == null) {
-            return "redirect:/DangNhapGiaoVien";
-        }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String teacherId = authentication.getName();
+        Person person = entityManager.find(Person.class, teacherId);
+        Teachers teacher = (Teachers) person;
 
-        // Tìm giáo viên
-        Teachers teacher = entityManager.find(Teachers.class, teacherID);
         if (teacher == null) {
             return "redirect:/TinNhanCuaGiaoVien?error=TeacherNotFound";
         }
@@ -218,20 +250,14 @@ public class GiaoVienGet {
 
         return "ChiTietTinNhanCuaGiaoVien";
     }
+
     @GetMapping("/TrangCaNhanGiaoVien")
     public String TrangCaNhanGiaoVien(HttpSession session, ModelMap model) {
-        if(session.getAttribute("TeacherID") == null) {
-            return "redirect:/DangNhapGiaoVien?error=TeacherNotFound";
-        }
-        Teachers teacher =entityManager.find(Teachers.class, session.getAttribute("TeacherID"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String teacherId = authentication.getName();
+        Person person = entityManager.find(Person.class, teacherId);
+        Teachers teacher = (Teachers) person;
         model.addAttribute("teacher", teacher);
-
         return "TrangCaNhanGiaoVien";
     }
-
-
-
-
-
-
 }

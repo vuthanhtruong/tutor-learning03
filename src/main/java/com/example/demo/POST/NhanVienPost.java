@@ -2,18 +2,25 @@ package com.example.demo.POST;
 
 import com.example.demo.OOP.*;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Controller
 @RequestMapping("/")
@@ -23,12 +30,56 @@ public class NhanVienPost {
     @PersistenceContext
     private EntityManager entityManager;
 
+
     @PostMapping("/DangKyNhanVien")
-    public String DangKyNhanVien(@RequestParam String EmployeeID, @RequestParam String FirstName,
-                                 @RequestParam String LastName, @RequestParam String Email,@RequestParam String PhoneNumber,
-                                 @RequestParam String Password) {
+    public String DangKyNhanVien(@RequestParam String EmployeeID,
+                                 @RequestParam String FirstName,
+                                 @RequestParam String LastName,
+                                 @RequestParam String Email,
+                                 @RequestParam String PhoneNumber,
+                                 @RequestParam String Password,
+                                 @RequestParam String ConfirmPassword,
+                                 Model model) {
+
+        // Kiểm tra EmployeeID đã tồn tại chưa
+        if (entityManager.find(Employees.class, EmployeeID) != null) {
+            model.addAttribute("employeeIDError", "Mã nhân viên đã tồn tại.");
+            return "DangKyNhanVien";
+        }
+
+        // Kiểm tra Email đã tồn tại chưa
+        List<Employees> existingEmployees = entityManager.createQuery(
+                        "SELECT e FROM Employees e WHERE e.email = :email", Employees.class)
+                .setParameter("email", Email)
+                .getResultList();
+        if (!existingEmployees.isEmpty()) {
+            model.addAttribute("emailError", "Email này đã được sử dụng.");
+            return "DangKyNhanVien";
+        }
+
+        // Kiểm tra số điện thoại (chỉ chứa số, tối thiểu 10 chữ số)
+        if (!PhoneNumber.matches("\\d{10,}")) {
+            model.addAttribute("phoneError", "Số điện thoại không hợp lệ (phải có ít nhất 10 chữ số).");
+            return "DangKyNhanVien";
+        }
+
+        // Kiểm tra mật khẩu có khớp không
+        if (!Password.equals(ConfirmPassword)) {
+            model.addAttribute("passwordError", "Mật khẩu không khớp.");
+            return "DangKyNhanVien";
+        }
+
+        // Kiểm tra độ mạnh của mật khẩu (8+ ký tự, chứa số và ký tự đặc biệt)
+        if (!isValidPassword(Password)) {
+            model.addAttribute("passwordStrengthError", "Mật khẩu phải có ít nhất 8 ký tự, bao gồm số và ký tự đặc biệt.");
+            return "DangKyNhanVien";
+        }
+
+        // Lấy Admin
         List<Admin> admins = entityManager.createQuery("from Admin", Admin.class).getResultList();
         Admin admin = admins.get(0);
+
+        // Tạo nhân viên mới
         Employees employees = new Employees();
         employees.setId(EmployeeID);
         employees.setFirstName(FirstName);
@@ -42,28 +93,12 @@ public class NhanVienPost {
 
         return "redirect:/DangNhapNhanVien";
     }
-    @PostMapping("/DangNhapNhanVien")
-    public String DangNhapNhanVien(@RequestParam("EmployeeID") String employeeID,
-                                   @RequestParam("Password") String password,
-                                   HttpSession session,
-                                   ModelMap model) {
-        try {
-            Employees employee = entityManager.createQuery(
-                            "SELECT e FROM Employees e WHERE e.id = :employeeID", Employees.class)
-                    .setParameter("employeeID", employeeID)
-                    .getSingleResult();
 
-            if (employee != null && employee.getPassword().equals(password)) {
-                session.setAttribute("EmployeeID", employee.getId());
-                return "redirect:/TrangChuNhanVien";
-            } else {
-                model.addAttribute("error", "Mã nhân viên hoặc mật khẩu không đúng!");
-                return "redirect:/DangNhapNhanVien";
-            }
-        } catch (NoResultException e) {
-            model.addAttribute("error", "Mã nhân viên không tồn tại!");
-            return "redirect:/DangNhapNhanVien";
-        }
+    // Hàm kiểm tra độ mạnh của mật khẩu
+    private boolean isValidPassword(String password) {
+        return password.length() >= 8 &&
+                Pattern.compile("[0-9]").matcher(password).find() &&
+                Pattern.compile("[!@#$%^&*(),.?\":{}|<>]").matcher(password).find();
     }
 
     @Transactional
@@ -77,60 +112,67 @@ public class NhanVienPost {
             @RequestParam("phoneNumber") String phoneNumber,
             @RequestParam(value = "misID", required = false) String misID,
             HttpSession session,
-            ModelMap model) {
+            RedirectAttributes redirectAttributes) {
 
-        if (session.getAttribute("EmployeeID") == null) {
-            model.addAttribute("error", "Bạn chưa đăng nhập hoặc không có quyền thêm giáo viên.");
-            return "ThemGiaoVienCuaBan";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String employeeId = authentication.getName();
+        Person person = entityManager.find(Person.class, employeeId);
+        Employees employee = (Employees) person;
+
+
+        // Kiểm tra TeacherID đã tồn tại chưa
+        if (entityManager.find(Teachers.class, teacherID) != null) {
+            redirectAttributes.addFlashAttribute("error", "Mã giáo viên đã tồn tại.");
+            return "redirect:/ThemGiaoVienCuaBan";
         }
 
-        Employees employee = entityManager.find(Employees.class, session.getAttribute("EmployeeID"));
-        if (employee == null) {
-            model.addAttribute("error", "Nhân viên không hợp lệ.");
-            return "ThemGiaoVienCuaBan";
-        }
-        List<Admin> admins = entityManager.createQuery("from Admin", Admin.class).getResultList();
-        Admin admin = entityManager.find(Admin.class, admins.get(0));
-        if (admin == null) {
-            model.addAttribute("error", "Không thể xác định Admin.");
-            return "ThemGiaoVienCuaBan";
-        }
-
-        // Kiểm tra trùng lặp email
-        Long emailCount = entityManager.createQuery("SELECT COUNT(t) FROM Teachers t WHERE t.email = :email", Long.class)
+        // Kiểm tra email đã tồn tại chưa
+        Long emailCount = entityManager.createQuery(
+                        "SELECT COUNT(t) FROM Teachers t WHERE t.email = :email", Long.class)
                 .setParameter("email", email)
                 .getSingleResult();
         if (emailCount > 0) {
-            model.addAttribute("error", "Email đã tồn tại.");
-            return "ThemGiaoVienCuaBan";
+            redirectAttributes.addFlashAttribute("error", "Email đã tồn tại.");
+            return "redirect:/ThemGiaoVienCuaBan";
         }
 
-        // Kiểm tra trùng lặp TeacherID
-        if (entityManager.find(Teachers.class, teacherID) != null) {
-            model.addAttribute("error", "TeacherID đã tồn tại.");
-            return "ThemGiaoVienCuaBan";
+        // Kiểm tra độ mạnh của mật khẩu
+        if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$")) {
+            redirectAttributes.addFlashAttribute("error", "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt.");
+            return "redirect:/ThemGiaoVienCuaBan";
         }
+
+        // Lấy Admin (giả sử hệ thống luôn có ít nhất một admin)
+        List<Admin> admins = entityManager.createQuery("FROM Admin", Admin.class).getResultList();
+        if (admins.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Không thể xác định Admin.");
+            return "redirect:/ThemGiaoVienCuaBan";
+        }
+        Admin admin = admins.get(0);
 
         try {
-            Teachers teachers = new Teachers();
-            teachers.setId(teacherID);
-            teachers.setFirstName(firstName);
-            teachers.setLastName(lastName);
-            teachers.setEmail(email);
-            teachers.setPhoneNumber(phoneNumber);
-            teachers.setMisID(misID != null ? misID : ""); // Tránh null nếu MIS_ID không bắt buộc
-            teachers.setPassword(password);
-            teachers.setEmployee(employee);
-            teachers.setAdmin(admin);
+            // Tạo giáo viên mới
+            Teachers teacher = new Teachers();
+            teacher.setId(teacherID);
+            teacher.setFirstName(firstName);
+            teacher.setLastName(lastName);
+            teacher.setEmail(email);
+            teacher.setPhoneNumber(phoneNumber);
+            teacher.setMisID(misID != null ? misID : "");
+            teacher.setPassword(password);
+            teacher.setEmployee(employee);
+            teacher.setAdmin(admin);
 
-            entityManager.persist(teachers);
-            entityManager.flush(); // Buộc lưu dữ liệu ngay để kiểm tra lỗi
+            // Lưu vào database
+            entityManager.persist(teacher);
 
+            // Chuyển hướng với thông báo thành công
+            redirectAttributes.addFlashAttribute("successMessage", "Thêm giáo viên thành công!");
             return "redirect:/DanhSachGiaoVienCuaBan";
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("error", "Lỗi khi thêm giáo viên: " + e.getMessage());
-            return "ThemGiaoVienCuaBan";
+            redirectAttributes.addFlashAttribute("error", "Lỗi khi thêm giáo viên: " + e.getMessage());
+            return "redirect:/ThemGiaoVienCuaBan";
         }
     }
 
@@ -144,45 +186,45 @@ public class NhanVienPost {
             @RequestParam("phoneNumber") String phoneNumber,
             @RequestParam(value = "misID", required = false) String misId,
             HttpSession session,
-            ModelMap model) {
+            RedirectAttributes redirectAttributes) {
 
-        // Kiểm tra Employee từ session
-        Object employeeID = session.getAttribute("EmployeeID");
-        if (employeeID == null) {
-            model.addAttribute("error", "Bạn chưa đăng nhập!");
-            return "ThemHocSinhCuaBan"; // Quay lại form với thông báo lỗi
-        }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String employeeId = authentication.getName();
+        Person person = entityManager.find(Person.class, employeeId);
+        Employees employee = (Employees) person;
 
-        Employees employee = entityManager.find(Employees.class, employeeID);
-        if (employee == null) {
-            model.addAttribute("error", "Không tìm thấy nhân viên với ID: " + employeeID);
-            return "ThemHocSinhCuaBan";
-        }
+        // Lấy Admin (chỉ cần một admin)
         List<Admin> admins = entityManager.createQuery("from Admin", Admin.class).getResultList();
-        Admin admin = entityManager.find(Admin.class, admins.get(0));
+        if (admins.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Không tìm thấy Admin!");
+            return "redirect:/ThemHocSinhCuaBan";
+        }
+        Admin admin = admins.get(0);
 
-
-        Students existingStudent = entityManager.find(Students.class, studentID);
-        if (existingStudent != null) {
-            model.addAttribute("error", "Mã học sinh đã tồn tại!");
-            return "ThemHocSinhCuaBan";
+        // Kiểm tra xem studentID đã tồn tại chưa
+        if (entityManager.find(Students.class, studentID) != null) {
+            redirectAttributes.addFlashAttribute("error", "Mã học sinh đã tồn tại!");
+            return "redirect:/ThemHocSinhCuaBan";
         }
 
-        List<Students> studentsWithEmail = entityManager.createQuery(
-                        "SELECT s FROM Students s WHERE s.email = :email", Students.class)
+        // Kiểm tra xem email đã tồn tại chưa
+        Long emailCount = entityManager.createQuery(
+                        "SELECT COUNT(s) FROM Students s WHERE s.email = :email", Long.class)
                 .setParameter("email", email)
-                .getResultList();
-        if (!studentsWithEmail.isEmpty()) {
-            model.addAttribute("error", "Email này đã được sử dụng!");
-            return "ThemHocSinhCuaBan";
+                .getSingleResult();
+        if (emailCount > 0) {
+            redirectAttributes.addFlashAttribute("error", "Email này đã được sử dụng!");
+            return "redirect:/ThemHocSinhCuaBan";
         }
+
+        // Tạo mới student (KHÔNG mã hóa mật khẩu)
         Students student = new Students();
         student.setId(studentID);
         student.setFirstName(firstName);
         student.setLastName(lastName);
         student.setEmail(email);
         student.setPhoneNumber(phoneNumber);
-        student.setPassword(password); // Lưu mật khẩu đã mã hóa
+        student.setPassword(password); // LƯU MẬT KHẨU DƯỚI DẠNG THÔ
         student.setMisId(misId);
         student.setEmployee(employee);
         student.setAdmin(admin);
@@ -190,24 +232,50 @@ public class NhanVienPost {
         // Lưu vào database
         entityManager.persist(student);
 
+        // Chuyển hướng với thông báo thành công
+        redirectAttributes.addFlashAttribute("successMessage", "Thêm học sinh thành công!");
         return "redirect:/DanhSachHocSinhCuaBan";
     }
+
     @PostMapping("/SuaGiaoVienCuaBan")
     public String SuaGiaoVienCuaBan(@RequestParam("teacherID") String id,
                                     @RequestParam("email") String email,
                                     @RequestParam("phoneNumber") String phoneNumber,
                                     @RequestParam("lastName") String lastName,
-                                    @RequestParam("firstName") String firstName) {
+                                    @RequestParam("firstName") String firstName,
+                                    ModelMap model) {
+
+        // Kiểm tra giáo viên có tồn tại không
         Teachers teacher = entityManager.find(Teachers.class, id);
-        if (teacher != null) {
-            teacher.setEmail(email);
-            teacher.setPhoneNumber(phoneNumber);
-            teacher.setFirstName(firstName);
-            teacher.setLastName(lastName);
-            entityManager.merge(teacher);
+        if (teacher == null) {
+            model.addAttribute("error", "Giáo viên không tồn tại!");
+            return "SuaGiaoVienCuaBan"; // Trả về trang chỉnh sửa với thông báo lỗi
         }
+
+        // Kiểm tra email đã được sử dụng bởi giáo viên khác chưa
+        List<Teachers> teachersWithEmail = entityManager.createQuery(
+                        "SELECT t FROM Teachers t WHERE t.email = :email AND t.id <> :id", Teachers.class)
+                .setParameter("email", email)
+                .setParameter("id", id)
+                .getResultList();
+
+        if (!teachersWithEmail.isEmpty()) {
+            model.addAttribute("error", "Email này đã được sử dụng bởi giáo viên khác!");
+            return "SuaGiaoVienCuaBan"; // Trả về trang chỉnh sửa với thông báo lỗi
+        }
+
+        // Cập nhật thông tin giáo viên
+        teacher.setEmail(email);
+        teacher.setPhoneNumber(phoneNumber);
+        teacher.setFirstName(firstName);
+        teacher.setLastName(lastName);
+
+        entityManager.merge(teacher); // Lưu vào database
+
+        model.addAttribute("successMessage", "Cập nhật giáo viên thành công!");
         return "redirect:/DanhSachGiaoVienCuaBan";
     }
+
     @PostMapping("/SuaHocSinhCuaBan")
     public String SuaHocSinhCuaBan(@RequestParam("studentID") String studentID,
                                    @RequestParam("firstName") String firstName,
@@ -215,18 +283,24 @@ public class NhanVienPost {
                                    @RequestParam("email") String email,
                                    @RequestParam("phoneNumber") String phoneNumber,
                                    @RequestParam(value = "misId", required = false) String misId,
-                                   HttpSession session) {
+                                   RedirectAttributes redirectAttributes) {
         // Tìm học sinh theo ID
         Students student = entityManager.find(Students.class, studentID);
-
         if (student == null) {
-            return "redirect:/DanhSachHocSinhCuaBan?error=notfound";
+            redirectAttributes.addFlashAttribute("error", "Không tìm thấy học sinh!");
+            return "redirect:/DanhSachHocSinhCuaBan";
         }
 
-        // Kiểm tra quyền chỉnh sửa (giáo viên phải là người phụ trách)
-        String employeeID = (String) session.getAttribute("EmployeeID");
-        if (employeeID == null || !employeeID.equals(student.getEmployee().getId())) {
-            return "redirect:/DanhSachHocSinhCuaBan?error=unauthorized";
+        // Kiểm tra trùng email với học sinh khác
+        List<Students> studentsWithEmail = entityManager.createQuery(
+                        "SELECT s FROM Students s WHERE s.email = :email AND s.id <> :studentID", Students.class)
+                .setParameter("email", email)
+                .setParameter("studentID", studentID)
+                .getResultList();
+
+        if (!studentsWithEmail.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Email này đã được sử dụng bởi học sinh khác!");
+            return "redirect:/DanhSachHocSinhCuaBan";
         }
 
         // Cập nhật thông tin học sinh
@@ -236,51 +310,77 @@ public class NhanVienPost {
         student.setPhoneNumber(phoneNumber);
         student.setMisId(misId);
 
-        entityManager.merge(student);  // Lưu vào database
+        entityManager.merge(student); // Lưu vào database
 
-        return "redirect:/DanhSachHocSinhCuaBan?success=updated";
+        redirectAttributes.addFlashAttribute("successMessage", "Cập nhật học sinh thành công!");
+        return "redirect:/DanhSachHocSinhCuaBan";
     }
+
     @PostMapping("/ThemPhongHoc")
     public String ThemPhongHoc(@RequestParam("roomId") String roomId,
                                @RequestParam("roomName") String roomName,
-                               HttpSession session) {
-        // Lấy thông tin nhân viên từ session
-        Employees loggedInEmployee = entityManager.find(Employees.class, session.getAttribute("EmployeeID"));
-        if (loggedInEmployee == null) {
-            return "redirect:/DangNhapNhanVien"; // Nếu chưa đăng nhập, quay về trang login
+
+                               RedirectAttributes redirectAttributes) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String employeeId = authentication.getName();
+        Person person = entityManager.find(Person.class, employeeId);
+        Employees employee = (Employees) person;
+        // Kiểm tra trùng ID
+        Rooms existingRoomById = entityManager.find(Rooms.class, roomId);
+        if (existingRoomById != null) {
+            redirectAttributes.addFlashAttribute("error", "ID phòng đã tồn tại!");
+            return "redirect:/ThemPhongHoc";
         }
 
+        // Kiểm tra trùng tên phòng
+        TypedQuery<Rooms> query = entityManager.createQuery(
+                "SELECT r FROM Rooms r WHERE r.roomName = :roomName", Rooms.class);
+        query.setParameter("roomName", roomName);
+        List<Rooms> existingRoomsByName = query.getResultList();
+        if (!existingRoomsByName.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Tên phòng đã tồn tại!");
+            return "redirect:/ThemPhongHoc";
+        }
+
+        // Thêm phòng học mới
         Rooms newRoom = new Rooms();
         newRoom.setRoomId(roomId);
         newRoom.setRoomName(roomName);
-        newRoom.setEmployee(loggedInEmployee);
+        newRoom.setEmployee(employee);
         entityManager.persist(newRoom);
 
-        return "redirect:/DanhSachPhongHoc"; // Quay về danh sách phòng học
+        redirectAttributes.addFlashAttribute("success", "Thêm phòng học thành công!");
+        return "redirect:/DanhSachPhongHoc";
     }
+
     @PostMapping("/ThemPhongHocOnline")
     public String LuuPhongHocOnline(
             @RequestParam("roomId") String roomId,
             @RequestParam("roomName") String roomName,
             @RequestParam("status") Boolean status,
-            HttpSession session) {
+            RedirectAttributes redirectAttributes) {
 
-        // Kiểm tra đăng nhập
-        if (session.getAttribute("EmployeeID") == null) {
-            return "redirect:/DangNhapNhanVien";
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String employeeId = authentication.getName();
+        Person person = entityManager.find(Person.class, employeeId);
+        Employees employee = (Employees) person;
+
+        // Kiểm tra ID phòng đã tồn tại chưa
+        OnlineRooms existingRoomById = entityManager.find(OnlineRooms.class, roomId);
+        if (existingRoomById != null) {
+            redirectAttributes.addFlashAttribute("error", "ID phòng học đã tồn tại.");
+            return "redirect:/ThemPhongHocOnline";
         }
 
-        // Lấy thông tin nhân viên từ session
-        String employeeId = (String) session.getAttribute("EmployeeID");
-        Employees employee = entityManager.find(Employees.class, employeeId);
-        if (employee == null) {
-            return "redirect:/ThemPhongHocOnline?error=invalid_employee";
-        }
-
-        // Kiểm tra ID phòng có tồn tại không
-        OnlineRooms existingRoom = entityManager.find(OnlineRooms.class, roomId);
-        if (existingRoom != null) {
-            return "redirect:/ThemPhongHocOnline?error=room_exists";
+        // Kiểm tra tên phòng đã tồn tại chưa
+        TypedQuery<OnlineRooms> query = entityManager.createQuery(
+                "SELECT r FROM OnlineRooms r WHERE r.roomName = :roomName", OnlineRooms.class);
+        query.setParameter("roomName", roomName);
+        List<OnlineRooms> existingRoomsByName = query.getResultList();
+        if (!existingRoomsByName.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Tên phòng học đã tồn tại.");
+            return "redirect:/ThemPhongHocOnline";
         }
 
         // Tạo phòng học online mới
@@ -292,51 +392,78 @@ public class NhanVienPost {
 
         // Lưu vào database
         entityManager.persist(newRoom);
+        redirectAttributes.addFlashAttribute("success", "Thêm phòng học thành công.");
 
-        return "redirect:/DanhSachPhongHoc?success=added";
+        return "redirect:/DanhSachPhongHoc";
     }
 
 
     @PostMapping("/SuaPhongHocOffline")
     public String CapNhatPhongHoc(@RequestParam("roomId") String roomId,
-                                  @RequestParam("roomName") String roomName,
-                                  HttpSession session) {
+                                  @RequestParam("roomName") String roomName) {
         // Lấy thông tin phòng từ database
         Rooms room = entityManager.find(Rooms.class, roomId);
         if (room == null) {
             return "redirect:/DanhSachPhongHoc?error=RoomNotFound";
         }
 
-        // Kiểm tra nhân viên đang đăng nhập
-        Employees loggedInEmployee = entityManager.find(Employees.class, session.getAttribute("EmployeeID"));
-        if (loggedInEmployee == null) {
-            return "redirect:/DangNhapNhanVien";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String employeeId = authentication.getName();
+        Person person = entityManager.find(Person.class, employeeId);
+        Employees employee = (Employees) person;
+
+        // Kiểm tra xem tên phòng mới đã tồn tại chưa
+        TypedQuery<Rooms> query = entityManager.createQuery(
+                "SELECT r FROM Rooms r WHERE r.roomName = :roomName AND r.roomId <> :roomId",
+                Rooms.class
+        );
+        query.setParameter("roomName", roomName);
+        query.setParameter("roomId", roomId);
+
+        List<Rooms> existingRooms = query.getResultList();
+        if (!existingRooms.isEmpty()) {
+            return "redirect:/SuaPhongHocOffline?roomId=" + roomId + "&error=RoomNameExists";
         }
 
         // Cập nhật thông tin phòng học
         room.setRoomName(roomName);
-        room.setEmployee(loggedInEmployee);
+        room.setEmployee(employee);
         entityManager.merge(room);  // Lưu thay đổi
 
         return "redirect:/DanhSachPhongHoc?success=RoomUpdated";
     }
+
     @PostMapping("/SuaPhongHocOnline")
-    public String CapNhatPhongHocOnline(@RequestParam("roomId") String roomId,
-                                        @RequestParam("roomName") String roomName,
-                                        HttpSession session) {
+    public String CapNhatPhongHocOnline(
+            @RequestParam("roomId") String roomId,
+            @RequestParam("roomName") String roomName) {
+
+        // Kiểm tra phòng học có tồn tại không
         OnlineRooms room = entityManager.find(OnlineRooms.class, roomId);
         if (room == null) {
             return "redirect:/DanhSachPhongHoc?error=RoomNotFound";
         }
 
-        Employees loggedInEmployee = entityManager.find(Employees.class, session.getAttribute("EmployeeID"));
-        if (loggedInEmployee == null) {
-            return "redirect:/DangNhapNhanVien";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String employeeId = authentication.getName();
+        Person person = entityManager.find(Person.class, employeeId);
+        Employees employee = (Employees) person;
+
+
+        // Kiểm tra trùng tên phòng (trừ phòng hiện tại)
+        TypedQuery<OnlineRooms> query = entityManager.createQuery(
+                "SELECT r FROM OnlineRooms r WHERE r.roomName = :roomName AND r.roomId <> :roomId", OnlineRooms.class);
+        query.setParameter("roomName", roomName);
+        query.setParameter("roomId", roomId);
+
+        List<OnlineRooms> duplicateRooms = query.getResultList();
+        if (!duplicateRooms.isEmpty()) {
+            return "redirect:/SuaPhongHocOnline?error=RoomNameExists&roomId=" + roomId + "&roomName=" + roomName;
         }
 
         // Cập nhật thông tin phòng học online
         room.setRoomName(roomName);
-        room.setEmployee(loggedInEmployee);
+        room.setEmployee(employee);
         entityManager.merge(room);  // Lưu thay đổi
 
         return "redirect:/DanhSachPhongHoc?success=RoomUpdated";
@@ -368,6 +495,8 @@ public class NhanVienPost {
 
             if (count == 0) {
                 ClassroomDetails classroomDetail = new ClassroomDetails(room, teacher);
+                Events event = entityManager.find(Events.class, 9);
+                classroomDetail.setEvent(event);
                 entityManager.persist(classroomDetail);
             }
         }
@@ -401,6 +530,8 @@ public class NhanVienPost {
 
             if (count == 0) {
                 ClassroomDetails classroomDetail = new ClassroomDetails(room, student);
+                Events event = entityManager.find(Events.class, 10);
+                classroomDetail.setEvent(event);
                 entityManager.persist(classroomDetail);
             }
         }
@@ -422,11 +553,11 @@ public class NhanVienPost {
 
             Room room = entityManager.find(Room.class, roomId);
             if (room instanceof Rooms) {
-                ((Rooms) room).setStartTime(thoiGianBatDau);
-                ((Rooms) room).setEndTime(thoiGianKetThuc);
+                room.setStartTime(thoiGianBatDau);
+                room.setEndTime(thoiGianKetThuc);
             } else if (room instanceof OnlineRooms) {
-                ((OnlineRooms) room).setStartTime(thoiGianBatDau);
-                ((OnlineRooms) room).setEndTime(thoiGianKetThuc);
+                room.setStartTime(thoiGianBatDau);
+                room.setEndTime(thoiGianKetThuc);
             } else {
                 return "redirect:/BoTriLopHoc?error=notfound";
             }
@@ -438,6 +569,7 @@ public class NhanVienPost {
             return "redirect:/BoTriLopHoc?error=invalid_datetime";
         }
     }
+
     @PostMapping("/CapNhatDiaChi")
     @Transactional
     public String capNhatDiaChi(
@@ -469,6 +601,30 @@ public class NhanVienPost {
         } else {
             return "redirect:/BoTriLopHoc?error=notfound";
         }
+    }
+
+    @PostMapping("/DanhSachHocSinhCuaBan")
+    public String DanhSachHocSinhCuaBan(@RequestParam("pageSize") int pageSize, HttpSession session) {
+        session.setAttribute("pageSize", pageSize); // Đặt session với đúng key
+        return "redirect:/DanhSachHocSinhCuaBan";
+    }
+
+    @PostMapping("/DanhSachGiaoVienCuaBan")
+    public String DanhSachGiaoVienCuaBan(@RequestParam("pageSize") int pageSize, HttpSession session) {
+        session.setAttribute("pageSize2", pageSize);
+        return "redirect:/DanhSachGiaoVienCuaBan"; // Đúng trang cần quay lại
+    }
+
+    @PostMapping("/DanhSachPhongHoc")
+    public String setPageSize(@RequestParam("pageSize") int pageSize, HttpSession session) {
+        session.setAttribute("pageSize3", pageSize); // Thống nhất key với GET request
+        return "redirect:/DanhSachPhongHoc";
+    }
+
+    @PostMapping("/DanhSachNguoiDungHeThong")
+    public String DanhSachNguoiDungHeThong1(@RequestParam("pageSize") int pageSize, HttpSession session) {
+        session.setAttribute("pageSize4", pageSize); // Thống nhất key với GET request
+        return "redirect:/DanhSachNguoiDungHeThong";
     }
 
 

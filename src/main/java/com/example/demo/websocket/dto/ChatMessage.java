@@ -1,5 +1,9 @@
 package com.example.demo.websocket.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+import java.time.LocalDateTime;
+
 public class ChatMessage {
     private String senderId;
     private String recipientId;

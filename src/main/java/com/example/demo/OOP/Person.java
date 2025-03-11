@@ -1,10 +1,11 @@
 package com.example.demo.OOP;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -29,4 +30,9 @@ public abstract class Person {
     @Column(name = "PhoneNumber", nullable = false, unique = true, length = 20)
     @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Số điện thoại không hợp lệ")
     private String phoneNumber;
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
 }
