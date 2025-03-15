@@ -1,4 +1,5 @@
 package com.example.demo.config;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
@@ -56,7 +57,29 @@ public class ThymeleafConfig {
         resolver.setPrefix("classpath:/templates/Students/");
         resolver.setSuffix(".html");
         resolver.setTemplateMode("HTML");
-        resolver.setOrder(3);
+        resolver.setOrder(5);
+        resolver.setCheckExistence(true);
+        return resolver;
+    }
+
+    @Bean
+    public SpringResourceTemplateResolver templateResolver6() {
+        SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
+        resolver.setPrefix("classpath:/templates/DanhSachLopHoc/");
+        resolver.setSuffix(".html");
+        resolver.setTemplateMode("HTML");
+        resolver.setOrder(6);
+        resolver.setCheckExistence(true);
+        return resolver;
+    }
+
+    @Bean
+    public SpringResourceTemplateResolver templateResolver7() {
+        SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
+        resolver.setPrefix("classpath:/templates/Messages/");
+        resolver.setSuffix(".html");
+        resolver.setTemplateMode("HTML");
+        resolver.setOrder(7);
         resolver.setCheckExistence(true);
         return resolver;
     }
