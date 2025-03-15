@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Chi Tiết Tin Nhắn</title>
+    <link href="/ChiTietTinNhanCuaGiaoVien.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h2>Chi Tiết Tin Nhắn</h2>
+
+    <div class="back-button">
+        <a th:href="@{/{trangchu}(trangchu=${trangchu})}">Quay về Trang Chủ</a>
+        <a class="btn btn-primary" href="/TinNhanCuaBan">Quay về danh sách tin nhắn</a>
+    </div>
+
+    <div id="messagesContainer">
+        <div class="message-box" th:classappend="${message.sender.id == currentUser.id} ? 'right' : 'left'"
+             th:each="message : ${messages}">
+            <div class="message-header">
+                <span th:text="${message.sender.id == currentUser.id ? 'Bạn' : chatPartner.firstName + ' ' + chatPartner.lastName}"></span>
+            </div>
+            <div class="message-time" th:text="${#temporals.format(message.datetime, 'dd/MM/yyyy HH:mm')}"></div>
+            <div class="message-text" th:text="${message.text}"></div>
+        </div>
+    </div>
+
+    <div class="message-form">
+        <h3>Gửi tin nhắn mới</h3>
+        <form id="messageForm">
+            <input id="currentUserId" th:value="${currentUser.id}" type="hidden"/>
+            <input id="chatPartnerId" th:value="${chatPartner.id}" type="hidden"/>
+            <textarea id="messageText" placeholder="Nhập tin nhắn..." required></textarea>
+            <button type="submit">Gửi</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Kéo xuống cuối danh sách tin nhắn khi trang tải xong
+        scrollToBottom();
+
+        var socket = new SockJS("/ws");
+        var stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function (frame) {
+            console.log("✅ Kết nối WebSocket thành công:", frame);
+            var currentUserId = document.getElementById("currentUserId").value;
+            var subscriptionPath = "/user/" + currentUserId + "/queue/messages";
+
+            stompClient.subscribe(subscriptionPath, function (message) {
+                var receivedMessage = JSON.parse(message.body);
+                console.log("📩 Nhận tin nhắn:", receivedMessage);
+                appendMessage(receivedMessage.senderId, receivedMessage.content, receivedMessage.timestamp);
+            });
+        }, function (error) {
+            console.error("❌ Lỗi kết nối WebSocket:", error);
+            // Thử kết nối lại sau 5 giây
+            setTimeout(function () {
+                location.reload();
+            }, 5000);
+        });
+
+        document.getElementById("messageForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            var senderId = document.getElementById("currentUserId").value;
+            var recipientId = document.getElementById("chatPartnerId").value;
+            var messageContent = document.getElementById("messageText").value.trim();
+
+            if (!messageContent) return;
+
+            var message = {
+                senderId: senderId,
+                recipientId: recipientId,
+                content: messageContent,
+                timestamp: new Date().toISOString()
+            };
+
+            stompClient.send("/app/chat", {}, JSON.stringify(message));
+            appendMessage(senderId, messageContent, message.timestamp);
+            document.getElementById("messageText").value = "";
+        });
+
+        function appendMessage(senderId, content, timestamp) {
+            var currentUserId = document.getElementById("currentUserId").value;
+            var chatPartnerId = document.getElementById("chatPartnerId").value;
+            var chatPartnerName = document.querySelector(".message-box.left .message-header span")?.textContent || "Người đối thoại";
+
+            var sender = senderId == currentUserId ? "Bạn" : chatPartnerName;
+            var isCurrentUser = senderId == currentUserId;
+
+            var messageHTML = `
+            <div class="message-box ${isCurrentUser ? 'right' : 'left'}">
+                <div class="message-header">${sender}</div>
+                <div class="message-time">${new Date(timestamp).toLocaleString('vi-VN')}</div>
+                <div class="message-text">${content}</div>
+            </div>`;
+
+            document.getElementById("messagesContainer").insertAdjacentHTML('beforeend', messageHTML);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            var container = document.getElementById("messagesContainer");
+            container.scrollTop = container.scrollHeight;
+        }
+    });
+</script>
+</body>
+</html>
