@@ -1,5 +1,6 @@
 package com.example.demo.OOP;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -229,7 +229,6 @@ button[type="submit"]:hover {
         transform: translateY(0);
     }
 }
-
 /* 📝 Bài Đăng Trong Lớp */
 .post-list ul {
     list-style: none;

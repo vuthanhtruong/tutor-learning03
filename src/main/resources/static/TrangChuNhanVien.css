@@ -172,7 +172,6 @@ h2 {
         transform: translateY(0);
     }
 }
-
 /* Tăng độ đậm cho nút */
 .btn {
     font-size: 20px;
@@ -264,7 +263,6 @@ h2 {
     background: var(--neon-purple);
     box-shadow: 0 0 30px var(--neon-purple);
 }
-
 /* Cập nhật nút để đậm và nổi bật hơn */
 .btn {
     font-size: 22px;
@@ -356,7 +354,6 @@ h2 {
     background: var(--neon-purple);
     box-shadow: 0 0 35px var(--neon-purple);
 }
-
 /* Cập nhật nút để luôn đậm mà không cần hover */
 .btn {
     font-size: 22px;

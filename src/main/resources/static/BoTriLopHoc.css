@@ -150,7 +150,6 @@ tr:hover {
         transform: translateY(0);
     }
 }
-
 /* Cập nhật màu sắc cho nút "Xem Chi Tiết" */
 .btn-info {
     background: var(--neon-blue) !important;
