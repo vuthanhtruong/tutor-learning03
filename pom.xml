@@ -144,6 +144,16 @@
             <artifactId>spring-cloud-gcp-starter-storage</artifactId>
             <version>${spring-cloud-gcp.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microsoft.cognitiveservices.speech</groupId>
+            <artifactId>client-sdk</artifactId>
+            <version>1.36.0</version>
+        </dependency>
     </dependencies>
 
     <build>

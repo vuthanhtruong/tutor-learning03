@@ -81,10 +81,12 @@ public class SecurityConfig {
                                 ).hasRole("EMPLOYEE")
                                 .requestMatchers(HttpMethod.GET,
                                         "/TinNhanCuaBan",
-                                        "/ChiTietTinNhan/**"
-                                ).hasAnyRole("TEACHER", "STUDENT")
+                                        "/ChiTietTinNhan/**",
+                                        "/XoaKhuonMat",
+                                        "/XoaGiongNoi"
+                                ).hasAnyRole("TEACHER", "STUDENT", "ADMIN", "EMPLOYEE")
                                 .requestMatchers(HttpMethod.POST, "/BaiPost",
-                                        "/BinhLuan", "/register-face")
+                                        "/BinhLuan", "/register-face", "/XoaKhuonMat", "/DangKyKhuonMat", "/DangKyGiongNoi", "/LuuThongTinCaNhan")
                                 .hasAnyRole("TEACHER", "STUDENT", "ADMIN", "EMPLOYEE")
                                 .requestMatchers(HttpMethod.GET,
 
@@ -147,7 +149,8 @@ public class SecurityConfig {
                                         "/auth/reset-password",
                                         "/auth/DatLaiMatKhau",
                                         "/auth/resend-otp",
-                                        "/XuLyThemBlog"
+                                        "/XuLyThemBlog",
+                                        "/DangNhapBangGiongNoi"
                                 ).permitAll()
                                 .requestMatchers("/ws/**").permitAll()
                                 // Mở API public cho AJAX requests
@@ -164,6 +167,7 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/redirect", true) // Điều hướng tới controller xử lý role
                         .permitAll()
                 )
+
                 .logout(logout -> logout
                         .logoutUrl("/DangXuat")  // Dùng chung cho cả Admin & Nhân viên
                         .logoutSuccessHandler((request, response, authentication) -> {

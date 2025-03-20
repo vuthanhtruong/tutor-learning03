@@ -5,35 +5,91 @@
     <title>Trang Cá Nhân</title>
     <link href="/css/style.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-
 <header>
-    <h1>Thông Tin Cá Nhân</h1>
+    <h1><i class="fas fa-address-card"></i> Thông Tin Cá Nhân</h1>
 </header>
 
 <main>
-    <!-- Hiển thị thông báo thành công/lỗi -->
-    <div class="alert alert-success" th:if="${success}">
-        Đăng ký khuôn mặt thành công!
+    <!-- Thông báo lỗi -->
+    <div class="alert alert-danger" th:if="${firstNameInvalid}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${firstNameInvalid}"></span>
     </div>
-    <div class="alert alert-success" th:if="${successDelete}">
-        Xóa khuôn mặt thành công!
+    <div class="alert alert-danger" th:if="${lastNameInvalid}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${lastNameInvalid}"></span>
     </div>
-    <div class="alert alert-danger" th:if="${error}">
-        <span th:switch="${error}">
-            <span th:case="'not_logged_in'">Vui lòng đăng nhập để tiếp tục.</span>
-            <span th:case="'user_not_found'">Không tìm thấy người dùng.</span>
-            <span th:case="'save_failed'">Lưu thông tin thất bại. Vui lòng thử lại.</span>
-            <span th:case="'invalid_face'">Ảnh khuôn mặt không hợp lệ.</span>
-            <span th:case="*">Đã có lỗi xảy ra: <span th:text="${error}"></span></span>
-        </span>
+    <div class="alert alert-danger" th:if="${emailInvalid}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${emailInvalid}"></span>
     </div>
-    <div class="alert alert-warning" th:if="${noteFace}">
-        <span th:switch="${noteFace}">
-            <span th:case="'face_already_registered'">Đã có người đăng ký khuôn mặt này rồi.</span>
-            <span th:case="*"><span th:text="${noteFace}"></span></span>
-        </span>
+    <div class="alert alert-danger" th:if="${phoneNumberInvalid}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${phoneNumberInvalid}"></span>
+    </div>
+    <div class="alert alert-danger" th:if="${emailDuplicate}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${emailDuplicate}"></span>
+    </div>
+    <div class="alert alert-danger" th:if="${phoneNumberDuplicate}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${phoneNumberDuplicate}"></span>
+    </div>
+    <div class="alert alert-danger" th:if="${userNotFound}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${userNotFound}"></span>
+    </div>
+    <div class="alert alert-danger" th:if="${updateFailed}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${updateFailed}"></span>
+    </div>
+
+    <!-- Thông báo thành công từ FaceLoginController -->
+    <div class="alert alert-success" th:if="${faceRegisterSuccess}">
+        <i class="fas fa-check-circle"></i> <span th:text="${faceRegisterSuccess}"></span>
+    </div>
+    <div class="alert alert-success" th:if="${faceDeleteSuccess}">
+        <i class="fas fa-check-circle"></i> <span th:text="${faceDeleteSuccess}"></span>
+    </div>
+
+    <!-- Thông báo thành công từ VoiceAuthController -->
+    <div class="alert alert-success" th:if="${voiceRegisterSuccess}">
+        <i class="fas fa-check-circle"></i> <span th:text="${voiceRegisterSuccess}"></span>
+    </div>
+    <div class="alert alert-success" th:if="${voiceDeleteSuccess}">
+        <i class="fas fa-check-circle"></i> <span th:text="${voiceDeleteSuccess}"></span>
+    </div>
+
+    <!-- Thông báo lỗi từ FaceLoginController -->
+    <div class="alert alert-danger" th:if="${faceDataInvalid}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${faceDataInvalid}"></span>
+    </div>
+    <div class="alert alert-danger" th:if="${faceAlreadyRegistered}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${faceAlreadyRegistered}"></span>
+    </div>
+    <div class="alert alert-danger" th:if="${notLoggedIn}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${notLoggedIn}"></span>
+    </div>
+    <div class="alert alert-danger" th:if="${faceSaveFailed}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${faceSaveFailed}"></span>
+    </div>
+    <div class="alert alert-danger" th:if="${noFaceToDelete}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${noFaceToDelete}"></span>
+    </div>
+    <div class="alert alert-danger" th:if="${faceNotMatched}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${faceNotMatched}"></span>
+    </div>
+    <div class="alert alert-danger" th:if="${faceDeleteFailed}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${faceDeleteFailed}"></span>
+    </div>
+
+    <!-- Thông báo lỗi từ VoiceAuthController -->
+    <div class="alert alert-danger" th:if="${voiceDataInvalid}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${voiceDataInvalid}"></span>
+    </div>
+    <div class="alert alert-danger" th:if="${voiceSaveFailed}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${voiceSaveFailed}"></span>
+    </div>
+    <div class="alert alert-danger" th:if="${noVoiceToDelete}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${noVoiceToDelete}"></span>
+    </div>
+    <div class="alert alert-danger" th:if="${voiceDeleteFailed}">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${voiceDeleteFailed}"></span>
     </div>
 
     <!-- Mục Hồ Sơ Cá Nhân -->
@@ -41,61 +97,109 @@
         <h2><i class="fas fa-user"></i> Hồ Sơ Cá Nhân</h2>
         <form th:action="@{/LuuThongTinCaNhan}" th:method="post">
             <div class="form-group">
-                <label><strong>ID:</strong></label>
+                <label><i class="fas fa-id-badge"></i> <strong>ID:</strong></label>
                 <span th:text="${user.id}"></span>
             </div>
             <div class="form-group">
-                <label><strong>Họ và Tên:</strong></label>
-                <input autocomplete="off" name="firstName" placeholder="Nhập Họ" required th:value="${user.firstName}"
-                       type="text">
-                <input autocomplete="off" name="lastName" placeholder="Nhập Tên" required th:value="${user.lastName}"
-                       type="text">
+                <label><i class="fas fa-user-edit"></i> <strong>Họ và Tên:</strong></label>
+                <input autocomplete="off" class="form-control d-inline-block w-auto" name="firstName"
+                       placeholder="Nhập Họ" required th:value="${user.firstName}" type="text">
+                <input autocomplete="off" class="form-control d-inline-block w-auto" name="lastName"
+                       placeholder="Nhập Tên" required th:value="${user.lastName}" type="text">
             </div>
             <div class="form-group">
-                <label><strong>Email:</strong></label>
-                <input autocomplete="off" name="email" placeholder="Nhập Email" required th:value="${user.email}"
-                       type="email">
+                <label><i class="fas fa-envelope"></i> <strong>Email:</strong></label>
+                <input autocomplete="off" class="form-control" name="email" placeholder="Nhập Email"
+                       required th:value="${user.email}" type="email">
             </div>
             <div class="form-group">
-                <label><strong>Số Điện Thoại:</strong></label>
-                <input autocomplete="off" name="phoneNumber" placeholder="Nhập Số Điện Thoại" required
-                       th:value="${user.phoneNumber}" type="text">
+                <label><i class="fas fa-phone"></i> <strong>Số Điện Thoại:</strong></label>
+                <input autocomplete="off" class="form-control" name="phoneNumber"
+                       placeholder="Nhập Số Điện Thoại" required th:value="${user.phoneNumber}" type="text">
             </div>
-            <button type="submit"><i class="fas fa-save"></i> Lưu</button>
+            <button class="btn btn-primary" type="submit">
+                <i class="fas fa-save"></i> Lưu
+            </button>
         </form>
     </section>
 
     <!-- Mục Đăng Ký Khuôn Mặt -->
     <section class="face-registration-section">
         <h2><i class="fas fa-camera"></i> Đăng Ký Khuôn Mặt</h2>
-        <p th:if="${user.faceData != null && !user.faceData.isEmpty()}">Bạn đã đăng ký khuôn mặt.</p>
-        <p th:unless="${user.faceData != null && !user.faceData.isEmpty()}">Bạn chưa đăng ký khuôn mặt.</p>
+        <p th:if="${user.faceData != null && !user.faceData.isEmpty()}"><i class="fas fa-check"></i> Bạn đã đăng ký
+            khuôn mặt.</p>
+        <p th:unless="${user.faceData != null && !user.faceData.isEmpty()}"><i class="fas fa-times"></i> Bạn chưa đăng
+            ký khuôn mặt.</p>
         <form th:action="@{/DangKyKhuonMat}" th:method="post">
             <video autoplay height="240" id="video" style="transform: scaleX(-1);" width="320"></video>
-            <button onclick="toggleCamera()" type="button">Bật/Tắt Camera</button>
-            <button onclick="captureFace('faceData')" type="button">Chụp Khuôn Mặt</button>
+            <div class="mt-2">
+                <button class="btn btn-info" onclick="toggleCamera()" type="button"><i class="fas fa-video"></i> Bật/Tắt
+                    Camera
+                </button>
+                <button class="btn btn-success" onclick="captureFace('faceData')" type="button"><i
+                        class="fas fa-camera-retro"></i> Chụp Khuôn Mặt
+                </button>
+            </div>
             <input id="faceData" name="faceData" type="hidden">
-            <span id="captureStatus" style="color: green; display: none;">Đã chụp khuôn mặt!</span>
-            <button type="submit"><i class="fas fa-upload"></i> Đăng Ký</button>
+            <span class="text-success mt-2" id="captureStatus" style="display: none;"><i class="fas fa-check"></i> Đã chụp khuôn mặt!</span>
+            <button class="btn btn-primary mt-2" type="submit">
+                <i class="fas fa-upload"></i> Đăng Ký
+            </button>
         </form>
     </section>
 
     <!-- Nút Xóa Khuôn Mặt -->
     <section class="face-delete-section">
         <h2><i class="fas fa-trash"></i> Xóa Khuôn Mặt</h2>
-        <a class="btn btn-danger" th:href="@{/XoaKhuonMat}"><i class="fas fa-trash-alt"></i> Xóa Khuôn Mặt Hiện Có</a>
+        <a class="btn btn-danger" th:href="@{/XoaKhuonMat}">
+            <i class="fas fa-trash-alt"></i> Xóa Khuôn Mặt Hiện Có
+        </a>
+    </section>
+
+    <!-- Mục Đăng Ký Giọng Nói -->
+    <section class="voice-registration-section">
+        <h2><i class="fas fa-microphone"></i> Đăng Ký Giọng Nói</h2>
+        <p th:if="${user.voiceData != null && !user.voiceData.isEmpty()}">
+            <i class="fas fa-check"></i> Bạn đã đăng ký giọng nói: <span th:text="${user.voiceData}"></span>
+        </p>
+        <p th:unless="${user.voiceData != null && !user.voiceData.isEmpty()}"><i class="fas fa-times"></i> Bạn chưa đăng
+            ký giọng nói.</p>
+        <form th:action="@{/DangKyGiongNoi}" th:method="post">
+            <button class="btn btn-info" onclick="startVoiceRecording('voiceData')" type="button">
+                <i class="fas fa-microphone-alt"></i> Bắt Đầu Ghi Âm
+            </button>
+            <input id="voiceData" name="voiceData" type="hidden">
+            <span class="text-success mt-2" id="recordStatus" style="display: none;"><i class="fas fa-check"></i> Đã ghi âm!</span>
+            <button class="btn btn-primary mt-2" type="submit">
+                <i class="fas fa-upload"></i> Đăng Ký
+            </button>
+        </form>
+    </section>
+
+    <!-- Nút Xóa Giọng Nói -->
+    <section class="voice-delete-section">
+        <h2><i class="fas fa-trash"></i> Xóa Giọng Nói</h2>
+        <a class="btn btn-danger" th:href="@{/XoaGiongNoi}">
+            <i class="fas fa-trash-alt"></i> Xóa Giọng Nói Hiện Có
+        </a>
     </section>
 
     <!-- Mục Bảo Mật -->
     <section class="password-section">
         <h2><i class="fas fa-key"></i> Bảo Mật</h2>
-        <a class="btn btn-warning" href="/DoiMatKhau"><i class="fas fa-lock"></i> Đổi Mật Khẩu</a>
+        <a class="btn btn-warning" href="/DoiMatKhau">
+            <i class="fas fa-lock"></i> Đổi Mật Khẩu
+        </a>
     </section>
 
     <!-- Điều Hướng -->
     <section class="navigation-section">
-        <a class="btn" th:href="@{/redirect}"><i class="fas fa-home"></i> Quay về Trang Chủ</a>
-        <a class="btn btn-danger" href="/DangXuat"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+        <a class="btn btn-primary" th:href="@{/redirect}">
+            <i class="fas fa-home"></i> Quay về Trang Chủ
+        </a>
+        <a class="btn btn-danger" href="/DangXuat">
+            <i class="fas fa-sign-out-alt"></i> Đăng xuất
+        </a>
     </section>
 </main>
 
@@ -151,41 +255,41 @@
         context.drawImage(targetVideo, 0, 0, canvas.width, canvas.height);
         let faceData = canvas.toDataURL('image/png');
         document.getElementById(inputId).value = faceData;
-        targetStatus.style.display = 'inline';
-        setTimeout(() => targetStatus.style.display = 'none', 2000);
+        targetStatus.style.display = 'block';
+        setTimeout(() => targetStatus.style.display = 'none', 3000);
     }
 </script>
 
-<style>
-    .alert {
-        padding: 10px;
-        margin-bottom: 15px;
-        border-radius: 5px;
-    }
+<script>
+    function startVoiceRecording(inputId) {
+        let audioInput = document.getElementById(inputId);
+        let recordStatus = document.getElementById('recordStatus');
 
-    .alert-success {
-        background-color: #d4edda;
-        color: #155724;
-    }
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'vi-VN';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
 
-    .alert-danger {
-        background-color: #f8d7da;
-        color: #721c24;
-    }
+        recognition.onresult = function (event) {
+            const transcript = event.results[0][0].transcript;
+            audioInput.value = transcript;
+            recordStatus.style.display = 'block';
+            setTimeout(() => recordStatus.style.display = 'none', 3000);
+        };
 
-    .alert-warning {
-        background-color: #fff3cd;
-        color: #856404;
-    }
+        recognition.onerror = function (event) {
+            console.error('Lỗi ghi âm: ', event.error);
+            alert("Không thể ghi âm: " + event.error);
+        };
 
-    .btn-danger {
-        background-color: #dc3545;
-        color: white;
-        padding: 10px 20px;
-        text-decoration: none;
-        border-radius: 5px;
+        recognition.onend = function () {
+            console.log('Ghi âm kết thúc');
+        };
+
+        recognition.start();
+        setTimeout(() => recognition.stop(), 10000);
     }
-</style>
+</script>
 
 </body>
 </html>

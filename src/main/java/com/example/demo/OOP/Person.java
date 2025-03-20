@@ -35,11 +35,21 @@ public class Person {
 
     @Column(name = "BirthDate", nullable = true)
     @Past(message = "Ngày sinh phải là một ngày trong quá khứ")
-    private LocalDate birthDate;
+    private LocalDate birthDate; // Ngày sinh (yyyy-MM-dd)
+    @Lob
+    @Column(name = "FaceData", columnDefinition = "LONGTEXT", nullable = true)
+    private String faceData;
 
     @Lob
-    @Column(name = "FaceData", columnDefinition = "LONGTEXT")
-    private String faceData;
+    @Column(name = "VoiceData", columnDefinition = "LONGTEXT", nullable = true)
+    private String voiceData;
+
+    // Thêm các trường cho OAuth
+    @Column(name = "OauthProvider", nullable = true, length = 50)
+    private String oauthProvider; // "google", "facebook", v.v.
+
+    @Column(name = "OauthId", nullable = true, length = 255)
+    private String oauthId; // ID duy nhất từ OAuth provider
 
     public String getFullName() {
         return firstName + " " + lastName;
