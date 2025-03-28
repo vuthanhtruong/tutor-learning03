@@ -97,8 +97,8 @@
 
                     <div class="text-center mt-3">
                         <p>Không nhận được mã?
-                        <form class="d-inline" method="post" th:action="@{/auth/resend-otp}">
-                            <button class="btn btn-link resend" type="submit">Gửi lại mã</button>
+                        <form method="post" th:action="@{/auth/resend-otp}" class="d-inline">
+                            <button type="submit" class="btn btn-link resend">Gửi lại mã</button>
                         </form>
                         </p>
                     </div>
