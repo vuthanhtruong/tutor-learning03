@@ -29,7 +29,8 @@ public class SecurityConfig {
                                         "/ThemHocSinh",
                                         "/XoaHocSinh/**",
                                         "/XoaGiaoVien/**",
-                                        "/XoaNhanVien/**"
+                                        "/XoaNhanVien/**",
+                                        "/Dashboard"
                                 ).hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST,
 
@@ -77,17 +78,30 @@ public class SecurityConfig {
                                         "/BangDieuKhienGiaoVien/**",
                                         "/TimKiemGiaoVienCuaBan",
                                         "/TimKiemHocSinhCuaBan",
-                                        "/DanhSachTimKiemPhongHoc"
+                                        "/DanhSachTimKiemPhongHoc",
+                                        "/ThoiKhoaBieu",
+                                        "/LuuLichHocNhieuSlot",
+                                        "/LuuLichHoc",
+                                        "/XoaLichHoc"
                                 ).hasRole("EMPLOYEE")
                                 .requestMatchers(HttpMethod.GET,
                                         "/TinNhanCuaBan",
                                         "/ChiTietTinNhan/**",
                                         "/XoaKhuonMat",
-                                        "/XoaGiongNoi"
+                                        "/XoaGiongNoi",
+                                        "/ChiTietBuoiHoc",
+                                        "/redirect"
                                 ).hasAnyRole("TEACHER", "STUDENT", "ADMIN", "EMPLOYEE")
-                                .requestMatchers(HttpMethod.POST, "/BaiPost",
+                                .requestMatchers(HttpMethod.POST, "/BaiPost", "/auth/verify-face-login",
                                         "/BinhLuan", "/register-face", "/XoaKhuonMat", "/DangKyKhuonMat", "/DangKyGiongNoi", "/LuuThongTinCaNhan")
                                 .hasAnyRole("TEACHER", "STUDENT", "ADMIN", "EMPLOYEE")
+
+                                .requestMatchers(HttpMethod.POST, "/DiemDanh")
+                                .hasAnyRole("TEACHER", "EMPLOYEE")
+                                .requestMatchers(HttpMethod.GET, "/ThoiKhoaBieuNguoiDung", "/SuaBaiDangCaNhan/**", "/XoaBaiDangCaNhan/**")
+                                .hasAnyRole("TEACHER", "STUDENT")
+
+
                                 .requestMatchers(HttpMethod.GET,
 
                                         "/TrangChuGiaoVien",
