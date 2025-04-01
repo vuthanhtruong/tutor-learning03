@@ -5,6 +5,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Đăng Ký Giáo Viên</title>
     <link href="/DangKyGiaoVien.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body class="d-flex align-items-center justify-content-center vh-100 bg-light">
 <main class="container">
@@ -12,63 +13,91 @@
         <section class="col-md-6">
             <div class="card shadow-lg p-4">
                 <h1 class="text-center mb-4">Đăng Ký Giáo Viên</h1>
-
-                <!-- Thông báo lỗi chung từ server -->
                 <div class="alert alert-danger text-center" role="alert" th:if="${databaseError}"
                      th:text="${databaseError}"></div>
-
                 <form method="POST" th:action="@{/DangKyGiaoVien}">
                     <div class="mb-3">
                         <label class="form-label" for="teacherID">ID Giáo Viên</label>
                         <input class="form-control" id="teacherID" name="TeacherID" required type="text">
                         <div class="text-danger" th:if="${teacherIDError}" th:text="${teacherIDError}"></div>
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label" for="firstName">Họ</label>
                         <input class="form-control" id="firstName" name="FirstName" required type="text">
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label" for="lastName">Tên</label>
                         <input class="form-control" id="lastName" name="LastName" required type="text">
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label" for="email">Email</label>
                         <input class="form-control" id="email" name="Email" required type="email">
                         <div class="text-danger" th:if="${emailError}" th:text="${emailError}"></div>
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label" for="phoneNumber">Số Điện Thoại</label>
                         <input class="form-control" id="phoneNumber" name="PhoneNumber" required type="text">
                         <div class="text-danger" th:if="${phoneError}" th:text="${phoneError}"></div>
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label" for="birthDate">Ngày Sinh</label>
                         <input class="form-control" id="birthDate" name="BirthDate" required type="date">
                         <div class="text-danger" th:if="${birthDateError}" th:text="${birthDateError}"></div>
                     </div>
-
                     <div class="mb-3">
-                        <label class="form-label" for="misID">Mã Giảng Viên (MIS ID - nếu có)</label>
+                        <label class="form-label" for="gender">Giới Tính</label>
+                        <select class="form-control" id="gender" name="Gender" required>
+                            <option value="MALE">Nam</option>
+                            <option value="FEMALE">Nữ</option>
+                            <option value="OTHER">Khác</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="country">Quốc Gia</label>
+                        <select class="form-control" id="country" name="Country" required>
+                            <option value="">Chọn quốc gia</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="province">Tỉnh/Thành phố</label>
+                        <select class="form-control" id="province" name="Province">
+                            <option value="">Chọn tỉnh/thành phố</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="district">Quận/Huyện</label>
+                        <select class="form-control" id="district" name="District">
+                            <option value="">Chọn quận/huyện</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="ward">Xã/Phường</label>
+                        <select class="form-control" id="ward" name="Ward">
+                            <option value="">Chọn xã/phường</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="street">Đường, Số Nhà</label>
+                        <input class="form-control" id="street" name="Street" type="text">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="postalCode">Mã Bưu Điện</label>
+                        <input class="form-control" id="postalCode" name="PostalCode" type="text">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="misID">(MIS ID - nếu có)</label>
                         <input class="form-control" id="misID" name="MisID" type="text">
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label" for="password">Mật Khẩu</label>
                         <input class="form-control" id="password" name="Password" required type="password">
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label" for="confirmPassword">Xác Nhận Mật Khẩu</label>
                         <input class="form-control" id="confirmPassword" name="ConfirmPassword" required
                                type="password">
                         <div class="text-danger" th:if="${passwordError}" th:text="${passwordError}"></div>
                     </div>
-
                     <div class="d-grid gap-2">
                         <button class="btn btn-primary" type="submit">Đăng Ký</button>
                         <a class="btn btn-outline-secondary" href="/TrangChu">Quay Lại Đăng Nhập</a>
@@ -78,10 +107,7 @@
         </section>
     </div>
 </main>
-
-<!-- Bootstrap JS (tùy chọn, nếu cần tính năng động) -->
-<script crossorigin="anonymous"
-        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
