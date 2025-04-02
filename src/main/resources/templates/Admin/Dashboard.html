@@ -4,209 +4,162 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body class="hold-transition sidebar-mini">
-    <div class="wrapper">
-        <!-- Sidebar -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <a href="#" class="brand-link">
-                <span class="brand-text font-weight-light">AdminLTE Dashboard</span>
-            </a>
-            <div class="sidebar">
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" role="menu">
-                        <li class="nav-item">
-                            <a href="/Dashboard" class="nav-link active">
-                                <i class="nav-icon fas fa-chart-line"></i>
-                                <p>Dashboard</p>
-                            </a>
-                            <a href="/TrangChuAdmin" class="nav-link active">
-                                <i class="nav-icon fas fa-chart-line"></i>
-                                <p>Admin Control</p>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </aside>
-        <!-- Nội dung Dashboard -->
-        <div class="content-wrapper">
-            <section class="content-header">
-                <h1>Dashboard</h1>
-            </section>
-            <section class="content">
-                <div class="container-fluid">
-                    <div class="row">
-                        <!-- Thẻ thông số -->
-                        <div class="col-lg-4 col-6">
-                            <div class="small-box bg-info">
-                                <div class="inner">
-                                    <h3 id="totalStudents" th:text="${totalStudents}">0</h3>
-                                    <p>Tổng số học viên</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="fas fa-users"></i>
-                                </div>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        </a>
+        <div class="sidebar">
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" role="menu">
+                    <li class="nav-item">
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>Dashboard</p>
+                        </a>
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>Admin Control</p>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+    <!-- Nội dung Dashboard -->
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>Dashboard</h1>
+        </section>
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- Thẻ thông số -->
+                    <div class="col-lg-4 col-6">
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3 id="totalStudents" th:text="${totalStudents}">0</h3>
+                                <p>Tổng số học viên</p>
                             </div>
-                        </div>
-                        <div class="col-lg-4 col-6">
-                            <div class="small-box bg-success">
-                                <div class="inner">
-                                    <h3 id="totalTeachers" th:text="${totalTeachers}">0</h3>
-                                    <p>Tổng số giáo viên</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="fas fa-chalkboard-teacher"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-6">
-                            <div class="small-box bg-warning">
-                                <div class="inner">
-                                    <h3 id="totalEmployees" th:text="${totalEmployees}">0</h3>
-                                    <p>Tổng số nhân viên</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="fas fa-user-tie"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-6">
-                            <div class="small-box bg-warning">
-                                <div class="inner">
-                                    <h3 id="totalBlog" th:text="${totalBlog}">0</h3>
-                                    <p>Tổng số bài Blogs</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="fas fa-chalkboard-blogs"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-6">
-                            <div class="small-box bg-info">
-                                <div class="inner">
-                                    <h3 id="totalOnRooms" th:text="${OnRoom}">0</h3>
-                                    <p>Tổng số Phòng Học Online</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="fas fa-chalkboard-OnRoom"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-6">
-                            <div class="small-box bg-success">
-                                <div class="inner">
-                                    <h3 id="totalOffRooms" th:text="${OffRoom}">0</h3>
-                                    <p>Tổng số bài Phòng Học Offline</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="fas fa-chalkboard-OffRoom"></i>
-                                </div>
+                            <div class="icon">
+                                <i class="fas fa-users"></i>
                             </div>
                         </div>
                     </div>
-                    <!-- Biểu đồ -->
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">Số lượng tin nhắn</h3>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="messageChart"></canvas>
-                                </div>
+                    <div class="col-lg-4 col-6">
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3 id="totalTeachers" th:text="${totalTeachers}">0</h3>
+                                <p>Tổng số giáo viên</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-6">
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3 id="totalEmployees" th:text="${totalEmployees}">0</h3>
+                                <p>Tổng số nhân viên</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-6">
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3 id="totalBlog" th:text="${totalBlog}">0</h3>
+                                <p>Tổng số bài Blogs</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-chalkboard-blogs"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-6">
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3 id="totalOnRooms" th:text="${OnRoom}">0</h3>
+                                <p>Tổng số Phòng Học Online</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-chalkboard-OnRoom"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-6">
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3 id="totalOffRooms" th:text="${OffRoom}">0</h3>
+                                <p>Tổng số bài Phòng Học Offline</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-chalkboard-OffRoom"></i>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-        </div>
+                <!-- Biểu đồ -->
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                            </div>
+                            <div class="card-body">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
+</div>
 
-    <!-- Script cập nhật số liệu và biểu đồ -->
-    <script>
-        var onlineUsersChart;
+<!-- Script cập nhật số liệu và biểu đồ -->
+<script>
 
-        function updateDashboard() {
-            $.getJSON("/api/Dashboard/stats", function (data) {
-                // Cập nhật số liệu
-                $("#totalStudents").text(data.totalStudents);
-                $("#totalTeachers").text(data.totalTeachers);
-                $("#totalEmployees").text(data.totalEmployees);
-                $("#totalBlog").text(data.totalBlog);
-                $("#totalOnRooms").text(data.OnRoom);
-                $("#totalOffRooms").text(data.OffRoom);
-                $("#totalMessages").text(data.totalMessages); // Hiển thị tổng số tin nhắn
-                if (messageChart) {
-                    messageChart.data.datasets[0].data.push(data.totalMessages); // Thêm dữ liệu vào biểu đồ
-                    messageChart.data.labels.push(new Date().toLocaleTimeString()); // Thêm thời gian vào trục x
-                    if (messageChart.data.datasets[0].data.length > 10) {
-                        messageChart.data.datasets[0].data.shift(); // Xóa dữ liệu cũ nếu vượt quá 10 điểm
-                        messageChart.data.labels.shift(); // Xóa nhãn cũ
-                    }
-                    messageChart.update(); // Cập nhật biểu đồ
+    function updateDashboard() {
+        $.getJSON("/api/Dashboard/stats", function (data) {
+            // Cập nhật số liệu
+            $("#totalStudents").text(data.totalStudents);
+            $("#totalTeachers").text(data.totalTeachers);
+            $("#totalEmployees").text(data.totalEmployees);
+            $("#totalBlog").text(data.totalBlog);
+            $("#totalOnRooms").text(data.OnRoom);
                 }
+            }
 
-                // Cập nhật biểu đồ 
-                if (onlineUsersChart) {
-                    onlineUsersChart.data.datasets[0].data = [
-                        data.onlineStudents,
-                        data.onlineTeachers,
-                        data.onlineEmployees,
-                        data.onlineBlog,
-                        data.OnRoom,
-                        data.OffRoom,
-                        data.totalMessages
-                    ];
-                    onlineUsersChart.update();
-                }
-            }).fail(function () {
-                console.error("Không thể tải dữ liệu từ API");
-            });
-        }
-
-        $(document).ready(function () {
-            var ctxMessage = document.getElementById('messageChart').getContext('2d');
-            messageChart = new Chart(ctxMessage, {
-                type: "line",
-                data: {
-                    labels: [], // Trục x (thời gian)
-                    datasets: [{
-                        label: "Tổng số tin nhắn",
-                        backgroundColor: "rgba(0,0,255,0.1)",
-                        borderColor: "rgba(0,0,255,1.0)",
-                        data: [] // Dữ liệu ban đầu
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: "Thời gian"
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: "Số lượng tin nhắn"
-                            },
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-            updateDashboard();
-            setInterval(updateDashboard, 5000);
+                ];
+            }
+        }).fail(function () {
+            console.error("Không thể tải dữ liệu từ API");
         });
-    </script>
+    }
+
+    $(document).ready(function () {
+            type: "line",
+            data: {
+                datasets: [{
+                    backgroundColor: "rgba(0,0,255,0.1)",
+                    borderColor: "rgba(0,0,255,1.0)",
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                }
+            }
+        });
+        updateDashboard();
+        setInterval(updateDashboard, 5000);
+    });
+</script>
 
 </body>
 
