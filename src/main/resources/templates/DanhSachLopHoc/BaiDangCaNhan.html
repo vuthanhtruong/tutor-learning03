@@ -1,9 +1,13 @@
 <div class="post-list">
     <h2>Bài Đăng Trong Lớp</h2>
     <ul>
+
         <a th:href="@{'/ChiTietLopHocBanThamGia/' + ${room?.roomId}}">
             <i class="fas fa-user"></i> Quay lại
         </a>
+
+        <link href="/BaiDangCaNhan.css" rel="stylesheet">
+
         <li th:each="post : ${posts}">
             <p><strong>👤 Người đăng:</strong> <span
                     th:text="${post.creator?.firstName + ' ' + post.creator?.lastName}"></span></p>

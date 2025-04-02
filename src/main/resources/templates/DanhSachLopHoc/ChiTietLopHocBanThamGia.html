@@ -11,6 +11,7 @@
 <header>
     <h1>Chi Tiết Lớp Học</h1>
     <div class="back-buttons">
+        <a class="btn btn-members" th:href="@{'/ThanhVienTrongLopHocCuaBan/' + ${room?.roomId}}">👥 Thành viên trong lớp</a>
         <a class="btn btn-back" th:href="@{/DanhSachLopHoc}">🔙 Quay lại danh sách lớp học</a>
         <a class="btn btn-home" th:href="@{${homePage}}">🏠 Quay lại trang chủ</a>
     </div>
@@ -29,7 +30,7 @@
             <button type="submit">📩 Gửi đánh giá</button>
         </form>
     </div>
-    <a class="btn btn-members" th:href="@{'/ThanhVienTrongLopHocCuaBan/' + ${room?.roomId}}">👥 Thành viên trong lớp</a>
+
 </header>
 
 <div class="container">
@@ -121,40 +122,6 @@
     </div>
 </div>
 
-<style>
-    .back-buttons {
-        margin-top: 20px;
-        text-align: center;
-    }
-
-    .btn {
-        display: inline-block;
-        padding: 10px 15px;
-        margin: 10px;
-        font-size: 16px;
-        text-decoration: none;
-        border-radius: 5px;
-    }
-
-    .btn-back {
-        background-color: #f39c12;
-        color: white;
-    }
-
-    .btn-home {
-        background-color: #3498db;
-        color: white;
-    }
-
-    .btn-members {
-        background-color: #2ecc71;
-        color: white;
-    }
-
-    .btn:hover {
-        opacity: 0.8;
-    }
-</style>
 
 <script>
     let selectedFiles = [];

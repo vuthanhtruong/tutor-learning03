@@ -1,0 +1,189 @@
+/* Import font */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
+
+/* Variables */
+:root {
+    --primary: #4361ee;
+    --secondary: #3a0ca3;
+    --accent: #4cc9f0;
+    --success: #2ecc71;
+    --warning: #f7b731;
+    --danger: #fc5c65;
+    --surface: #ffffff;
+    --text: #2d3436;
+}
+
+/* Base styles */
+body {
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    padding: 2rem;
+    background: radial-gradient(circle at 0% 0%, rgba(67, 97, 238, 0.1), transparent 50%),
+    radial-gradient(circle at 100% 100%, rgba(76, 201, 240, 0.1), transparent 50%),
+    #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Header and back button */
+head a, body > a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+    margin: 1rem 0;
+}
+
+head a {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+}
+
+head a:hover, body > a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin: 2rem 0;
+    text-align: center;
+}
+
+/* Form styles */
+form {
+    width: 100%;
+    max-width: 700px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 0 0 1px rgba(67, 97, 238, 0.05),
+    0 10px 20px rgba(67, 97, 238, 0.1);
+    margin-bottom: 2rem;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+}
+
+textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 1rem;
+    border: 1px solid rgba(67, 97, 238, 0.2);
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    resize: vertical;
+    margin-bottom: 1.5rem;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
+
+/* Document display */
+div p {
+    background: rgba(67, 97, 238, 0.05);
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+}
+
+/* File input */
+input[type="file"] {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1.5rem;
+    border: 1px dashed rgba(67, 97, 238, 0.3);
+    border-radius: 8px;
+    cursor: pointer;
+    background: rgba(67, 97, 238, 0.02);
+}
+
+input[type="file"]:hover {
+    border-color: var(--primary);
+    background: rgba(67, 97, 238, 0.05);
+}
+
+/* Submit button */
+button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+    margin-bottom: 1rem;
+}
+
+button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+}
+
+button[type="submit"]:active {
+    transform: translateY(1px);
+}
+
+/* Back link at bottom */
+body > a {
+    margin-top: 0;
+    background: linear-gradient(135deg, var(--secondary), var(--primary));
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+
+    head a {
+        position: static;
+        display: inline-flex;
+        margin: 1rem 0;
+    }
+
+    h1 {
+        font-size: 2rem;
+        margin: 1.5rem 0;
+    }
+
+    form {
+        padding: 1.5rem;
+    }
+}
+
+/* Selection */
+::selection {
+    background: rgba(67, 97, 238, 0.2);
+    color: var(--primary);
+}
