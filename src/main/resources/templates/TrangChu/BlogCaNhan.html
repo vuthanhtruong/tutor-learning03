@@ -1,59 +1,108 @@
 <!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"></html>
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="Blogcanhan.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
+    <header class="header">
+        <div class="header-container">
+            <div class="header-logo">
+                <i class="fas fa-blog"></i>
+                <h1>Blog</h1>
+            </div>
+            <nav class="header-nav">
+                <ul>
+                    <li><a th:href="@{/QuayVeTrangChu}"><i class="fas fa-home"></i> Quay Về Trang Chủ</a></li>
+                    <li><a href="/BlogCaNhan"><i class="fas fa-user"></i> Blog Đã Đăng</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-<header>
-    <h1><i class="fas fa-blog"></i> Blog</h1>
-    <a class="btn btn-home" th:href="@{/QuayVeTrangChu}"><i class="fas fa-home"></i> Quay Về Trang Chủ</a>
-    <a class="btn blog-content" href="/BlogCaNhan"><i class="fas fa-user"></i> Blog Đã Đăng</a>
-</header>
+    <div class="main-content">
+        <div class="container">
+            <div class="welcome-section">
+                <h1>Blog Cá Nhân</h1>
+                <p>Quản lý và chỉnh sửa các bài viết của bạn</p>
+            </div>
 
-<main>
-    <!-- 🔹 Danh sách Blog dưới dạng bảng -->
-    <section class="blog-feed">
-        <h2><i class="fas fa-list"></i> Bài viết mới nhất</h2>
+            <div class="form-container">
+                <!-- 🔹 Danh sách Blog dưới dạng bảng -->
+                <section class="blog-feed">
+                    <h2><i class="fas fa-list"></i> Bài viết đã đăng</h2>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>👤 Tác giả</th>
+                                    <th>📅 Ngày đăng</th>
+                                    <th>📖 Tiêu đề</th>
+                                    <th>📝 Nội dung</th>
+                                    <th>⚙️ Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="blog : ${blogs}">
+                                    <td th:text="${blog.creator.firstName} + ' ' + ${blog.creator.lastName}"></td>
+                                    <td th:text="${#temporals.format(blog.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                                    <td th:text="${blog.title}"></td>
+                                    <td th:text="${blog.content}"></td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a class="btn btn-primary"
+                                                th:href="@{/SuaBlogCaNhan/edit/{id}(id=${blog.blogId})}">
+                                                <i class="fas fa-edit"></i> Sửa
+                                            </a>
+                                            <a class="btn btn-danger"
+                                                onclick="return confirm('Bạn có chắc chắn muốn xóa blog này?');"
+                                                th:href="@{/XoaBlogCaNhan/{id}(id=${blog.blogId})}">
+                                                <i class="fas fa-trash"></i> Xóa
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
 
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>👤 Tác giả</th>
-                <th>📅 Ngày đăng</th>
-                <th>📖 Tiêu đề</th>
-                <th>📝 Nội dung</th>
-                <th>⚙️ Hành động</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="blog : ${blogs}">
-                <td th:text="${blog.creator.firstName} + ' ' + ${blog.creator.lastName}"></td>
-                <td th:text="${#temporals.format(blog.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
-                <td th:text="${blog.title}"></td>
-                <td th:text="${blog.content}"></td>
-                <td>
-                    <a class="btn btn-primary" th:href="@{/SuaBlogCaNhan/{id}(id=${blog.blogId})}">
-                        <i class="fas fa-edit"></i> Sửa
-                    </a>
-                    <a class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa blog này?');"
-                       th:href="@{/XoaBlogCaNhan/{id}(id=${blog.blogId})}">
-                        <i class="fas fa-trash"></i> Xóa
-                    </a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-text">
+                <div class="footer-logo">
+                    <i class="fas fa-blog"></i>
+                    <span>Blog</span>
+                </div>
+                <p>Chia sẻ ý tưởng và kết nối với mọi người</p>
+                <p class="footer-copyright">&copy; 2025 Blog - Bản quyền được bảo lưu</p>
+            </div>
 
-    </section>
+            <div class="newsletter">
+                <p>Đăng ký nhận thông báo</p>
+                <div class="subscribe-form">
+                    <input type="email" placeholder="Email của bạn">
+                    <button class="subscribe-btn">Đăng ký</button>
+                </div>
+            </div>
 
-</main>
-
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-info-circle"></i> Về chúng tôi</a>
+                <a href="#"><i class="fas fa-file-contract"></i> Điều khoản sử dụng</a>
+                <a href="#"><i class="fas fa-shield-alt"></i> Chính sách bảo mật</a>
+                <a href="#"><i class="fas fa-envelope"></i> Liên hệ</a>
+            </div>
+        </div>
+    </footer>
 </body>
 
 </html>

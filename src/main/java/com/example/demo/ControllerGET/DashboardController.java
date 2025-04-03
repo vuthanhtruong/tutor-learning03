@@ -1,9 +1,9 @@
 package com.example.demo.ControllerGET;
 
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.example.demo.ModelOOP.Admin;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import com.example.demo.ModelOOP.Admin;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 @Controller
 @RequestMapping("/")
@@ -51,6 +52,14 @@ public class DashboardController {
 
         Long totalMessages = (Long) entityManager.createQuery("SELECT COUNT(m) FROM Messages m").getSingleResult();
 
+        Long totalComment = (long) entityManager.createQuery("SELECT COUNT(c) FROM Comments c").getSingleResult();
+
+        Long studentsInClass = (Long) entityManager
+                .createQuery("SELECT COUNT(DISTINCT cd.member) FROM ClassroomDetails cd WHERE cd.member IS NOT NULL AND TYPE(cd.member) = Students")
+                .getSingleResult();
+
+        Long studentsNotInClass = totalStudents - studentsInClass;
+
         // Truyền dữ liệu tổng số vào model
         model.addAttribute("totalStudents", totalStudents);
         model.addAttribute("totalTeachers", totalTeachers);
@@ -59,6 +68,9 @@ public class DashboardController {
         model.addAttribute("OffRoom", OffRoom);
         model.addAttribute("totalBlog", totalBlog);
         model.addAttribute("totalMessages", totalMessages);
+        model.addAttribute("totalComment", totalComment);
+        model.addAttribute("studentsInClass", studentsInClass);
+        model.addAttribute("studentsNotInClass", studentsNotInClass);
 
         return "Dashboard"; // Trả về view Dashboard
     }
@@ -74,13 +86,11 @@ public class DashboardController {
         if (admin == null) {
             throw new IllegalStateException("Admin không tồn tại");
         }
-        // Tổng số học viên
+
         Long totalStudents = (Long) entityManager.createQuery("SELECT COUNT(s) FROM Students s").getSingleResult();
 
-        // Tổng số giáo viên
         Long totalTeachers = (Long) entityManager.createQuery("SELECT COUNT(t) FROM Teachers t").getSingleResult();
 
-        // Tổng số nhân viên
         Long totalEmployees = (Long) entityManager.createQuery("SELECT COUNT(e) FROM Employees e").getSingleResult();
 
         Long totalBlog = (Long) entityManager.createQuery("SELECT COUNT(b) FROM Blogs b").getSingleResult();
@@ -91,6 +101,15 @@ public class DashboardController {
 
         Long totalMessages = (Long) entityManager.createQuery("SELECT COUNT(m) FROM Messages m").getSingleResult();
 
+        Long totalComment = (long) entityManager.createQuery("SELECT COUNT(c) FROM Comments c").getSingleResult();
+
+        Long studentsInClass = (Long) entityManager
+                .createQuery(
+                        "SELECT COUNT(DISTINCT cd.member) FROM ClassroomDetails cd WHERE cd.member IS NOT NULL AND TYPE(cd.member) = Students")
+                .getSingleResult();
+
+        Long studentsNotInClass = totalStudents - studentsInClass;
+
         LocalDate now = LocalDate.now();
         LocalDate last24Hours = now.minusDays(1);
 
@@ -100,24 +119,26 @@ public class DashboardController {
                 .getSingleResult();
         // Tổng số học viên mới (trong 24 giờ)
         Long newStudents = (Long) entityManager.createQuery(
-                        "SELECT COUNT(s) FROM Students s WHERE s.createdDate >= :last24Hours")
+                "SELECT COUNT(s) FROM Students s WHERE s.createdDate >= :last24Hours")
                 .setParameter("last24Hours", last24Hours)
                 .getSingleResult();
 
         // Tổng số giáo viên mới (trong 24 giờ)
         Long newTeachers = (Long) entityManager.createQuery(
-                        "SELECT COUNT(t) FROM Teachers t WHERE t.createdDate >= :last24Hours")
+                "SELECT COUNT(t) FROM Teachers t WHERE t.createdDate >= :last24Hours")
                 .setParameter("last24Hours", last24Hours)
                 .getSingleResult();
 
         // Tổng số nhân viên mới (trong 24 giờ)
         Long newEmployees = (Long) entityManager.createQuery(
-                        "SELECT COUNT(e) FROM Employees e WHERE e.createdDate >= :last24Hours")
+                "SELECT COUNT(e) FROM Employees e WHERE e.createdDate >= :last24Hours")
                 .setParameter("last24Hours", last24Hours)
                 .getSingleResult();
 
         // Trả về dữ liệu dưới dạng JSON
         Map<String, Object> stats = new HashMap<>();
+        stats.put("studentsInClass", studentsInClass);
+        stats.put("studentsNotInClass", studentsNotInClass);
         stats.put("totalStudents", totalStudents);
         stats.put("totalTeachers", totalTeachers);
         stats.put("totalEmployees", totalEmployees);
@@ -129,6 +150,7 @@ public class DashboardController {
         stats.put("newTeachers", newTeachers);
         stats.put("newEmployees", newEmployees);
         stats.put("visitor", visitor);
+        stats.put("totalComment", totalComment);
         return stats;
     }
 }

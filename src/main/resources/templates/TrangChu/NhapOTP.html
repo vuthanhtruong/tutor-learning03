@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -59,54 +60,56 @@
         }
     </style>
 </head>
+
 <body>
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="mb-0">Xác thực OTP</h3>
-                </div>
-                <div class="card-body">
-                    <p class="text-center mb-4">
-                        Mã OTP đã được gửi đến email <span class="fw-bold" th:text="${email}"></span>.
-                        Vui lòng kiểm tra và nhập mã vào ô bên dưới.
-                    </p>
-
-                    <!-- Hiển thị thông báo lỗi nếu có -->
-                    <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
-
-                    <form method="post" th:action="@{/auth/verify-otp}">
-                        <input name="email" th:value="${email}" type="hidden">
-
-                        <div class="mb-3">
-                            <label class="form-label" for="otp">Mã OTP</label>
-                            <input autofocus class="form-control otp-input" id="otp" maxlength="6" name="otp"
-                                   pattern="\d{6}" required title="Mã OTP gồm 6 chữ số" type="text">
-                            <div class="form-text">
-                                Mã OTP có hiệu lực trong <span class="timer" id="timer">10:00</span> phút.
-                            </div>
-                        </div>
-
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-primary" type="submit">Xác nhận</button>
-                            <a class="btn btn-outline-secondary" href="/auth/QuenMatKhau">Quay lại</a>
-                        </div>
-                    </form>
-
-
-                    <div class="text-center mt-3">
-                        <p>Không nhận được mã?
-                        <form method="post" th:action="@{/auth/resend-otp}" class="d-inline">
-                            <button type="submit" class="btn btn-link resend">Gửi lại mã</button>
-                        </form>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="mb-0">Xác thực OTP</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-center mb-4">
+                            Mã OTP đã được gửi đến email <span class="fw-bold" th:text="${email}"></span>.
+                            Vui lòng kiểm tra và nhập mã vào ô bên dưới.
                         </p>
+
+                        <!-- Hiển thị thông báo lỗi nếu có -->
+                        <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
+
+                        <form method="post" th:action="@{/auth/verify-otp}">
+                            <input name="email" th:value="${email}" type="hidden">
+
+                            <div class="mb-3">
+                                <label class="form-label" for="otp">Mã OTP</label>
+                                <input autofocus class="form-control otp-input" id="otp" maxlength="6" name="otp"
+                                    pattern="\d{6}" required title="Mã OTP gồm 6 chữ số" type="text">
+                                <div class="form-text">
+                                    Mã OTP có hiệu lực trong <span class="timer" id="timer">10:00</span> phút.
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" type="submit">Xác nhận</button>
+                                <a class="btn btn-outline-secondary" href="/auth/QuenMatKhau">Quay lại</a>
+                            </div>
+                        </form>
+
+
+                        <div class="text-center mt-3">
+                            <p>Không nhận được mã?
+                            <form method="post" th:action="@{/auth/resend-otp}" class="d-inline">
+                                <button type="submit" class="btn btn-link resend">Gửi lại mã</button>
+                            </form>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-</div>
+    </div>
 </body>
+
 </html>

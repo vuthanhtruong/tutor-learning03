@@ -1,25 +1,239 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>✏️ Chỉnh Sửa Blog</title>
+    <link rel="stylesheet" href="ChinhSuaBlog.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
 </head>
+
+<style>
+    :root {
+        --primary-color: #1a73e8;
+        --primary-light: #e8f0fe;
+        --primary-dark: #0d47a1;
+        --secondary-color: #34a853;
+        --accent-color: #fbbc05;
+        --warning-color: #ea4335;
+        --text-color: #202124;
+        --text-light: #5f6368;
+        --white: #ffffff;
+        --gray-100: #f8f9fa;
+        --gray-200: #f1f3f4;
+        --gray-300: #dadce0;
+        --gray-400: #bdc1c6;
+        --spacing-xs: 0.25rem;
+        --spacing-sm: 0.5rem;
+        --spacing-md: 1rem;
+        --spacing-lg: 1.5rem;
+        --spacing-xl: 2rem;
+        --border-radius-sm: 50px;
+        --border-radius: 50px;
+        --border-radius-lg: 50px;
+        --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        --box-shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.15);
+        --transition: all 0.3s ease;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Roboto', 'Arial', sans-serif;
+    }
+
+    body {
+        background-color: var(--gray-100);
+        color: var(--text-color);
+        line-height: 1.6;
+    }
+
+    .header {
+        background-color: var(--white);
+        box-shadow: var(--box-shadow);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+    }
+
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: var(--spacing-md) var(--spacing-xl);
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .header-logo {
+        display: flex;
+        align-items: center;
+    }
+
+    .header-logo h1 {
+        color: var(--primary-color);
+        font-size: 1.5rem;
+        margin: 0;
+    }
+
+    .main-content {
+        padding-top: 100px;
+        min-height: calc(100vh - 200px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-bottom: var(--spacing-xl);
+    }
+
+    .container {
+        width: 100%;
+        max-width: 800px;
+        background-color: var(--white);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        overflow: hidden;
+        margin: 0 var(--spacing-md);
+    }
+
+    .welcome-section {
+        background-color: var(--primary-color);
+        color: var(--white);
+        padding: var(--spacing-lg) var(--spacing-xl);
+        text-align: center;
+    }
+
+    .welcome-section h2 {
+        font-size: 1.8rem;
+        margin-bottom: var(--spacing-md);
+        color: var(--white);
+    }
+
+    .form-container {
+        padding: var(--spacing-lg) var(--spacing-xl);
+    }
+
+    .mb-3 {
+        margin-bottom: var(--spacing-md);
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: var(--spacing-xs);
+        color: var(--text-color);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+        border: 1px solid var(--gray-300);
+        border-radius: var(--border-radius-sm);
+        outline: none;
+        transition: var(--transition);
+        margin-bottom: var(--spacing-md);
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        border: none;
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        color: var(--white);
+    }
+
+    .btn-primary:hover {
+        background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+        background-color: var(--gray-200);
+        color: var(--text-color);
+    }
+
+    .btn-secondary:hover {
+        background-color: var(--gray-300);
+    }
+
+    .form-actions {
+        display: flex;
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-lg);
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            margin: 0 var(--spacing-xs);
+        }
+
+        .form-container {
+            padding: var(--spacing-md);
+        }
+    }
+</style>
+
 <body>
-<h2>✏️ Chỉnh Sửa Blog</h2>
+    <header class="header">
+        <div class="header-container">
+            <div class="header-logo">
+                <h1>✏️ Chỉnh Sửa Blog</h1>
+            </div>
+        </div>
+    </header>
 
-<!-- Form gửi dữ liệu lên server -->
-<form action="/XuLySuaBlog" method="post">
-    <!-- Trường ẩn để giữ ID của blog -->
-    <input name="id" th:value="${Fixblogs.blogId}" type="hidden">
+    <div class="main-content">
+        <div class="container">
+            <div class="welcome-section">
+                <h2>✏️ Chỉnh Sửa Blog</h2>
+            </div>
+            <div class="form-container">
+                <!-- Form gửi dữ liệu lên server -->
+                <form action="/XuLySuaBlog" method="post">
+                    <!-- Trường ẩn để giữ ID của blog -->
+                    <input name="id" th:value="${Fixblogs.blogId}" type="hidden">
 
-    <label for="title">📌 Tiêu đề:</label><br>
-    <input id="title" name="title" required th:value="${Fixblogs.title}" type="text"><br><br>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">📌 Tiêu đề:</label>
+                        <input id="title" name="title" required th:value="${Fixblogs.title}" type="text"
+                            class="form-control">
+                    </div>
 
-    <label for="content">📝 Nội dung:</label><br>
-    <textarea id="content" name="content" required rows="5">[[${Fixblogs.content}]]</textarea><br><br>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">📝 Nội dung:</label>
+                        <textarea class="form-control" id="content" name="content" required rows="10"
+                            th:text="${Fixblogs.content}"></textarea>
+                    </div>
 
-    <button type="submit">💾 Lưu thay đổi</button>
-    <a href="/BlogCaNhan">🔙 Hủy</a>
-</form>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">💾 Lưu thay đổi</button>
+                        <a href="/BlogCaNhan" class="btn btn-secondary">🔙 Hủy</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>

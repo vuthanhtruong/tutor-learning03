@@ -1,11 +1,12 @@
 package com.example.demo.ControllerGET;
 
-
 import com.example.demo.ModelOOP.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,6 +40,11 @@ public class TrangChu {
         return "TrangChu";
     }
 
+    @GetMapping("/favicon.ico")
+    public ResponseEntity<Void> favicon() {
+        return ResponseEntity.noContent().build(); // Trả về 204 No Content
+    }
+
     @GetMapping("/DoiMatKhau")
     public String DoiMatKhau(HttpSession session) {
 
@@ -47,9 +53,9 @@ public class TrangChu {
 
     @PostMapping("/XuLyDoiMatKhau")
     public String XuLyDoiMatKhau(HttpSession session,
-                                 @RequestParam String currentPassword,
-                                 @RequestParam String newPassword,
-                                 @RequestParam String confirmPassword) {
+            @RequestParam String currentPassword,
+            @RequestParam String newPassword,
+            @RequestParam String confirmPassword) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = authentication.getName();
 

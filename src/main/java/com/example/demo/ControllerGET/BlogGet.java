@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-
 @Controller
 @RequestMapping("/")
 @Transactional
@@ -40,7 +39,7 @@ public class BlogGet {
         return "BlogCaNhan";
     }
 
-    @GetMapping("/SuaBlogCaNhan/{id}")
+    @GetMapping("/SuaBlogCaNhan/edit/{id}")
     public String SuaBlogCaNhan(ModelMap model, @PathVariable("id") String id) {
         Blogs Fixblogs = entityManager.find(Blogs.class, id);
         if (Fixblogs == null) {
@@ -59,5 +58,4 @@ public class BlogGet {
         entityManager.remove(blogs);
         return "redirect:/BlogCaNhan";
     }
-
 }

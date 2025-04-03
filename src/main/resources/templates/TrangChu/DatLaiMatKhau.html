@@ -4,116 +4,153 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Đặt Lại Mật Khẩu</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            padding-top: 50px;
-        }
-
-        .card {
-            max-width: 500px;
-            margin: 0 auto;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-
-        .card-header {
-            background-color: #007bff;
-            color: white;
-            text-align: center;
-            border-radius: 10px 10px 0 0 !important;
-            padding: 20px;
-        }
-
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-
-        .btn-primary:hover {
-            background-color: #0069d9;
-            border-color: #0062cc;
-        }
-
-        .password-strength {
-            height: 5px;
-            margin-top: 10px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .password-message {
-            font-size: 0.85rem;
-            margin-top: 5px;
-        }
-
-        .password-rules {
-            font-size: 0.85rem;
-            margin-top: 10px;
-        }
-
-        .password-rule {
-            color: #6c757d;
-        }
-
-        .password-rule.valid {
-            color: #198754;
-        }
-
-        .password-rule i {
-            margin-right: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="DatLaiMatKhau.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 </head>
 <body>
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="mb-0">Đặt Lại Mật Khẩu</h3>
-                </div>
-                <div class="card-body">
-                    <p class="text-center mb-4">Vui lòng nhập mật khẩu mới cho tài khoản của bạn</p>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-container">
+            <div class="header-logo">
+                <img src="/api/placeholder/40/40" alt="Logo">
+                <h1>Hệ Thống</h1>
+            </div>
+            <nav class="header-nav">
+                <ul>
+                    <li><a href="/TrangChu">Trang chủ</a></li>
+                    <li><a href="/GioiThieu">Giới thiệu</a></li>
+                    <li><a href="/DichVu">Dịch vụ</a></li>
+                    <li><a href="/LienHe">Liên hệ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 
-                    <!-- Hiển thị thông báo lỗi nếu có -->
-                    <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
-                    <!-- Hiển thị thông báo thành công nếu có -->
-                    <div class="alert alert-success" role="alert" th:if="${success}" th:text="${success}"></div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="welcome-section">
+                <h3>Đặt Lại Mật Khẩu</h3>
+                <p>Vui lòng nhập mật khẩu mới cho tài khoản của bạn</p>
+            </div>
+            
+            <div class="form-container">
+                <!-- Hiển thị thông báo lỗi nếu có -->
+                <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
+                <!-- Hiển thị thông báo thành công nếu có -->
+                <div class="alert alert-success" role="alert" th:if="${success}" th:text="${success}"></div>
 
-                    <form method="post" th:action="@{/auth/reset-password}">
-                        <input name="email" th:value="${email}" type="hidden">
-                        <input name="otp" th:value="${otp}" type="hidden">  <!-- Thêm OTP -->
+                <form method="post" th:action="@{/auth/reset-password}">
+                    <input name="email" th:value="${email}" type="hidden">
+                    <input name="otp" th:value="${otp}" type="hidden">
 
-                        <div class="mb-3">
-                            <label class="form-label" for="newPassword">Mật khẩu mới</label>
-                            <input class="form-control" id="newPassword" minlength="8" name="newPassword" required
-                                   type="password">
+                    <div class="mb-3">
+                        <label class="form-label" for="newPassword">Mật khẩu mới</label>
+                        <input class="form-control" id="newPassword" minlength="8" name="newPassword" required type="password">
+                        <div class="password-strength"></div>
+                        <div class="password-message"></div>
+                        <div class="password-rules">
+                            <div class="password-rule" id="length"><i class="fas fa-circle"></i> Ít nhất 8 ký tự</div>
+                            <div class="password-rule" id="uppercase"><i class="fas fa-circle"></i> Ít nhất 1 ký tự viết hoa</div>
+                            <div class="password-rule" id="lowercase"><i class="fas fa-circle"></i> Ít nhất 1 ký tự viết thường</div>
+                            <div class="password-rule" id="number"><i class="fas fa-circle"></i> Ít nhất 1 số</div>
                         </div>
+                    </div>
 
-                        <div class="mb-3">
-                            <label class="form-label" for="confirmPassword">Xác nhận mật khẩu</label>
-                            <input class="form-control" id="confirmPassword" name="confirmPassword" required
-                                   type="password">
-                            <div class="form-text" id="passwordMatch"></div>
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="confirmPassword">Xác nhận mật khẩu</label>
+                        <input class="form-control" id="confirmPassword" name="confirmPassword" required type="password">
+                        <div class="form-text" id="passwordMatch"></div>
+                    </div>
 
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-primary" id="submitBtn" type="submit">Đặt lại mật khẩu</button>
-                            <a class="btn btn-outline-secondary" href="/TrangChu">Hủy</a>
-                        </div>
-                    </form>
-
-                </div>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary" id="submitBtn" type="submit">Đặt lại mật khẩu</button>
+                        <a class="btn btn-secondary" href="/TrangChu">Hủy</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div>
+                <div class="footer-logo">
+                    <img src="/api/placeholder/40/40" alt="Logo">
+                    <div class="footer-text">
+                        <span>Hệ Thống</span>
+                        <span>Bảo mật & Đơn giản</span>
+                    </div>
+                </div>
+                <p>Chúng tôi cung cấp giải pháp đăng nhập và bảo mật an toàn cho người dùng.</p>
+            </div>
+
+            <div>
+                <h4>Liên kết</h4>
+                <div class="footer-links">
+                    <a href="/TrangChu">Trang chủ</a>
+                    <a href="/GioiThieu">Giới thiệu</a>
+                    <a href="/DichVu">Dịch vụ</a>
+                    <a href="/HoTro">Hỗ trợ</a>
+                </div>
+            </div>
+
+            <div>
+                <h4>Liên hệ</h4>
+                <div class="footer-links">
+                    <a href="tel:+84123456789">Hotline: 0123 456 789</a>
+                    <a href="mailto:info@hethong.vn">Email: info@hethong.vn</a>
+                    <a href="#">Địa chỉ: 123 Đường ABC, Hà Nội</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Validate password strength
+        const newPassword = document.getElementById('newPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const passwordMatch = document.getElementById('passwordMatch');
+        const submitBtn = document.getElementById('submitBtn');
+        const lengthRule = document.getElementById('length');
+        const uppercaseRule = document.getElementById('uppercase');
+        const lowercaseRule = document.getElementById('lowercase');
+        const numberRule = document.getElementById('number');
+        
+        newPassword.addEventListener('input', function() {
+            const password = this.value;
+            
+            // Check rules
+            const hasLength = password.length >= 8;
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            
+            // Update rule indicators
+            lengthRule.className = hasLength ? 'password-rule valid' : 'password-rule';
+            uppercaseRule.className = hasUpperCase ? 'password-rule valid' : 'password-rule';
+            lowercaseRule.className = hasLowerCase ? 'password-rule valid' : 'password-rule';
+            numberRule.className = hasNumber ? 'password-rule valid' : 'password-rule';
+            
+            // Update icon
+            lengthRule.innerHTML = hasLength ? '<i class="fas fa-check-circle"></i> Ít nhất 8 ký tự' : '<i class="fas fa-circle"></i> Ít nhất 8 ký tự';
+            uppercaseRule.innerHTML = hasUpperCase ? '<i class="fas fa-check-circle"></i> Ít nhất 1 ký tự viết hoa' : '<i class="fas fa-circle"></i> Ít nhất 1 ký tự viết hoa';
+            lowercaseRule.innerHTML = hasLowerCase ? '<i class="fas fa-check-circle"></i> Ít nhất 1 ký tự viết thường' : '<i class="fas fa-circle"></i> Ít nhất 1 ký tự viết thường';
+            numberRule.innerHTML = hasNumber ? '<i class="fas fa-check-circle"></i> Ít nhất 1 số' : '<i class="fas fa-circle"></i> Ít nhất 1 số';
+        });
+        
+        // Check if passwords match
+        confirmPassword.addEventListener('input', function() {
+            if (newPassword.value === this.value) {
+                passwordMatch.textContent = 'Mật khẩu khớp';
+                passwordMatch.style.color = 'var(--secondary-color)';
+            } else {
+                passwordMatch.textContent = 'Mật khẩu không khớp';
+                passwordMatch.style.color = 'var(--warning-color)';
+            }
+        });
+    </script>
 </body>
 </html>
