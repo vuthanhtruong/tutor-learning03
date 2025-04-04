@@ -1,4 +1,4 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -33,46 +33,45 @@
             </div>
 
             <div class="form-container">
-                <!-- 🔹 Hộp nhập Blog -->
-                <section class="login-form">
+                <!-- Hộp nhập Blog -->
+                <section class="create-post">
                     <h2><i class="fas fa-edit"></i> Tạo bài viết mới</h2>
                     <form action="/XuLyThemBlog" method="post">
-                        <div class="mb-3">
-                            <label for="title" class="form-label">Tiêu đề</label>
-                            <input type="text" class="form-control" id="title" name="title" placeholder="Bạn đang nghĩ gì?" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="content" class="form-label">Nội dung</label>
-                            <textarea class="form-control" id="content" name="content" placeholder="Viết nội dung blog..." required rows="5"></textarea>
-                        </div>
-                        <div class="login-buttons">
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Đăng</button>
+                        <div class="post-input">
+                            <input type="text" class="form-control" id="title" name="title"
+                                placeholder="Tiêu đề bài viết..." required>
+                            <textarea class="form-control" id="content" name="content" placeholder="Bạn đang nghĩ gì?"
+                                required rows="3"></textarea>
+                            <div class="post-actions">
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i>
+                                    Đăng</button>
+                            </div>
                         </div>
                     </form>
                 </section>
 
-                <!-- 🔹 Danh sách Blog dưới dạng bảng -->
-                <section class="registration-links">
-                    <h3><i class="fas fa-list"></i> Bài viết mới nhất</h3>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>👤 Tác giả</th>
-                                    <th>📅 Ngày đăng</th>
-                                    <th>📖 Tiêu đề</th>
-                                    <th>📝 Nội dung</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="blog : ${blogs}">
-                                    <td th:text="${blog.creator.firstName} + ' ' + ${blog.creator.lastName}"></td>
-                                    <td th:text="${#temporals.format(blog.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
-                                    <td th:text="${blog.title}"></td>
-                                    <td th:text="${blog.content}"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <!-- Feed của Blog -->
+                <section class="feed">
+                    <h3><i class="fas fa-stream"></i> Bảng tin</h3>
+
+                    <div class="posts-container">
+                        <div class="post" th:each="blog : ${blogs}">
+                            <div class="post-header">
+                                <div class="post-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div class="post-info">
+                                    <div class="post-author"
+                                        th:text="${blog.creator.firstName} + ' ' + ${blog.creator.lastName}"></div>
+                                    <div class="post-time"
+                                        th:text="${#temporals.format(blog.createdAt, 'dd/MM/yyyy HH:mm')}"></div>
+                                </div>
+                            </div>
+                            <div class="post-content">
+                                <h4 class="post-title" th:text="${blog.title}"></h4>
+                                <p class="post-text" th:text="${blog.content}"></p>
+                            </div>
+                        </div>
                     </div>
                 </section>
             </div>
@@ -89,7 +88,7 @@
                 <p>Chia sẻ ý tưởng và kết nối với mọi người</p>
                 <p class="footer-copyright">&copy; 2025 Blog - Bản quyền được bảo lưu</p>
             </div>
-            
+
             <div class="newsletter">
                 <p>Đăng ký nhận thông báo</p>
                 <div class="subscribe-form">
@@ -97,7 +96,7 @@
                     <button class="subscribe-btn">Đăng ký</button>
                 </div>
             </div>
-            
+
             <div class="footer-links">
                 <a href="#"><i class="fas fa-info-circle"></i> Về chúng tôi</a>
                 <a href="#"><i class="fas fa-file-contract"></i> Điều khoản sử dụng</a>
