@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org"></html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -33,43 +32,43 @@
                 <p>Quản lý và chỉnh sửa các bài viết của bạn</p>
             </div>
 
-            <div class="form-container">
-                <!-- 🔹 Danh sách Blog dưới dạng bảng -->
+            <div class="feed-container">
+                <!-- Feed bài viết kiểu mạng xã hội -->
                 <section class="blog-feed">
                     <h2><i class="fas fa-list"></i> Bài viết đã đăng</h2>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>👤 Tác giả</th>
-                                    <th>📅 Ngày đăng</th>
-                                    <th>📖 Tiêu đề</th>
-                                    <th>📝 Nội dung</th>
-                                    <th>⚙️ Hành động</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="blog : ${blogs}">
-                                    <td th:text="${blog.creator.firstName} + ' ' + ${blog.creator.lastName}"></td>
-                                    <td th:text="${#temporals.format(blog.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
-                                    <td th:text="${blog.title}"></td>
-                                    <td th:text="${blog.content}"></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <a class="btn btn-primary"
-                                                th:href="@{/SuaBlogCaNhan/edit/{id}(id=${blog.blogId})}">
+                    
+                    <div class="post-feed">
+                        <!-- Mỗi blog post là một thẻ riêng biệt -->
+                        <div class="post-card" th:each="blog : ${blogs}">
+                            <div class="post-header">
+                                <div class="post-author">
+                                    <div class="author-avatar">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                    <div class="author-info">
+                                        <div class="author-name" th:text="${blog.creator.firstName} + ' ' + ${blog.creator.lastName}"></div>
+                                        <div class="post-date" th:text="${#temporals.format(blog.createdAt, 'dd/MM/yyyy HH:mm')}"></div>
+                                    </div>
+                                </div>
+                                <div class="post-options">
+                                    <div class="dropdown">
+                                        <button class="dropdown-btn"><i class="fas fa-ellipsis-h"></i></button>
+                                        <div class="dropdown-content">
+                                            <a th:href="@{/SuaBlogCaNhan/edit/{id}(id=${blog.blogId})}">
                                                 <i class="fas fa-edit"></i> Sửa
                                             </a>
-                                            <a class="btn btn-danger"
-                                                onclick="return confirm('Bạn có chắc chắn muốn xóa blog này?');"
-                                                th:href="@{/XoaBlogCaNhan/{id}(id=${blog.blogId})}">
+                                            <a onclick="return confirm('Bạn có chắc chắn muốn xóa blog này?');" 
+                                               th:href="@{/XoaBlogCaNhan/{id}(id=${blog.blogId})}">
                                                 <i class="fas fa-trash"></i> Xóa
                                             </a>
                                         </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="post-title" th:text="${blog.title}"></div>
+                            <div class="post-content" th:text="${blog.content}"></div>
+                        </div>
                     </div>
                 </section>
             </div>
@@ -103,6 +102,44 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // JavaScript để xử lý nút thích
+        document.querySelectorAll('.like-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('far')) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    icon.style.color = '#e53935';
+                } else {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    icon.style.color = 'inherit';
+                }
+            });
+        });
+        
+        // JavaScript để xử lý dropdown menu
+        document.querySelectorAll('.dropdown-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                content.classList.toggle('show');
+            });
+        });
+        
+        // Đóng dropdown khi click ra ngoài
+        window.addEventListener('click', function(event) {
+            if (!event.target.matches('.dropdown-btn') && !event.target.matches('.fa-ellipsis-h')) {
+                const dropdowns = document.querySelectorAll('.dropdown-content');
+                dropdowns.forEach(dropdown => {
+                    if (dropdown.classList.contains('show')) {
+                        dropdown.classList.remove('show');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
