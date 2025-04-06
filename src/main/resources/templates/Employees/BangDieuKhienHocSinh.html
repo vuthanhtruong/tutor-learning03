@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>📋 Trang Cá Nhân Học Sinh</title>
+    <link href="/BangDieuKhienHocSinh.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/styles.css">
 </head>
@@ -13,6 +14,12 @@
         <h1 class="text-primary"><i class="fas fa-user-graduate"></i> Trang Cá Nhân Của Học Sinh</h1>
         <h3 class="mt-3">👤 Học Sinh: <span th:text="${student.firstName} + ' ' + ${student.lastName}"></span></h3>
         <p class="lead">🆔 ID Học Sinh: <span th:text="${student.id}"></span></p>
+    </div>
+
+    <div class="text-center mt-4">
+        <a th:href="@{/DanhSachNguoiDungHeThong}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
     </div>
 
     <!-- Employee Details -->
