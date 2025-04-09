@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>My Schedule</title>
+    <title>Thời Khóa Biểu Của Tôi</title>
     <link href="/ThoiKhoaBieuNguoiDung.css" rel="stylesheet">
 
 </head>
 <body>
 <header>
-    <h1>Schedule for <span th:text="${userType == 'Teacher' ? 'Teacher' : 'Student'}"></span> <span
+    <h1>Thời Khóa Biểu Của <span th:text="${userType == 'Teacher' ? 'Giáo Viên' : 'Học Sinh'}"></span> <span
             th:text="${userName}"></span></h1>
 </header>
 
 <nav class="home-button">
-    <a th:href="${URL}">Back to Home</a>
+    <a th:href="${URL}">Quay về trang chủ</a>
 </nav>
 
 
 <section class="filter-form">
     <form method="get" th:action="@{/ThoiKhoaBieuNguoiDung}">
-        <label for="year">Select Time Period:</label>
+        <label for="year">Chọn thời điểm:</label>
         <select id="year" name="year" onchange="this.form.submit()">
             <option th:each="y : ${#numbers.sequence(selectedYear - 5, selectedYear + 5)}"
                     th:selected="${y == selectedYear}"
@@ -44,7 +44,7 @@
 </section>
 
 <section th:if="${timetables == null or timetables.isEmpty()}">
-    <p>No schedule available for this week.</p>
+    <p>Không có lịch học nào cho tuần này.</p>
 </section>
 
 <section>
@@ -70,13 +70,13 @@
                         <div class="room-info">
                             <a style="color: #2980B9; text-decoration: none;"
                                th:href="@{/ChiTietBuoiHoc(timetableId=${timetable.timetableId})}"
-                               th:text="'Room: ' + ${timetable.room.roomName}"></a>
+                               th:text="'Phòng: ' + ${timetable.room.roomName}"></a>
                             <br>
                             <span th:text="'Slot: ' + ${timetable.slot.slotName}"></span>
                             <br>
-                            <span th:text="'Time: ' + ${#temporals.format(timetable.slot.startTime, 'HH:mm')} + ' - ' + ${#temporals.format(timetable.slot.endTime, 'HH:mm')}"></span>
+                            <span th:text="'Thời gian: ' + ${#temporals.format(timetable.slot.startTime, 'HH:mm')} + ' - ' + ${#temporals.format(timetable.slot.endTime, 'HH:mm')}"></span>
                             <br>
-                            <span th:text="'Date: ' + ${#temporals.format(timetable.date, 'dd/MM/yyyy')}"></span>
+                            <span th:text="'Ngày: ' + ${#temporals.format(timetable.date, 'dd/MM/yyyy')}"></span>
                         </div>
                     </div>
                 </div>

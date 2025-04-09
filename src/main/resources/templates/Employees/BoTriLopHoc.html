@@ -1,32 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Class Arrangement</title>
+    <title>Bố Trí Lớp Học</title>
     <link rel="stylesheet" th:href="@{/BoTriLopHoc.css}">
 </head>
 <body>
 <header class="text-center">
-    <h1>Class Arrangement</h1>
+    <h1>Bố Trí Lớp Học</h1>
 </header>
 <nav class="mb-3">
-    <a class="btn btn-secondary" th:href="@{/TrangChuNhanVien}">Back to Employee Home</a>
+    <a class="btn btn-secondary" th:href="@{/TrangChuNhanVien}">Quay Lại Trang Chủ Nhân Viên</a>
 </nav>
 <main class="container">
-    <!-- Offline Classroom Table -->
+    <!-- Bảng phòng học Offline -->
     <section class="table-container">
-        <h2>Offline Classrooms</h2>
+        <h2>Phòng Học Offline</h2>
         <table class="table table-bordered">
             <thead class="table-dark">
             <tr>
-                <th>Room ID</th>
-                <th>Room Name</th>
-                <th>Address</th>
-                <th>Total Slots</th>
-                <th>Details</th>
-                <th>Actions</th>
-                <th>Sent Notifications</th> <!-- New column -->
+                <th>ID Phòng</th>
+                <th>Tên Phòng</th>
+                <th>Địa Chỉ</th>
+                <th>Tổng Số Slot</th>
+                <th>Chi Tiết</th>
+                <th>Hành Động</th>
+                <th>Thông Báo Đã Gửi</th> <!-- Cột mới -->
             </tr>
             </thead>
             <tbody>
@@ -37,7 +37,7 @@
                     <form method="post" th:action="@{/CapNhatDiaChi}">
                         <input name="roomId" th:value="${room.roomId}" type="hidden"/>
                         <input name="roomAddress" required th:value="${room.address}" type="text"/>
-                        <button class="btn btn-primary btn-sm" type="submit">Update Address</button>
+                        <button class="btn btn-primary btn-sm" type="submit">Cập Nhật Địa Chỉ</button>
                     </form>
                 </td>
                 <td>
@@ -50,22 +50,22 @@
                         <button onclick="this.parentNode.querySelector('input[name=slotQuantity]').stepUp();"
                                 type="button">+
                         </button>
-                        <button class="btn btn-primary btn-sm" type="submit">Update</button>
+                        <button class="btn btn-primary btn-sm" type="submit">Cập Nhật</button>
                     </form>
                 </td>
                 <td>
                     <a class="btn btn-info btn-sm" th:href="@{/ChiTietLopHoc/{id}(id=${room.roomId})}">
-                        View Details
+                        Xem Chi Tiết
                     </a>
                 </td>
                 <td>
                     <a class="btn btn-warning btn-sm" th:href="@{/GuiThongBao/{id}(id=${room.roomId})}">
-                        Send Notification
+                        Gửi Thông Báo
                     </a>
                 </td>
                 <td>
                     <a class="btn btn-success btn-sm" th:href="@{/DanhSachThongBaoDaGui/{id}(id=${room.roomId})}">
-                        View Sent Notifications
+                        Xem Thông Báo Đã Gửi
                     </a>
                 </td>
             </tr>
@@ -73,19 +73,19 @@
         </table>
     </section>
 
-    <!-- Online Classroom Table -->
+    <!-- Bảng phòng học Online -->
     <section class="table-container">
-        <h2>Online Classrooms</h2>
+        <h2>Phòng Học Online</h2>
         <table class="table table-bordered">
             <thead class="table-dark">
             <tr>
-                <th>Room ID</th>
-                <th>Room Name</th>
-                <th>Room Link</th>
-                <th>Total Slots</th>
-                <th>Details</th>
-                <th>Actions</th>
-                <th>Sent Notifications</th> <!-- New column -->
+                <th>ID Phòng</th>
+                <th>Tên Phòng</th>
+                <th>Link Phòng</th>
+                <th>Tổng Số Slot</th>
+                <th>Chi Tiết</th>
+                <th>Hành Động</th>
+                <th>Thông Báo Đã Gửi</th> <!-- Cột mới -->
             </tr>
             </thead>
             <tbody>
@@ -96,7 +96,7 @@
                     <form method="post" th:action="@{/CapNhatLink}">
                         <input name="roomId" th:value="${room.roomId}" type="hidden"/>
                         <input name="roomLink" required th:value="${room.link}" type="url"/>
-                        <button class="btn btn-primary btn-sm" type="submit">Update Link</button>
+                        <button class="btn btn-primary btn-sm" type="submit">Cập Nhật Link</button>
                     </form>
                 </td>
                 <td>
@@ -109,22 +109,22 @@
                         <button onclick="this.parentNode.querySelector('input[name=slotQuantity]').stepUp();"
                                 type="button">+
                         </button>
-                        <button class="btn btn-primary btn-sm" type="submit">Update</button>
+                        <button class="btn btn-primary btn-sm" type="submit">Cập Nhật</button>
                     </form>
                 </td>
                 <td>
                     <a class="btn btn-info btn-sm" th:href="@{/ChiTietLopHoc/{id}(id=${room.roomId})}">
-                        View Details
+                        Xem Chi Tiết
                     </a>
                 </td>
                 <td>
                     <a class="btn btn-warning btn-sm" th:href="@{/GuiThongBao/{id}(id=${room.roomId})}">
-                        Send Notification
+                        Gửi Thông Báo
                     </a>
                 </td>
                 <td>
                     <a class="btn btn-success btn-sm" th:href="@{/DanhSachThongBaoDaGui/{id}(id=${room.roomId})}">
-                        View Sent Notifications
+                        Xem Thông Báo Đã Gửi
                     </a>
                 </td>
             </tr>

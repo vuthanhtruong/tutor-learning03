@@ -2,18 +2,18 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Delete Face</title>
+    <title>Xóa Khuôn Mặt</title>
     <link href="/css/style.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 
 <header>
-    <h1>Delete Existing Face</h1>
+    <h1>Xóa Khuôn Mặt Hiện Có</h1>
 </header>
 
 <main>
-    <!-- Error messages from FaceLoginController -->
+    <!-- Thông báo lỗi từ FaceLoginController -->
     <div class="alert alert-danger" th:if="${faceDataInvalid}">
         <span th:text="${faceDataInvalid}"></span>
     </div>
@@ -33,20 +33,23 @@
         <span th:text="${faceDeleteFailed}"></span>
     </div>
 
-    <!-- Face Delete Form -->
+    <!-- Form Xóa Khuôn Mặt -->
     <section class="face-delete-section">
-        <p>Please verify your face to delete.</p>
+        <p>Vui lòng xác thực khuôn mặt của bạn để xóa.</p>
         <form th:action="@{/XoaKhuonMat}" th:method="post">
             <video autoplay height="240" id="videoDelete" style="transform: scaleX(-1);" width="320"></video>
             <div class="mt-2">
-                <button class="btn btn-info" onclick="toggleCameraDelete()" type="button">Turn Camera On/Off</button>
-                <button class="btn btn-success" onclick="captureFace('faceDataDelete')" type="button">Capture Face For Verification</button>
+                <button class="btn btn-info" onclick="toggleCameraDelete()" type="button">Bật/Tắt Camera</button>
+                <button class="btn btn-success" onclick="captureFace('faceDataDelete')" type="button">Chụp Khuôn Mặt Để
+                    Xác Thực
+                </button>
             </div>
             <input id="faceDataDelete" name="faceData" type="hidden">
-            <span class="text-success" id="captureStatusDelete" style="display: none;">Face captured!</span>
-            <button class="btn btn-danger mt-2" type="submit"><i class="fas fa-trash-alt"></i> Delete Face</button>
+            <span class="text-success" id="captureStatusDelete" style="display: none;">Đã chụp khuôn mặt!</span>
+            <button class="btn btn-danger mt-2" type="submit"><i class="fas fa-trash-alt"></i> Xóa Khuôn Mặt</button>
         </form>
-        <a class="btn btn-secondary mt-2" th:href="@{/TrangCaNhan}"><i class="fas fa-arrow-left"></i> Back to Profile</a>
+        <a class="btn btn-secondary mt-2" th:href="@{/TrangCaNhan}"><i class="fas fa-arrow-left"></i> Quay lại Trang Cá
+            Nhân</a>
     </section>
 </main>
 

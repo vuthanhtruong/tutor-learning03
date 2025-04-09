@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
+    <title>Trang Chủ Admin</title>
     <link href="/TrangChuAdmin.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 </head>
@@ -10,10 +10,10 @@
 <div class="container">
     <!-- Header -->
     <div class="header">
-        <h2><i class="fas fa-user-shield"></i> Admin Dashboard</h2>
+        <h2><i class="fas fa-user-shield"></i> Trang Chủ Admin</h2>
         <div th:if="${admin != null}">
                 <span>
-                    <i class="fas fa-user"></i> Welcome,
+                    <i class="fas fa-user"></i> Xin chào,
                     <b th:text="${admin.firstName + ' ' + admin.lastName}"></b>
                 </span> |
             <span>
@@ -21,68 +21,68 @@
                     <b th:text="${admin.email}"></b>
                 </span> |
             <span>
-                    <i class="fas fa-phone"></i> Phone:
+                    <i class="fas fa-phone"></i> SĐT:
                     <b th:text="${admin.phoneNumber}"></b>
                 </span> |
             <a href="/TrangCaNhan">
-                <i class="fas fa-user-circle"></i> Profile
+                <i class="fas fa-user-circle"></i> Trang Cá Nhân
             </a> |
-            <a href="/Dashboard"> <i class="fa fa-dashboard"></i>Web Statistics</a>
+            <a href="/Dashboard"> <i class="fa fa-dashboard"></i>Thông số Web</a>
             <a href="/Blogs">
                 <i class="fas fa-blog"></i> Blog
             </a> |
             <a href="/DangXuat">
-                <i class="fas fa-sign-out-alt"></i> Logout
+                <i class="fas fa-sign-out-alt"></i> Đăng xuất
             </a>
         </div>
     </div>
 
-    <!-- Main Layout -->
+    <!-- Bố cục chính -->
     <div class="main-content">
-        <!-- Dashboard (Left side) -->
+        <!-- Dashboard (Bên trái) -->
         <div class="dashboard">
             <div class="card">
-                <h3><i class="fas fa-user-graduate"></i> Students</h3>
-                <p>Manage student list</p>
+                <h3><i class="fas fa-user-graduate"></i> Sinh Viên</h3>
+                <p>Quản lý danh sách sinh viên</p>
                 <a href="/DanhSachHocSinh">
-                    <i class="fas fa-list"></i> View Details
+                    <i class="fas fa-list"></i> Xem chi tiết
                 </a>
             </div>
             <div class="card">
-                <h3><i class="fas fa-chalkboard-teacher"></i> Teachers</h3>
-                <p>Manage teacher list</p>
+                <h3><i class="fas fa-chalkboard-teacher"></i> Giáo Viên</h3>
+                <p>Quản lý danh sách giáo viên</p>
                 <a href="/DanhSachGiaoVien">
-                    <i class="fas fa-list"></i> View Details
+                    <i class="fas fa-list"></i> Xem chi tiết
                 </a>
             </div>
             <div class="card">
-                <h3><i class="fas fa-user-tie"></i> Employees</h3>
-                <p>Manage employee list</p>
+                <h3><i class="fas fa-user-tie"></i> Nhân Viên</h3>
+                <p>Quản lý danh sách nhân viên</p>
                 <a href="/DanhSachNhanVien">
-                    <i class="fas fa-list"></i> View Details
+                    <i class="fas fa-list"></i> Xem chi tiết
                 </a>
             </div>
         </div>
 
-        <!-- Blog (Right side) -->
+        <!-- Blog (Bên phải) -->
         <div class="blog-section">
-            <h3><i class="fas fa-blog"></i> Blog Posts</h3>
+            <h3><i class="fas fa-blog"></i> Bài Viết Blog</h3>
             <ul id="blog-list">
                 <li th:each="blog : ${blogs}">
-                    <strong>Event ID:</strong>
+                    <strong>ID Sự Kiện:</strong>
                     <span th:text="${blog.event.eventId}"></span><br>
-                    <strong>Description:</strong>
+                    <strong>Mô tả:</strong>
                     <span th:text="${blog.event.description}"></span><br>
-                    <strong>Posted by:</strong>
+                    <strong>Người đăng:</strong>
                     <span th:text="${blog.creator.firstName + ' ' + blog.creator.lastName}"></span>
                 </li>
             </ul>
 
-            <!-- Pagination -->
+            <!-- Phân trang -->
             <div class="pagination">
-                <button onclick="changePage('blog', -1)">⬅ Previous Page</button>
+                <button onclick="changePage('blog', -1)">⬅ Trang Trước</button>
                 <span id="blog-page-info"></span>
-                <button onclick="changePage('blog', 1)">Next Page ➡</button>
+                <button onclick="changePage('blog', 1)">Trang Sau ➡</button>
             </div>
         </div>
     </div>

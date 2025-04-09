@@ -2,40 +2,40 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Teacher</title>
+    <title>Sửa Giáo Viên</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/SuaGiaoVienCuaBan.css}">
 </head>
 <body>
 
 <div class="container mt-5">
-    <h1 class="text-center text-primary"><i class="fas fa-edit"></i> Edit Teacher</h1>
+    <h1 class="text-center text-primary"><i class="fas fa-edit"></i> Sửa Giáo Viên</h1>
     <a class="btn btn-secondary" th:href="@{/DanhSachGiaoVienCuaBan}">
-        <i class="fas fa-arrow-left"></i> Back
+        <i class="fas fa-arrow-left"></i> Quay lại
     </a>
 
-    <!-- Display error message -->
+    <!-- Hiển thị thông báo lỗi -->
     <div class="alert alert-danger mt-3 text-center" th:if="${error}">
         <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
     </div>
 
-    <!-- Display success message -->
+    <!-- Hiển thị thông báo thành công -->
     <div class="alert alert-success mt-3 text-center" th:if="${successMessage}">
         <i class="fas fa-check-circle"></i> <span th:text="${successMessage}"></span>
     </div>
 
-    <!-- Edit teacher form -->
+    <!-- Form sửa giáo viên -->
     <form class="mt-4" method="post" th:action="@{/SuaGiaoVienCuaBan}">
-        <!-- Hidden teacher ID -->
+        <!-- Giáo viên ID ẩn -->
         <input name="teacherID" th:value="${teachers.id}" type="hidden">
 
         <div class="mb-3">
-            <label class="form-label">Last Name</label>
+            <label class="form-label">Họ</label>
             <input class="form-control" name="firstName" required th:value="${teachers.firstName}" type="text">
         </div>
 
         <div class="mb-3">
-            <label class="form-label">First Name</label>
+            <label class="form-label">Tên</label>
             <input class="form-control" name="lastName" required th:value="${teachers.lastName}" type="text">
         </div>
 
@@ -45,13 +45,13 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Phone Number</label>
+            <label class="form-label">Số Điện Thoại</label>
             <input class="form-control" name="phoneNumber" required th:value="${teachers.phoneNumber}" type="text">
         </div>
 
         <div class="text-center">
             <button class="btn btn-success" type="submit">
-                <i class="fas fa-save"></i> Save Changes
+                <i class="fas fa-save"></i> Lưu Thay Đổi
             </button>
         </div>
     </form>

@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>📋 Teacher's Personal Page</title>
+  <title>📋 Trang Cá Nhân Của Giáo Viên</title>
+  <link href="/BangDieuKhienGiaoVien.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="/styles.css">
 </head>
@@ -10,27 +11,27 @@
 <div class="container mt-5">
   <!-- Display Teacher's Name and ID -->
   <div class="text-center mt-4">
-    <h1 class="text-primary"><i class="fas fa-chalkboard-teacher"></i> Teacher's Personal Page</h1>
-    <h3 class="mt-3">👤 Teacher: <span th:text="${teacher.firstName} + ' ' + ${teacher.lastName}"></span></h3>
-    <p class="lead">🆔 Teacher ID: <span th:text="${teacher.id}"></span></p>
+    <h1 class="text-primary"><i class="fas fa-chalkboard-teacher"></i> Trang Cá Nhân Của Giáo Viên</h1>
+    <h3 class="mt-3">👤 Giáo Viên: <span th:text="${teacher.firstName} + ' ' + ${teacher.lastName}"></span></h3>
+    <p class="lead">🆔 ID Giáo Viên: <span th:text="${teacher.id}"></span></p>
   </div>
 
   <div class="text-center mt-4">
     <a th:href="@{/DanhSachNguoiDungHeThong}" class="btn btn-secondary">
-      <i class="fas fa-arrow-left"></i> Back
+      <i class="fas fa-arrow-left"></i> Quay lại
     </a>
   </div>
 
-  <!-- Teaching Rooms -->
+  <!-- Phòng Dạy -->
   <div class="user-section mt-5">
-    <h2 class="text-secondary"><i class="fas fa-door-closed"></i> Teacher's Teaching Rooms</h2>
+    <h2 class="text-secondary"><i class="fas fa-door-closed"></i> Phòng Dạy Của Giáo Viên</h2>
     <table class="table table-striped">
       <thead class="table-dark">
       <tr>
         <th>🆔 ID</th>
-        <th>🏷 Room Name</th>
-        <th>📅 Start Time</th>
-        <th>📅 End Time</th>
+        <th>🏷 Tên Phòng</th>
+        <th>📅 Thời Gian Bắt Đầu</th>
+        <th>📅 Thời Gian Kết Thúc</th>
       </tr>
       </thead>
       <tbody>
@@ -44,16 +45,16 @@
     </table>
   </div>
 
-  <!-- Students -->
+  <!-- Học Sinh -->
   <div class="user-section mt-5">
-    <h2 class="text-primary"><i class="fas fa-user-graduate"></i> Students of This Teacher</h2>
+    <h2 class="text-primary"><i class="fas fa-user-graduate"></i> Học Sinh Của Giáo Viên Này</h2>
     <table class="table table-striped">
       <thead class="table-dark">
       <tr>
         <th>🆔 ID</th>
-        <th>👤 Full Name</th>
+        <th>👤 Họ và Tên</th>
         <th>📧 Email</th>
-        <th>📞 Phone Number</th>
+        <th>📞 Số Điện Thoại</th>
       </tr>
       </thead>
       <tbody>

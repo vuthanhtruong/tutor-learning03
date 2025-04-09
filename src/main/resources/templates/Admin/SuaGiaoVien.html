@@ -2,13 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Edit Teacher</title>
+  <title>Sửa Giáo Viên</title>
   <link rel="stylesheet" href="/SuaGiaoVien.css">
 </head>
 <body>
-<h2>Edit Teacher</h2>
+<h2>Sửa Giáo Viên</h2>
 
-<!-- Display error or success messages -->
+<!-- Hiển thị thông báo lỗi hoặc thành công -->
 <div th:if="${error}" class="alert alert-danger">
   <p th:text="${error}"></p>
 </div>
@@ -19,11 +19,11 @@
 <form th:action="@{/SuaGiaoVien/{id}(id=${teachers.id})}" method="post">
   <input type="hidden" name="teacherID" th:value="${teachers.id}" />
 
-  <label for="firstName">Last Name:</label>
+  <label for="firstName">Họ:</label>
   <input type="text" id="firstName" name="firstName" th:value="${teachers.firstName}" required />
   <br/>
 
-  <label for="lastName">First Name:</label>
+  <label for="lastName">Tên:</label>
   <input type="text" id="lastName" name="lastName" th:value="${teachers.lastName}" required />
   <br/>
 
@@ -31,7 +31,7 @@
   <input type="email" id="email" name="email" th:value="${teachers.email}" required />
   <br/>
 
-  <label for="phoneNumber">Phone Number:</label>
+  <label for="phoneNumber">Số điện thoại:</label>
   <input type="text" id="phoneNumber" name="phoneNumber" th:value="${teachers.phoneNumber}" required />
   <br/>
 
@@ -39,9 +39,9 @@
   <input type="text" id="misID" name="misID" th:value="${teachers.misID}" />
   <br/>
 
-  <label for="employee">Assigned Employee:</label>
+  <label for="employee">Nhân viên phụ trách:</label>
   <select id="employee" name="employeeID">
-    <option value="">-- Select Employee --</option>
+    <option value="">-- Chọn nhân viên --</option>
     <option th:each="emp : ${employees}" th:value="${emp.id}"
             th:text="${emp.firstName + ' ' + emp.lastName}"
             th:selected="${teachers.employee != null and teachers.employee.id == emp.id}">
@@ -49,9 +49,9 @@
   </select>
   <br/>
 
-  <button type="submit">Update</button>
+  <button type="submit">Cập nhật</button>
   <div class="text-center mt-3">
-    <a href="/DanhSachGiaoVien" class="btn btn-secondary">Back to Teacher List</a>
+    <a href="/DanhSachGiaoVien" class="btn btn-secondary">Quay Lại Danh Sách Giáo viên</a>
   </div>
 </form>
 </body>

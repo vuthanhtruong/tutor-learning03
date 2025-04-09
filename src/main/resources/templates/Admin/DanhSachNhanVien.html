@@ -2,60 +2,60 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>📋 Employee List</title>
+    <title>📋 Danh Sách Nhân Viên</title>
     <link href="/DanhSachNhanVien.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container mt-5">
-    <!-- Title and navigation buttons -->
+    <!-- Tiêu đề và các nút điều hướng -->
     <div class="header">
         <h2 class="text-center text-primary">
-            <i class="fas fa-users"></i> Employee List
+            <i class="fas fa-users"></i> Danh Sách Nhân Viên
         </h2>
         <div class="btn-group d-flex justify-content-between mb-3">
             <div>
                 <a class="btn btn-primary me-2" href="/ThemNhanVien">
-                    <i class="fas fa-user-plus"></i> Add Employee
+                    <i class="fas fa-user-plus"></i> Thêm Nhân Viên
                 </a>
                 <a class="btn btn-danger" href="/XoaTatCaNhanVien"
-                   onclick="return confirm('Are you sure you want to delete all employees?');">
-                    <i class="fas fa-trash"></i> Delete All
+                   onclick="return confirm('Bạn có chắc chắn muốn xóa tất cả nhân viên?');">
+                    <i class="fas fa-trash"></i> Xóa Tất Cả
                 </a>
             </div>
             <a class="btn btn-secondary" th:href="@{/TrangChuAdmin}">
-                <i class="fas fa-home"></i> Back to Home
+                <i class="fas fa-home"></i> Quay Lại Trang Chủ
             </a>
         </div>
     </div>
 
-    <!-- Employee search form -->
+    <!-- Form tìm kiếm nhân viên -->
     <div class="search-form mb-3">
         <form class="d-flex align-items-center" method="post" th:action="@{/TimKiemNhanVien}">
-            <label class="me-2" for="searchType">🔍 Search by:</label>
+            <label class="me-2" for="searchType">🔍 Tìm kiếm theo:</label>
             <select class="form-select me-2" id="searchType" name="searchType">
                 <option value="id">ID</option>
-                <option value="name">Name</option>
+                <option value="name">Tên</option>
             </select>
-            <input class="form-control me-2" name="keyword" placeholder="Enter keyword..." required type="text">
+            <input class="form-control me-2" name="keyword" placeholder="Nhập từ khóa..." required type="text">
             <button class="btn btn-info" type="submit">
-                <i class="fas fa-search"></i> Search
+                <i class="fas fa-search"></i> Tìm kiếm
             </button>
         </form>
     </div>
 
-    <!-- Sort and quantity filters -->
+    <!-- Bộ lọc sắp xếp và số lượng -->
     <div class="d-flex mb-3">
         <form action="/DanhSachNhanVien" class="me-3" method="get">
-            <label class="me-2" for="sortOrder">🔄 Sort by name:</label>
+            <label class="me-2" for="sortOrder">🔄 Sắp xếp theo tên:</label>
             <select class="form-select" id="sortOrder" name="order" onchange="this.form.submit()">
-                <option th:selected="${order == null or order == ''}" value="">Default</option>
+                <option th:selected="${order == null or order == ''}" value="">Mặc định</option>
                 <option th:selected="${order == 'asc'}" value="asc">A → Z</option>
                 <option th:selected="${order == 'desc'}" value="desc">Z → A</option>
             </select>
         </form>
         <form action="/DanhSachNhanVien" method="get">
-            <label class="me-2" for="pageSize">Quantity:</label>
+            <label class="me-2" for="pageSize">Số lượng:</label>
             <select class="form-select" id="pageSize" name="pageSize" onchange="this.form.submit()">
                 <option th:selected="${pageSize == 5}" value="5">5</option>
                 <option th:selected="${pageSize == 10}" value="10">10</option>
@@ -64,18 +64,18 @@
         </form>
     </div>
 
-    <!-- Employee list table -->
+    <!-- Bảng danh sách nhân viên -->
     <div class="employee-table">
         <table class="table table-bordered table-striped">
             <thead class="table-dark">
             <tr>
                 <th><i class="fas fa-id-badge"></i> ID</th>
-                <th><i class="fas fa-user"></i> Last Name</th>
-                <th><i class="fas fa-user"></i> First Name</th>
+                <th><i class="fas fa-user"></i> Họ</th>
+                <th><i class="fas fa-user"></i> Tên</th>
                 <th><i class="fas fa-envelope"></i> Email</th>
-                <th><i class="fas fa-phone"></i> Phone Number</th>
-                <th><i class="fas fa-calendar"></i> Birth Date</th>
-                <th><i class="fas fa-cogs"></i> Actions</th>
+                <th><i class="fas fa-phone"></i> Số điện thoại</th>
+                <th><i class="fas fa-calendar"></i> Ngày sinh</th>
+                <th><i class="fas fa-cogs"></i> Hành động</th>
             </tr>
             </thead>
             <tbody>
@@ -88,12 +88,12 @@
                 <td th:text="${#temporals.format(employee.birthDate, 'dd/MM/yyyy')}"></td>
                 <td class="action-buttons">
                     <a class="btn btn-warning btn-sm" th:href="@{/SuaNhanVien/{id}(id=${employee.id})}">
-                        <i class="fas fa-edit"></i> Edit
+                        <i class="fas fa-edit"></i> Sửa
                     </a>
                     <a class="btn btn-danger btn-sm"
-                       onclick="return confirm('Are you sure you want to delete this employee?');"
+                       onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên này?');"
                        th:href="@{/XoaNhanVien/{id}(id=${employee.id})}">
-                        <i class="fas fa-trash-alt"></i> Delete
+                        <i class="fas fa-trash-alt"></i> Xóa
                     </a>
                 </td>
             </tr>
@@ -101,20 +101,20 @@
         </table>
     </div>
 
-    <!-- Pagination -->
+    <!-- Phân trang -->
     <ul class="pagination justify-content-center mt-3">
-        <!-- First button -->
+        <!-- Nút "Đầu" -->
         <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-            <a class="page-link" th:href="@{/DanhSachNhanVien(page=1, pageSize=${pageSize}, order=${order})}">First</a>
+            <a class="page-link" th:href="@{/DanhSachNhanVien(page=1, pageSize=${pageSize}, order=${order})}">Đầu</a>
         </li>
 
-        <!-- Previous button -->
+        <!-- Nút "Trước" -->
         <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
             <a class="page-link"
                th:href="@{/DanhSachNhanVien(page=${currentPage - 1}, pageSize=${pageSize}, order=${order})}">«</a>
         </li>
 
-        <!-- Page numbers -->
+        <!-- Danh sách số trang -->
         <th:block th:each="i : ${#numbers.sequence(1, totalPages)}">
             <li class="page-item" th:classappend="${i == currentPage} ? 'active'">
                 <a class="page-link" th:href="@{/DanhSachNhanVien(page=${i}, pageSize=${pageSize}, order=${order})}"
@@ -122,16 +122,16 @@
             </li>
         </th:block>
 
-        <!-- Next button -->
+        <!-- Nút "Sau" -->
         <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
             <a class="page-link"
                th:href="@{/DanhSachNhanVien(page=${currentPage + 1}, pageSize=${pageSize}, order=${order})}">»</a>
         </li>
 
-        <!-- Last button -->
+        <!-- Nút "Cuối" -->
         <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
             <a class="page-link"
-               th:href="@{/DanhSachNhanVien(page=${totalPages}, pageSize=${pageSize}, order=${order})}">Last</a>
+               th:href="@{/DanhSachNhanVien(page=${totalPages}, pageSize=${pageSize}, order=${order})}">Cuối</a>
         </li>
     </ul>
 </div>

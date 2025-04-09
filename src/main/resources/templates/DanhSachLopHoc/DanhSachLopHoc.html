@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Class List</title>
+    <title>Danh Sách Lớp Học</title>
     <link href="DanhSachLopHoc.css" rel="stylesheet">
 </head>
 <body>
 <header>
-    <h1>My Classes</h1>
+    <h1>Danh Sách Lớp Học Của Tôi</h1>
     <nav>
-        <a class="btn btn-home" th:href="@{${homePage}}">🏠 Back to Home</a>
+        <a class="btn btn-home" th:href="@{${homePage}}">🏠 Quay lại trang chủ</a>
     </nav>
 </header>
 <main class="container">
-    <!-- Split screen into 2 columns -->
+    <!-- Phân chia màn hình thành 2 cột -->
     <section class="section left">
-        <h2>Traditional Classes</h2>
+        <h2>Lớp Học Truyền Thống</h2>
         <ul>
             <th:block th:each="room : ${rooms}">
                 <li>
@@ -27,7 +27,7 @@
         </ul>
     </section>
     <section class="section right">
-        <h2>Online Classes</h2>
+        <h2>Lớp Học Online</h2>
         <ul>
             <th:block th:each="onlineRoom : ${onlineRooms}">
                 <li>
