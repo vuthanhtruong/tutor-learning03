@@ -66,7 +66,8 @@ public class BaiVietPost {
 
             if (files != null && !files.isEmpty()) {
                 File dir = new File(uploadDir);
-                if (!dir.exists()) dir.mkdirs();
+                if (!dir.exists())
+                    dir.mkdirs();
 
                 for (MultipartFile file : files) {
                     if (!file.isEmpty()) {
@@ -75,7 +76,8 @@ public class BaiVietPost {
                             throw new IOException("Tệp rỗng hoặc không đọc được: " + file.getOriginalFilename());
                         }
 
-                        String filePath = uploadDir + File.separator + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+                        String filePath = uploadDir + File.separator + System.currentTimeMillis() + "_"
+                                + file.getOriginalFilename();
                         File destFile = new File(filePath);
                         file.transferTo(destFile); // Ghi file ra thư mục
 
@@ -113,7 +115,7 @@ public class BaiVietPost {
             @RequestParam("postId") Long postId,
             @RequestParam("postContent") String postContent,
             @RequestParam("roomId") String roomId,
-            @RequestParam(value = "files", required = false) List<MultipartFile> files,
+            @RequestParam(value = "file", required = false) MultipartFile file, // Thay đổi ở đây
             RedirectAttributes redirectAttributes) {
 
         try {
@@ -125,46 +127,48 @@ public class BaiVietPost {
             existingPost.setContent(postContent);
             entityManager.merge(existingPost);
 
-            if (files != null && !files.isEmpty()) {
-                List<Documents> existingDocuments = entityManager.createQuery(
-                                "SELECT d FROM Documents d WHERE d.post.postId = :postId", Documents.class)
-                        .setParameter("postId", postId)
-                        .getResultList();
+            // Xử lý tài liệu
+            List<Documents> existingDocuments = entityManager.createQuery(
+                    "SELECT d FROM Documents d WHERE d.post.postId = :postId", Documents.class)
+                    .setParameter("postId", postId)
+                    .getResultList();
 
-                for (Documents doc : existingDocuments) {
-                    File oldFile = new File(doc.getFilePath());
-                    if (oldFile.exists()) oldFile.delete(); // Xóa file cũ khỏi thư mục
-                    entityManager.remove(doc);
-                }
-                entityManager.flush();
+            // Xóa tài liệu cũ
+            for (Documents doc : existingDocuments) {
+                File oldFile = new File(doc.getFilePath());
+                if (oldFile.exists())
+                    oldFile.delete();
+                entityManager.remove(doc);
+            }
+            entityManager.flush();
 
+            // Thêm tài liệu mới nếu có
+            if (file != null && !file.isEmpty()) {
                 File dir = new File(uploadDir);
-                if (!dir.exists()) dir.mkdirs();
+                if (!dir.exists())
+                    dir.mkdirs();
 
-                for (MultipartFile file : files) {
-                    if (!file.isEmpty()) {
-                        byte[] fileData = file.getBytes();
-                        if (fileData.length == 0) {
-                            throw new IOException("Tệp rỗng hoặc không đọc được: " + file.getOriginalFilename());
-                        }
-
-                        String filePath = uploadDir + File.separator + System.currentTimeMillis() + "_" + file.getOriginalFilename();
-                        File destFile = new File(filePath);
-                        file.transferTo(destFile); // Ghi file ra thư mục
-
-                        Documents newDocument = new Documents();
-                        newDocument.setDocumentTitle(file.getOriginalFilename());
-                        newDocument.setFileData(fileData);
-                        newDocument.setFilePath(filePath);
-                        newDocument.setCreator(existingPost.getCreator());
-                        newDocument.setPost(existingPost);
-
-                        Events fileEvent = entityManager.find(Events.class, 4);
-                        newDocument.setEvent(fileEvent);
-
-                        entityManager.persist(newDocument);
-                    }
+                byte[] fileData = file.getBytes();
+                if (fileData.length == 0) {
+                    throw new IOException("Tệp rỗng hoặc không đọc được: " + file.getOriginalFilename());
                 }
+
+                String filePath = uploadDir + File.separator + System.currentTimeMillis() + "_"
+                        + file.getOriginalFilename();
+                File destFile = new File(filePath);
+                file.transferTo(destFile);
+
+                Documents newDocument = new Documents();
+                newDocument.setDocumentTitle(file.getOriginalFilename());
+                newDocument.setFileData(fileData);
+                newDocument.setFilePath(filePath);
+                newDocument.setCreator(existingPost.getCreator());
+                newDocument.setPost(existingPost);
+
+                Events fileEvent = entityManager.find(Events.class, 4);
+                newDocument.setEvent(fileEvent);
+
+                entityManager.persist(newDocument);
             }
 
             redirectAttributes.addFlashAttribute("message", "Bài đăng đã được cập nhật thành công!");

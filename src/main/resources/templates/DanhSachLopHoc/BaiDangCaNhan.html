@@ -17,7 +17,7 @@
                 <ul>
                     <li th:each="document : ${post.documents}">
                         <a class="btn btn-download" th:download="${document.documentTitle}"
-                           th:href="@{'/api/files/download/' + ${document.documentId}}">
+                            th:href="@{'/api/files/download/' + ${document.documentId}}">
                             📥 Download
                         </a>
                     </li>
@@ -32,9 +32,8 @@
             </div>
 
             <div class="delete-post">
-                <a class="btn btn-delete"
-                   onclick="return confirm('Bạn có chắc chắn muốn xóa bài đăng này?');"
-                   th:href="@{'/XoaBaiDangCaNhan/' + ${post.postId} + '?roomId=' + ${post.room.roomId}}">
+                <a class="btn btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa bài đăng này?');"
+                    th:href="@{'/XoaBaiDangCaNhan/' + ${post.postId} + '?roomId=' + ${post.room.roomId}}">
                     🗑️ Delete Post
                 </a>
             </div>
