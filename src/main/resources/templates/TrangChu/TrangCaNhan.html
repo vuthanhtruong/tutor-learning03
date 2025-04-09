@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Trang Cá Nhân</title>
+    <title>Personal Page</title>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -13,11 +13,11 @@
 </head>
 <body>
 <header>
-    <h1><i class="fas fa-address-card"></i> Thông Tin Cá Nhân</h1>
+    <h1><i class="fas fa-address-card"></i> Personal Information</h1>
 </header>
 
 <main>
-    <!-- Thông báo lỗi -->
+    <!-- Error notifications -->
     <div class="alert alert-danger" th:if="${firstNameInvalid}">
         <i class="fas fa-exclamation-circle"></i> <span th:text="${firstNameInvalid}"></span>
     </div>
@@ -43,7 +43,7 @@
         <i class="fas fa-exclamation-circle"></i> <span th:text="${updateFailed}"></span>
     </div>
 
-    <!-- Thông báo thành công từ FaceLoginController -->
+    <!-- Success notifications from FaceLoginController -->
     <div class="alert alert-success" th:if="${faceRegisterSuccess}">
         <i class="fas fa-check-circle"></i> <span th:text="${faceRegisterSuccess}"></span>
     </div>
@@ -51,7 +51,7 @@
         <i class="fas fa-check-circle"></i> <span th:text="${faceDeleteSuccess}"></span>
     </div>
 
-    <!-- Thông báo thành công từ VoiceAuthController -->
+    <!-- Success notifications from VoiceAuthController -->
     <div class="alert alert-success" th:if="${voiceRegisterSuccess}">
         <i class="fas fa-check-circle"></i> <span th:text="${voiceRegisterSuccess}"></span>
     </div>
@@ -59,7 +59,7 @@
         <i class="fas fa-check-circle"></i> <span th:text="${voiceDeleteSuccess}"></span>
     </div>
 
-    <!-- Thông báo lỗi từ FaceLoginController -->
+    <!-- Error notifications from FaceLoginController -->
     <div class="alert alert-danger" th:if="${faceDataInvalid}">
         <i class="fas fa-exclamation-circle"></i> <span th:text="${faceDataInvalid}"></span>
     </div>
@@ -82,7 +82,7 @@
         <i class="fas fa-exclamation-circle"></i> <span th:text="${faceDeleteFailed}"></span>
     </div>
 
-    <!-- Thông báo lỗi từ VoiceAuthController -->
+    <!-- Error notifications from VoiceAuthController -->
     <div class="alert alert-danger" th:if="${voiceDataInvalid}">
         <i class="fas fa-exclamation-circle"></i> <span th:text="${voiceDataInvalid}"></span>
     </div>
@@ -97,9 +97,9 @@
     </div>
 
     <section class="profile-section">
-        <h2><i class="fas fa-user"></i> Hồ Sơ Cá Nhân</h2>
+        <h2><i class="fas fa-user"></i> Personal Profile</h2>
 
-        <!-- Sử dụng th:object để binding toàn bộ object 'user' -->
+        <!-- Using th:object to bind the entire 'user' object -->
         <form method="post" th:action="@{/LuuThongTinCaNhan}" th:object="${user}">
             <div class="form-group">
                 <label><i class="fas fa-id-badge"></i> <strong>ID:</strong></label>
@@ -107,164 +107,160 @@
             </div>
 
             <div class="form-group">
-                <label><i class="fas fa-user-edit"></i> <strong>Họ và Tên:</strong></label>
-                <input autocomplete="off" class="form-control d-inline-block w-auto" placeholder="Nhập Họ" required
+                <label><i class="fas fa-user-edit"></i> <strong>Full Name:</strong></label>
+                <input autocomplete="off" class="form-control d-inline-block w-auto" placeholder="Enter Last Name" required
                        th:field="*{firstName}"/>
-                <input autocomplete="off" class="form-control d-inline-block w-auto" placeholder="Nhập Tên" required
+                <input autocomplete="off" class="form-control d-inline-block w-auto" placeholder="Enter First Name" required
                        th:field="*{lastName}"/>
             </div>
 
             <div class="form-group">
                 <label><i class="fas fa-envelope"></i> <strong>Email:</strong></label>
-                <input autocomplete="off" class="form-control" placeholder="Nhập Email" required th:field="*{email}"/>
+                <input autocomplete="off" class="form-control" placeholder="Enter Email" required th:field="*{email}"/>
             </div>
 
             <div class="form-group">
-                <label><i class="fas fa-phone"></i> <strong>Số Điện Thoại:</strong></label>
-                <input autocomplete="off" class="form-control" placeholder="Nhập Số Điện Thoại" required
+                <label><i class="fas fa-phone"></i> <strong>Phone Number:</strong></label>
+                <input autocomplete="off" class="form-control" placeholder="Enter Phone Number" required
                        th:field="*{phoneNumber}"/>
             </div>
 
             <div class="mb-3">
-                <label class="form-label" for="birthDate">Ngày Sinh</label>
+                <label class="form-label" for="birthDate">Date of Birth</label>
                 <input class="form-control" id="birthDate" name="birthDate" th:value="*{birthDate}" type="date"/>
             </div>
 
-            <!-- Giới Tính - giữ nguyên radio button -->
+            <!-- Gender - keeping radio buttons unchanged -->
             <div class="mb-3">
-                <label class="form-label d-block">Giới Tính</label>
+                <label class="form-label d-block">Gender</label>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" id="genderMale" th:field="*{gender}" type="radio" value="MALE"/>
-                    <label class="form-check-label" for="genderMale">Nam</label>
+                    <label class="form-check-label" for="genderMale">Male</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" id="genderFemale" th:field="*{gender}" type="radio" value="FEMALE"/>
-                    <label class="form-check-label" for="genderFemale">Nữ</label>
+                    <label class="form-check-label" for="genderFemale">Female</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" id="genderOther" th:field="*{gender}" type="radio" value="OTHER"/>
-                    <label class="form-check-label" for="genderOther">Khác</label>
+                    <label class="form-check-label" for="genderOther">Other</label>
                 </div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label" for="country"><i class="fas fa-globe"></i> Quốc Gia</label>
-                <input class="form-control" id="country" name="country" placeholder="Nhập quốc gia"
+                <label class="form-label" for="country"><i class="fas fa-globe"></i> Country</label>
+                <input class="form-control" id="country" name="country" placeholder="Enter country"
                        th:field="*{country}"/>
             </div>
 
-            <!-- Tỉnh/Thành phố -->
+            <!-- Province/City -->
             <div class="mb-3">
-                <label class="form-label" for="province"><i class="fas fa-map-marker-alt"></i> Tỉnh/Thành phố</label>
-                <input class="form-control" id="province" name="province" placeholder="Nhập tỉnh/thành phố"
+                <label class="form-label" for="province"><i class="fas fa-map-marker-alt"></i> Province/City</label>
+                <input class="form-control" id="province" name="province" placeholder="Enter province/city"
                        th:field="*{province}"/>
             </div>
 
-            <!-- Quận/Huyện -->
+            <!-- District -->
             <div class="mb-3">
-                <label class="form-label" for="district"><i class="fas fa-map"></i> Quận/Huyện</label>
-                <input class="form-control" id="district" name="district" placeholder="Nhập quận/huyện"
+                <label class="form-label" for="district"><i class="fas fa-map"></i> District</label>
+                <input class="form-control" id="district" name="district" placeholder="Enter district"
                        th:field="*{district}"/>
             </div>
 
-            <!-- Xã/Phường -->
+            <!-- Ward -->
             <div class="mb-3">
-                <label class="form-label" for="ward"><i class="fas fa-home"></i> Xã/Phường</label>
-                <input class="form-control" id="ward" name="ward" placeholder="Nhập xã/phường" th:field="*{ward}"/>
+                <label class="form-label" for="ward"><i class="fas fa-home"></i> Ward</label>
+                <input class="form-control" id="ward" name="ward" placeholder="Enter ward" th:field="*{ward}"/>
             </div>
 
             <div class="mb-3">
-                <label class="form-label" for="street">Đường, Số Nhà</label>
+                <label class="form-label" for="street">Street, House Number</label>
                 <input class="form-control" id="street" th:field="*{street}"/>
             </div>
 
             <div class="mb-3">
-                <label class="form-label" for="postalCode">Mã Bưu Điện</label>
+                <label class="form-label" for="postalCode">Postal Code</label>
                 <input class="form-control" id="postalCode" th:field="*{postalCode}"/>
             </div>
 
             <button class="btn btn-primary" type="submit">
-                <i class="fas fa-save"></i> Lưu
+                <i class="fas fa-save"></i> Save
             </button>
         </form>
     </section>
 
-    <!-- Mục Đăng Ký Khuôn Mặt -->
+    <!-- Face Registration Section -->
     <section class="face-registration-section">
-        <h2><i class="fas fa-camera"></i> Đăng Ký Khuôn Mặt</h2>
-        <p th:if="${user.faceData != null && !user.faceData.isEmpty()}"><i class="fas fa-check"></i> Bạn đã đăng ký
-            khuôn mặt.</p>
-        <p th:unless="${user.faceData != null && !user.faceData.isEmpty()}"><i class="fas fa-times"></i> Bạn chưa đăng
-            ký khuôn mặt.</p>
+        <h2><i class="fas fa-camera"></i> Face Registration</h2>
+        <p th:if="${user.faceData != null && !user.faceData.isEmpty()}"><i class="fas fa-check"></i> You have registered your face.</p>
+        <p th:unless="${user.faceData != null && !user.faceData.isEmpty()}"><i class="fas fa-times"></i> You have not registered your face.</p>
         <form th:action="@{/DangKyKhuonMat}" th:method="post">
             <video autoplay height="240" id="video" style="transform: scaleX(-1);" width="320"></video>
             <div class="mt-2">
-                <button class="btn btn-info" onclick="toggleCamera()" type="button"><i class="fas fa-video"></i> Bật/Tắt
-                    Camera
+                <button class="btn btn-info" onclick="toggleCamera()" type="button"><i class="fas fa-video"></i> Toggle Camera
                 </button>
                 <button class="btn btn-success" onclick="captureFace('faceData')" type="button"><i
-                        class="fas fa-camera-retro"></i> Chụp Khuôn Mặt
+                        class="fas fa-camera-retro"></i> Capture Face
                 </button>
             </div>
             <input id="faceData" name="faceData" type="hidden">
-            <span class="text-success mt-2" id="captureStatus" style="display: none;"><i class="fas fa-check"></i> Đã chụp khuôn mặt!</span>
+            <span class="text-success mt-2" id="captureStatus" style="display: none;"><i class="fas fa-check"></i> Face captured!</span>
             <button class="btn btn-primary mt-2" type="submit">
-                <i class="fas fa-upload"></i> Đăng Ký
+                <i class="fas fa-upload"></i> Register
             </button>
         </form>
     </section>
 
-    <!-- Nút Xóa Khuôn Mặt -->
+    <!-- Face Delete Button -->
     <section class="face-delete-section">
-        <h2><i class="fas fa-trash"></i> Xóa Khuôn Mặt</h2>
+        <h2><i class="fas fa-trash"></i> Delete Face</h2>
         <a class="btn btn-danger" th:href="@{/XoaKhuonMat}">
-            <i class="fas fa-trash-alt"></i> Xóa Khuôn Mặt Hiện Có
+            <i class="fas fa-trash-alt"></i> Delete Current Face
         </a>
     </section>
 
-    <!-- Mục Đăng Ký Giọng Nói -->
+    <!-- Voice Registration Section -->
     <section class="voice-registration-section">
-        <h2><i class="fas fa-microphone"></i> Đăng Ký Giọng Nói</h2>
+        <h2><i class="fas fa-microphone"></i> Voice Registration</h2>
         <p th:if="${user.voiceData != null && !user.voiceData.isEmpty()}">
-            <i class="fas fa-check"></i> Bạn đã đăng ký giọng nói: <span th:text="${user.voiceData}"></span>
+            <i class="fas fa-check"></i> You have registered your voice: <span th:text="${user.voiceData}"></span>
         </p>
-        <p th:unless="${user.voiceData != null && !user.voiceData.isEmpty()}"><i class="fas fa-times"></i> Bạn chưa đăng
-            ký giọng nói.</p>
+        <p th:unless="${user.voiceData != null && !user.voiceData.isEmpty()}"><i class="fas fa-times"></i> You have not registered your voice.</p>
         <form th:action="@{/DangKyGiongNoi}" th:method="post">
             <button class="btn btn-info" onclick="startVoiceRecording('voiceData')" type="button">
-                <i class="fas fa-microphone-alt"></i> Bắt Đầu Ghi Âm
+                <i class="fas fa-microphone-alt"></i> Start Recording
             </button>
             <input id="voiceData" name="voiceData" type="hidden">
-            <span class="text-success mt-2" id="recordStatus" style="display: none;"><i class="fas fa-check"></i> Đã ghi âm!</span>
+            <span class="text-success mt-2" id="recordStatus" style="display: none;"><i class="fas fa-check"></i> Voice recorded!</span>
             <button class="btn btn-primary mt-2" type="submit">
-                <i class="fas fa-upload"></i> Đăng Ký
+                <i class="fas fa-upload"></i> Register
             </button>
         </form>
     </section>
 
-    <!-- Nút Xóa Giọng Nói -->
+    <!-- Voice Delete Button -->
     <section class="voice-delete-section">
-        <h2><i class="fas fa-trash"></i> Xóa Giọng Nói</h2>
+        <h2><i class="fas fa-trash"></i> Delete Voice</h2>
         <a class="btn btn-danger" th:href="@{/XoaGiongNoi}">
-            <i class="fas fa-trash-alt"></i> Xóa Giọng Nói Hiện Có
+            <i class="fas fa-trash-alt"></i> Delete Current Voice
         </a>
     </section>
 
-    <!-- Mục Bảo Mật -->
+    <!-- Security Section -->
     <section class="password-section">
-        <h2><i class="fas fa-key"></i> Bảo Mật</h2>
+        <h2><i class="fas fa-key"></i> Security</h2>
         <a class="btn btn-warning" href="/DoiMatKhau">
-            <i class="fas fa-lock"></i> Đổi Mật Khẩu
+            <i class="fas fa-lock"></i> Change Password
         </a>
     </section>
 
-    <!-- Điều Hướng -->
+    <!-- Navigation -->
     <section class="navigation-section">
         <a class="btn btn-primary" th:href="@{/redirect}">
-            <i class="fas fa-home"></i> Quay về Trang Chủ
+            <i class="fas fa-home"></i> Back to Home
         </a>
         <a class="btn btn-danger" href="/DangXuat">
-            <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            <i class="fas fa-sign-out-alt"></i> Logout
         </a>
     </section>
 </main>
@@ -288,8 +284,8 @@
                 video.srcObject = stream;
             })
             .catch(function (err) {
-                console.log("Lỗi webcam đăng ký: " + err);
-                alert("Không thể truy cập webcam cho đăng ký: " + err.message);
+                console.log("Webcam registration error: " + err);
+                alert("Cannot access webcam for registration: " + err.message);
             });
     }
 
@@ -314,7 +310,7 @@
         let targetStatus = captureStatus;
 
         if (!targetVideo.srcObject) {
-            alert("Vui lòng bật camera trước khi chụp!");
+            alert("Please enable the camera before capturing!");
             return;
         }
         let canvas = document.createElement('canvas');
@@ -347,12 +343,12 @@
         };
 
         recognition.onerror = function (event) {
-            console.error('Lỗi ghi âm: ', event.error);
-            alert("Không thể ghi âm: " + event.error);
+            console.error('Recording error: ', event.error);
+            alert("Cannot record: " + event.error);
         };
 
         recognition.onend = function () {
-            console.log('Ghi âm kết thúc');
+            console.log('Recording ended');
         };
 
         recognition.start();

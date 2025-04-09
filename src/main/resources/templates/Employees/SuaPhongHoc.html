@@ -2,42 +2,42 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Chỉnh Sửa Phòng Học</title>
+  <title>Edit Classroom</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" th:href="@{/SuaPhongHoc.css}">
 </head>
 <body class="container mt-4">
 
-<h2 class="text-center mb-4"><i class="fas fa-school"></i> Chỉnh Sửa Phòng Học</h2>
+<h2 class="text-center mb-4"><i class="fas fa-school"></i> Edit Classroom</h2>
 
-<!-- Hiển thị lỗi nếu trùng tên phòng -->
+<!-- Display error if room name exists -->
 <div th:if="${param.error == 'RoomNameExists'}" class="alert alert-danger">
-  <i class="fas fa-exclamation-triangle"></i> Tên phòng đã tồn tại. Vui lòng nhập tên khác.
+  <i class="fas fa-exclamation-triangle"></i> Room name already exists. Please enter a different name.
 </div>
 
 <div th:if="${param.error == 'RoomNotFound'}" class="alert alert-warning">
-  <i class="fas fa-exclamation-circle"></i> Phòng học không tồn tại.
+  <i class="fas fa-exclamation-circle"></i> Classroom not found.
 </div>
 
 <form th:action="@{/SuaPhongHocOffline}" method="post" class="border p-4">
-  <!-- ID Phòng (Chỉ hiển thị, không chỉnh sửa) -->
+  <!-- Room ID (Display only, not editable) -->
   <div class="mb-3">
-    <label for="roomId" class="form-label"><i class="fas fa-hashtag"></i> ID Phòng</label>
+    <label for="roomId" class="form-label"><i class="fas fa-hashtag"></i> Room ID</label>
     <input type="text" id="roomId" name="roomId" class="form-control" th:value="${room.roomId}" readonly>
   </div>
 
-  <!-- Nhập Tên Phòng -->
+  <!-- Enter Room Name -->
   <div class="mb-3">
-    <label for="roomName" class="form-label"><i class="fas fa-door-open"></i> Tên Phòng</label>
+    <label for="roomName" class="form-label"><i class="fas fa-door-open"></i> Room Name</label>
     <input type="text" id="roomName" name="roomName" class="form-control"
            th:value="${param.roomName != null ? param.roomName : room.roomName}" required>
   </div>
 
-  <!-- Nút Cập Nhật -->
-  <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Cập Nhật</button>
+  <!-- Update Button -->
+  <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Update</button>
 
-  <!-- Nút Hủy -->
-  <a th:href="@{/DanhSachPhongHoc}" class="btn btn-secondary"><i class="fas fa-times"></i> Hủy</a>
+  <!-- Cancel Button -->
+  <a th:href="@{/DanhSachPhongHoc}" class="btn btn-secondary"><i class="fas fa-times"></i> Cancel</a>
 </form>
 
 </body>

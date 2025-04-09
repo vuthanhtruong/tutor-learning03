@@ -3,108 +3,60 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog</title>
-    <link rel="stylesheet" href="Blog.css">
+    <link rel="stylesheet" th:href="@{/Blogs.css}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
-    <header class="header">
-        <div class="header-container">
-            <div class="header-logo">
-                <i class="fas fa-blog"></i>
-                <h1>Blog</h1>
-            </div>
-            <nav class="header-nav">
-                <ul>
-                    <li><a th:href="@{/QuayVeTrangChu}"><i class="fas fa-home"></i> Quay Về Trang Chủ</a></li>
-                    <li><a href="/BlogCaNhan"><i class="fas fa-user"></i> Blog Đã Đăng</a></li>
-                </ul>
-            </nav>
+
+<header>
+    <h1><i class="fas fa-blog"></i> Blog</h1>
+    <a class="btn btn-home" th:href="@{/QuayVeTrangChu}"><i class="fas fa-home"></i> Back to Home</a>
+    <a class="btn blog-content" href="/BlogCaNhan"><i class="fas fa-user"></i> My Posts</a>
+</header>
+
+<main>
+
+    <!-- 🔹 Blog Input Box -->
+    <section class="new-post">
+        <div class="profile-pic">
+            <img alt="User Avatar" th:src="@{/images/user-default.png}">
         </div>
-    </header>
+        <form action="/XuLyThemBlog" class="post-form" method="post">
+            <input id="title" name="title" placeholder="What are you thinking?" required type="text">
+            <textarea id="content" name="content" placeholder="Write your blog content..." required></textarea>
+            <button type="submit"><i class="fas fa-paper-plane"></i> Post</button>
+        </form>
+    </section>
 
-    <div class="main-content">
-        <div class="container">
-            <div class="welcome-section">
-                <h1>Blog Cá Nhân</h1>
-                <p>Chia sẻ suy nghĩ và trải nghiệm của bạn</p>
-            </div>
+    <!-- 🔹 Blog List in Table Format -->
+    <section class="blog-feed">
+        <h2><i class="fas fa-list"></i> Latest Posts</h2>
 
-            <div class="form-container">
-                <!-- Hộp nhập Blog -->
-                <section class="create-post">
-                    <h2><i class="fas fa-edit"></i> Tạo bài viết mới</h2>
-                    <form action="/XuLyThemBlog" method="post">
-                        <div class="post-input">
-                            <input type="text" class="form-control" id="title" name="title"
-                                placeholder="Tiêu đề bài viết..." required>
-                            <textarea class="form-control" id="content" name="content" placeholder="Bạn đang nghĩ gì?"
-                                required rows="3"></textarea>
-                            <div class="post-actions">
-                                <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i>
-                                    Đăng</button>
-                            </div>
-                        </div>
-                    </form>
-                </section>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>👤 Author</th>
+                <th>📅 Post Date</th>
+                <th>📖 Title</th>
+                <th>📝 Content</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="blog : ${blogs}">
+                <td th:text="${blog.creator.firstName} + ' ' + ${blog.creator.lastName}"></td>
+                <td th:text="${#temporals.format(blog.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                <td th:text="${blog.title}"></td>
+                <td th:text="${blog.content}"></td>
+            </tr>
+            </tbody>
+        </table>
 
-                <!-- Feed của Blog -->
-                <section class="feed">
-                    <h3><i class="fas fa-stream"></i> Bảng tin</h3>
+    </section>
 
-                    <div class="posts-container">
-                        <div class="post" th:each="blog : ${blogs}">
-                            <div class="post-header">
-                                <div class="post-avatar">
-                                    <i class="fas fa-user-circle"></i>
-                                </div>
-                                <div class="post-info">
-                                    <div class="post-author"
-                                        th:text="${blog.creator.firstName} + ' ' + ${blog.creator.lastName}"></div>
-                                    <div class="post-time"
-                                        th:text="${#temporals.format(blog.createdAt, 'dd/MM/yyyy HH:mm')}"></div>
-                                </div>
-                            </div>
-                            <div class="post-content">
-                                <h4 class="post-title" th:text="${blog.title}"></h4>
-                                <p class="post-text" th:text="${blog.content}"></p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>
-    </div>
+</main>
 
-    <footer class="site-footer">
-        <div class="footer-container">
-            <div class="footer-text">
-                <div class="footer-logo">
-                    <i class="fas fa-blog"></i>
-                    <span>Blog</span>
-                </div>
-                <p>Chia sẻ ý tưởng và kết nối với mọi người</p>
-                <p class="footer-copyright">&copy; 2025 Blog - Bản quyền được bảo lưu</p>
-            </div>
-
-            <div class="newsletter">
-                <p>Đăng ký nhận thông báo</p>
-                <div class="subscribe-form">
-                    <input type="email" placeholder="Email của bạn">
-                    <button class="subscribe-btn">Đăng ký</button>
-                </div>
-            </div>
-
-            <div class="footer-links">
-                <a href="#"><i class="fas fa-info-circle"></i> Về chúng tôi</a>
-                <a href="#"><i class="fas fa-file-contract"></i> Điều khoản sử dụng</a>
-                <a href="#"><i class="fas fa-shield-alt"></i> Chính sách bảo mật</a>
-                <a href="#"><i class="fas fa-envelope"></i> Liên hệ</a>
-            </div>
-        </div>
-    </footer>
 </body>
 
 </html>

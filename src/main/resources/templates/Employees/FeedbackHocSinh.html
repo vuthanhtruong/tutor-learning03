@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Feedback từ Học Sinh</title>
+    <title>Student Feedback</title>
     <link rel="stylesheet" th:href="@{/FeedbackHocSinh.css}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 </head>
@@ -10,18 +10,18 @@
 
 <div class="container mt-5">
     <div class="text-center mb-4">
-        <h1 class="text-primary"><i class="fas fa-comments"></i> Feedback từ Học Sinh</h1>
+        <h1 class="text-primary"><i class="fas fa-comments"></i> Student Feedback</h1>
     </div>
 
     <table class="table table-striped">
         <thead>
         <tr>
             <th>#</th>
-            <th>Người Đánh Giá</th>
-            <th>Giáo Viên</th>
-            <th>Nội Dung</th>
-            <th>PHòng</th>
-            <th>Thời Gian</th>
+            <th>Reviewer</th>
+            <th>Teacher</th>
+            <th>Content</th>
+            <th>Room</th>
+            <th>Time</th>
         </tr>
         </thead>
         <tbody>
@@ -38,7 +38,7 @@
 
     <div class="text-center mt-4">
         <a class="btn btn-secondary" th:href="@{/TrangChuNhanVien}">
-            <i class="fas fa-arrow-left"></i> Quay lại
+            <i class="fas fa-arrow-left"></i> Back
         </a>
     </div>
 </div>
