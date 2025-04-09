@@ -1,145 +1,59 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog</title>
-    <link rel="stylesheet" href="Blogcanhan.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
-    <header class="header">
-        <div class="header-container">
-            <div class="header-logo">
-                <i class="fas fa-blog"></i>
-                <h1>Blog</h1>
-            </div>
-            <nav class="header-nav">
-                <ul>
-                    <li><a th:href="@{/QuayVeTrangChu}"><i class="fas fa-home"></i> Quay Về Trang Chủ</a></li>
-                    <li><a href="/BlogCaNhan"><i class="fas fa-user"></i> Blog Đã Đăng</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
 
-    <div class="main-content">
-        <div class="container">
-            <div class="welcome-section">
-                <h1>Blog Cá Nhân</h1>
-                <p>Quản lý và chỉnh sửa các bài viết của bạn</p>
-            </div>
+<header>
+    <h1><i class="fas fa-blog"></i> Blog</h1>
+    <a class="btn btn-home" th:href="@{/QuayVeTrangChu}"><i class="fas fa-home"></i> Back to Home</a>
+    <a class="btn blog-content" href="/BlogCaNhan"><i class="fas fa-user"></i> My Posts</a>
+</header>
 
-            <div class="feed-container">
-                <!-- Feed bài viết kiểu mạng xã hội -->
-                <section class="blog-feed">
-                    <h2><i class="fas fa-list"></i> Bài viết đã đăng</h2>
-                    
-                    <div class="post-feed">
-                        <!-- Mỗi blog post là một thẻ riêng biệt -->
-                        <div class="post-card" th:each="blog : ${blogs}">
-                            <div class="post-header">
-                                <div class="post-author">
-                                    <div class="author-avatar">
-                                        <i class="fas fa-user-circle"></i>
-                                    </div>
-                                    <div class="author-info">
-                                        <div class="author-name" th:text="${blog.creator.firstName} + ' ' + ${blog.creator.lastName}"></div>
-                                        <div class="post-date" th:text="${#temporals.format(blog.createdAt, 'dd/MM/yyyy HH:mm')}"></div>
-                                    </div>
-                                </div>
-                                <div class="post-options">
-                                    <div class="dropdown">
-                                        <button class="dropdown-btn"><i class="fas fa-ellipsis-h"></i></button>
-                                        <div class="dropdown-content">
-                                            <a th:href="@{/SuaBlogCaNhan/edit/{id}(id=${blog.blogId})}">
-                                                <i class="fas fa-edit"></i> Sửa
-                                            </a>
-                                            <a onclick="return confirm('Bạn có chắc chắn muốn xóa blog này?');" 
-                                               th:href="@{/XoaBlogCaNhan/{id}(id=${blog.blogId})}">
-                                                <i class="fas fa-trash"></i> Xóa
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="post-title" th:text="${blog.title}"></div>
-                            <div class="post-content" th:text="${blog.content}"></div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>
-    </div>
+<main>
+    <!-- 🔹 Blog List in Table Format -->
+    <section class="blog-feed">
+        <h2><i class="fas fa-list"></i> Latest Posts</h2>
 
-    <footer class="site-footer">
-        <div class="footer-container">
-            <div class="footer-text">
-                <div class="footer-logo">
-                    <i class="fas fa-blog"></i>
-                    <span>Blog</span>
-                </div>
-                <p>Chia sẻ ý tưởng và kết nối với mọi người</p>
-                <p class="footer-copyright">&copy; 2025 Blog - Bản quyền được bảo lưu</p>
-            </div>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>👤 Author</th>
+                <th>📅 Post Date</th>
+                <th>📖 Title</th>
+                <th>📝 Content</th>
+                <th>⚙️ Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="blog : ${blogs}">
+                <td th:text="${blog.creator.firstName} + ' ' + ${blog.creator.lastName}"></td>
+                <td th:text="${#temporals.format(blog.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                <td th:text="${blog.title}"></td>
+                <td th:text="${blog.content}"></td>
+                <td>
+                    <a class="btn btn-primary" th:href="@{/SuaBlogCaNhan/{id}(id=${blog.blogId})}">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this blog?');"
+                       th:href="@{/XoaBlogCaNhan/{id}(id=${blog.blogId})}">
+                        <i class="fas fa-trash"></i> Delete
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
-            <div class="newsletter">
-                <p>Đăng ký nhận thông báo</p>
-                <div class="subscribe-form">
-                    <input type="email" placeholder="Email của bạn">
-                    <button class="subscribe-btn">Đăng ký</button>
-                </div>
-            </div>
+    </section>
 
-            <div class="footer-links">
-                <a href="#"><i class="fas fa-info-circle"></i> Về chúng tôi</a>
-                <a href="#"><i class="fas fa-file-contract"></i> Điều khoản sử dụng</a>
-                <a href="#"><i class="fas fa-shield-alt"></i> Chính sách bảo mật</a>
-                <a href="#"><i class="fas fa-envelope"></i> Liên hệ</a>
-            </div>
-        </div>
-    </footer>
+</main>
 
-    <script>
-        // JavaScript để xử lý nút thích
-        document.querySelectorAll('.like-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const icon = this.querySelector('i');
-                if (icon.classList.contains('far')) {
-                    icon.classList.remove('far');
-                    icon.classList.add('fas');
-                    icon.style.color = '#e53935';
-                } else {
-                    icon.classList.remove('fas');
-                    icon.classList.add('far');
-                    icon.style.color = 'inherit';
-                }
-            });
-        });
-        
-        // JavaScript để xử lý dropdown menu
-        document.querySelectorAll('.dropdown-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const content = this.nextElementSibling;
-                content.classList.toggle('show');
-            });
-        });
-        
-        // Đóng dropdown khi click ra ngoài
-        window.addEventListener('click', function(event) {
-            if (!event.target.matches('.dropdown-btn') && !event.target.matches('.fa-ellipsis-h')) {
-                const dropdowns = document.querySelectorAll('.dropdown-content');
-                dropdowns.forEach(dropdown => {
-                    if (dropdown.classList.contains('show')) {
-                        dropdown.classList.remove('show');
-                    }
-                });
-            }
-        });
-    </script>
 </body>
 
 </html>

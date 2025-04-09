@@ -1,115 +1,96 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Nhập Mã OTP</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            padding-top: 50px;
-        }
-
-        .card {
-            max-width: 500px;
-            margin: 0 auto;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-
-        .card-header {
-            background-color: #007bff;
-            color: white;
-            text-align: center;
-            border-radius: 10px 10px 0 0 !important;
-            padding: 20px;
-        }
-
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-
-        .btn-primary:hover {
-            background-color: #0069d9;
-            border-color: #0062cc;
-        }
-
-        .otp-input {
-            font-size: 24px;
-            text-align: center;
-            letter-spacing: 0.5em;
-        }
-
-        .timer {
-            color: #dc3545;
-            font-weight: bold;
-        }
-
-        .resend {
-            cursor: pointer;
-            color: #007bff;
-            text-decoration: underline;
-        }
-    </style>
+    <title>Enter OTP Code</title>
+    <link rel="stylesheet" th:href="@{/NhapOTP.css}">
 </head>
-
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="mb-0">Xác thực OTP</h3>
-                    </div>
-                    <div class="card-body">
-                        <p class="text-center mb-4">
-                            Mã OTP đã được gửi đến email <span class="fw-bold" th:text="${email}"></span>.
-                            Vui lòng kiểm tra và nhập mã vào ô bên dưới.
-                        </p>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">OTP Verification</h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-center mb-4">
+                        OTP code has been sent to email <span class="fw-bold" th:text="${email}"></span>.
+                        Please check and enter the code below.
+                    </p>
 
-                        <!-- Hiển thị thông báo lỗi nếu có -->
-                        <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
+                    <!-- Display error message if any -->
+                    <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
+                    <!-- Display resend message if any -->
+                    <div class="alert alert-success" role="alert" th:if="${message}" th:text="${message}"></div>
 
-                        <form method="post" th:action="@{/auth/verify-otp}">
-                            <input name="email" th:value="${email}" type="hidden">
+                    <form method="post" th:action="@{/auth/verify-otp}">
+                        <input name="email" th:value="${email}" type="hidden">
 
-                            <div class="mb-3">
-                                <label class="form-label" for="otp">Mã OTP</label>
-                                <input autofocus class="form-control otp-input" id="otp" maxlength="6" name="otp"
-                                    pattern="\d{6}" required title="Mã OTP gồm 6 chữ số" type="text">
-                                <div class="form-text">
-                                    Mã OTP có hiệu lực trong <span class="timer" id="timer">10:00</span> phút.
-                                </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="otp">OTP Code</label>
+                            <input autofocus class="form-control otp-input" id="otp" maxlength="6" name="otp"
+                                   pattern="\d{6}" required title="OTP code consists of 6 digits" type="text">
+                            <div class="form-text">
+                                OTP code is valid for <span class="timer" id="timer">10:00</span>.
                             </div>
-
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-primary" type="submit">Xác nhận</button>
-                                <a class="btn btn-outline-secondary" href="/auth/QuenMatKhau">Quay lại</a>
-                            </div>
-                        </form>
-
-
-                        <div class="text-center mt-3">
-                            <p>Không nhận được mã?
-                            <form method="post" th:action="@{/auth/resend-otp}" class="d-inline">
-                                <button type="submit" class="btn btn-link resend">Gửi lại mã</button>
-                            </form>
-                            </p>
                         </div>
+
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary" type="submit">Confirm</button>
+                            <a class="btn btn-outline-secondary" href="/auth/QuenMatKhau">Back</a>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <p>Didn't receive the code?
+                        <form method="post" th:action="@{/auth/resend-otp}" class="d-inline">
+                            <button type="submit" class="btn btn-link resend">Resend Code</button>
+                        </form>
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
-</body>
+</div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const timerElement = document.getElementById('timer');
+        let timeLeft = 10 * 60; // 10 minutes in seconds (synchronized with AuthController)
+
+        // Function to update timer
+        const updateTimer = () => {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            if (timeLeft > 0) {
+                timeLeft--;
+            } else {
+                timerElement.textContent = 'Expired';
+                timerElement.style.color = 'var(--danger)'; // Using CSS variable from NhapOTP.css
+                clearInterval(timerInterval);
+            }
+        };
+
+        // Update immediately on first run
+        updateTimer();
+
+        // Run countdown every second
+        const timerInterval = setInterval(updateTimer, 1000);
+
+        // Reset timer when resending OTP (assuming form submission is successful)
+        document.querySelector('form[action="/auth/resend-otp"]').addEventListener('submit', () => {
+            clearInterval(timerInterval); // Stop current countdown
+            timeLeft = 10 * 60; // Reset to 10 minutes
+            timerElement.style.color = 'var(--primary)'; // Reset color
+            updateTimer(); // Update immediately
+            setInterval(updateTimer, 1000); // Start countdown again
+        });
+    });
+</script>
+</body>
 </html>

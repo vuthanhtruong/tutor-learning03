@@ -1,44 +1,44 @@
 <!DOCTYPE html>
-<html lang="vi"
+<html lang="en"
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Thành Viên Trong Lớp</title>
+    <title>Class Members</title>
     <link href="/ThanhVienTrongLopHocCuaBan.css" rel="stylesheet">
 </head>
 
 <body>
 
 <header>
-    <h1>Danh Sách Thành Viên Trong Lớp</h1>
+    <h1>Class Member List</h1>
 
     <!-- Back Button Section -->
     <div class="buttons">
-        <a class="btn btn-primary" th:href="${homePage}">Quay về Trang Chủ</a>
-        <a class="btn btn-secondary" href="/DanhSachLopHoc">Quay về Danh Sách Lớp Học</a>
-        <a class="btn btn-tertiary" th:href="@{'/ChiTietLopHocBanThamGia/' + ${roomId}}">Quay về Chi Tiết Lớp Học</a>
+        <a class="btn btn-primary" th:href="${homePage}">Back to Home</a>
+        <a class="btn btn-secondary" href="/DanhSachLopHoc">Back to Class List</a>
+        <a class="btn btn-tertiary" th:href="@{'/ChiTietLopHocBanThamGia/' + ${roomId}}">Back to Class Details</a>
     </div>
 
 
 </header>
 
-<!-- Phân chia màn hình thành 2 phần -->
+<!-- Split screen into 2 sections -->
 <div class="container">
     <!-- Section for Teachers -->
     <div class="section left">
-        <h2>Danh Sách Giáo Viên</h2>
+        <h2>Teacher List</h2>
         <ul>
             <th:block th:each="teacher : ${teachers}">
                 <li>
                     <div class="member-info">
-                        <strong th:text="${teacher.firstName} + ' ' + ${teacher.lastName}">Tên Giáo Viên</strong><br>
+                        <strong th:text="${teacher.firstName} + ' ' + ${teacher.lastName}">Teacher Name</strong><br>
                         <span th:text="${teacher.email}">Email</span><br>
-                        <span th:text="${teacher.phoneNumber}">Số điện thoại</span>
+                        <span th:text="${teacher.phoneNumber}">Phone Number</span>
                         <!-- Message Button -->
                         <a class="btn btn-message"
-                           th:href="@{/ChiTietTinNhan(id=${teacher.id})}">Gửi Tin Nhắn</a>
+                           th:href="@{/ChiTietTinNhan(id=${teacher.id})}">Send Message</a>
                     </div>
                 </li>
             </th:block>
@@ -47,17 +47,17 @@
 
     <!-- Section for Students -->
     <div class="section right">
-        <h2>Danh Sách Học Sinh</h2>
+        <h2>Student List</h2>
         <ul>
             <th:block th:each="student : ${students}">
                 <li>
                     <div class="member-info">
-                        <strong th:text="${student.firstName} + ' ' + ${student.lastName}">Tên Học Sinh</strong><br>
+                        <strong th:text="${student.firstName} + ' ' + ${student.lastName}">Student Name</strong><br>
                         <span th:text="${student.email}">Email</span><br>
-                        <span th:text="${student.phoneNumber}">Số điện thoại</span>
+                        <span th:text="${student.phoneNumber}">Phone Number</span>
                         <!-- Message Button -->
                         <a class="btn btn-message"
-                           th:href="@{/ChiTietTinNhan(id=${student.id})}">Gửi Tin Nhắn</a>
+                           th:href="@{/ChiTietTinNhan(id=${student.id})}">Send Message</a>
                     </div>
                 </li>
             </th:block>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Chi Tiết Tin Nhắn</title>
+    <title>Message Details</title>
     <link href="/ChiTietTinNhan.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
@@ -11,51 +11,51 @@
 </head>
 <body>
 <div class="container">
-    <!-- Danh sách liên hệ bên trái -->
+    <!-- Contact list on the left -->
     <div class="contacts">
-        <h3>Danh sách liên hệ</h3>
+        <h3>Contact List</h3>
         <ul>
             <li th:each="contact : ${contacts}">
                 <a th:href="@{/ChiTietTinNhan(id=${contact.id})}"
                    th:text="${contact.firstName + ' ' + contact.lastName}"></a>
             </li>
-            <li th:if="${#lists.isEmpty(contacts)}">Chưa có liên hệ nào.</li>
+            <li th:if="${#lists.isEmpty(contacts)}">No contacts available.</li>
         </ul>
     </div>
 
-    <!-- Chi tiết tin nhắn bên phải -->
+    <!-- Message details on the right -->
     <div class="chat">
         <div class="back-button">
-            <a th:href="@{/{trangchu}(trangchu=${trangchu})}">Quay về Trang Chủ</a>
+            <a th:href="@{/{trangchu}(trangchu=${trangchu})}">Back to Home</a>
         </div>
 
-        <!-- Hiển thị tin nhắn khi có chatPartner -->
+        <!-- Display messages when chatPartner exists -->
         <div id="messagesContainer" th:if="${chatPartner != null}">
             <div class="message-box" th:classappend="${message.sender.id == currentUser.id} ? 'right' : 'left'"
                  th:each="message : ${messages}" th:id="'message-' + ${message.messagesID}">
                 <div class="message-header">
-                    <span th:text="${message.sender.id == currentUser.id ? 'Bạn' : chatPartner.firstName + ' ' + chatPartner.lastName}"></span>
+                    <span th:text="${message.sender.id == currentUser.id ? 'You' : chatPartner.firstName + ' ' + chatPartner.lastName}"></span>
                 </div>
                 <div class="message-time" th:text="${#temporals.format(message.datetime, 'dd/MM/yyyy HH:mm')}"></div>
                 <div class="message-text" th:text="${message.text}"></div>
-                <!-- Nút xóa -->
+                <!-- Delete button -->
                 <span class="delete-btn" onclick="deleteMessage(this)"
                       th:data-message-id="${message.messagesID}" th:if="${message.sender.id == currentUser.id}">X</span>
             </div>
         </div>
-        <!-- Thông báo khi chưa chọn liên hệ -->
+        <!-- Notification when no contact is selected -->
         <div class="text-center" style="padding: 20px;" th:if="${chatPartner == null}">
-            <p>Chọn một liên hệ từ danh sách để xem tin nhắn.</p>
+            <p>Select a contact from the list to view messages.</p>
         </div>
 
-        <!-- Form gửi tin nhắn chỉ hiển thị khi có chatPartner -->
+        <!-- Message form only displayed when chatPartner exists -->
         <div class="message-form" th:if="${chatPartner != null}">
-            <h3>Gửi tin nhắn mới</h3>
+            <h3>Send New Message</h3>
             <form id="messageForm">
                 <input id="currentUserId" th:value="${currentUser.id}" type="hidden"/>
                 <input id="chatPartnerId" th:value="${chatPartner.id}" type="hidden"/>
-                <textarea id="messageText" placeholder="Nhập tin nhắn..." required></textarea>
-                <button type="submit">Gửi</button>
+                <textarea id="messageText" placeholder="Enter message..." required></textarea>
+                <button type="submit">Send</button>
             </form>
         </div>
     </div>
@@ -66,7 +66,7 @@
         const stompClient = Stomp.over(socket);
 
         stompClient.connect({}, function (frame) {
-            console.log("🟢 WebSocket kết nối thành công: " + frame);
+            console.log("🟢 WebSocket connection successful: " + frame);
 
             stompClient.subscribe("/user/queue/messages", function (message) {
                 const content = JSON.parse(message.body);
@@ -102,15 +102,15 @@
         function appendMessage(senderId, content, timestamp, messageId) {
             var currentUserId = document.getElementById("currentUserId")?.value;
             var chatPartnerId = document.getElementById("chatPartnerId")?.value;
-            var chatPartnerName = document.querySelector(".message-box.left .message-header span")?.textContent || "Người đối thoại";
+            var chatPartnerName = document.querySelector(".message-box.left .message-header span")?.textContent || "Chat Partner";
 
-            var sender = senderId == currentUserId ? "Bạn" : chatPartnerName;
+            var sender = senderId == currentUserId ? "You" : chatPartnerName;
             var isCurrentUser = senderId == currentUserId;
 
             var messageHTML = `
             <div class="message-box ${isCurrentUser ? 'right' : 'left'}" id="message-${messageId}">
                 <div class="message-header">${sender}</div>
-                <div class="message-time">${new Date(timestamp).toLocaleString('vi-VN')}</div>
+                <div class="message-time">${new Date(timestamp).toLocaleString('en-US')}</div>
                 <div class="message-text">${content}</div>
                 ${isCurrentUser ? `<span class="delete-btn" data-message-id="${messageId}" onclick="deleteMessage(this)">X</span>` : ''}
             </div>`;
@@ -126,10 +126,10 @@
             const messageElement = document.getElementById(`message-${messageId}`);
             if (messageElement) {
                 const textElement = messageElement.querySelector(".message-text");
-                textElement.textContent = "Người dùng này đã xóa tin nhắn";
+                textElement.textContent = "This message has been deleted";
                 const deleteBtn = messageElement.querySelector(".delete-btn");
                 if (deleteBtn) {
-                    deleteBtn.remove(); // Xóa nút "X" sau khi tin nhắn đã bị xóa
+                    deleteBtn.remove(); // Remove the "X" button after the message has been deleted
                 }
             }
         }
@@ -151,7 +151,7 @@
             }));
         };
 
-        // Cuộn xuống cuối nếu có tin nhắn
+        // Scroll to bottom if there are messages
         if (document.getElementById("messagesContainer")) {
             scrollToBottom();
         }

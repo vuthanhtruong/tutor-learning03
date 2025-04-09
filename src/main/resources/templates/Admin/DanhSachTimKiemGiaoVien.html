@@ -1,46 +1,47 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Kết Quả Tìm Kiếm Giáo Viên</title>
+    <title>Teacher Search Results</title>
     <!-- CSS -->
     <link href="/DanhSachTimKiemGiaoVien.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container mt-5">
-    <!-- Tiêu đề -->
+    <!-- Title -->
     <div class="header">
         <h2 class="text-center text-primary">
-            <i class="fas fa-search"></i> Kết Quả Tìm Kiếm Giáo Viên
+            <i class="fas fa-search"></i> Teacher Search Results
         </h2>
     </div>
 
-    <!-- Nút Xóa Tất Cả -->
+    <!-- Delete All Button -->
     <div class="mb-3">
-        <form method="post" onsubmit="return confirm('Bạn có chắc chắn muốn xóa tất cả giáo viên?');"
+        <form method="post" onsubmit="return confirm('Are you sure you want to delete all teachers?');"
               th:action="@{/XoaTatCaGiaoVienWithAttributes}">
             <input name="keyword" th:value="${keyword}" type="hidden">
             <button class="btn btn-danger" type="submit">
-                <i class="fas fa-trash"></i> Xóa Tất Cả Giáo Viên Theo Tìm Kiếm Này
+                <i class="fas fa-trash"></i> Delete All Teachers From This Search
             </button>
         </form>
     </div>
 
-    <!-- Bảng danh sách giáo viên -->
+    <!-- Teacher list table -->
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead class="table-dark">
             <tr>
                 <th><i class="fas fa-id-badge"></i> ID</th>
-                <th><i class="fas fa-user"></i> Họ</th>
-                <th><i class="fas fa-user"></i> Tên</th>
+                <th><i class="fas fa-user"></i> Last Name</th>
+                <th><i class="fas fa-user"></i> First Name</th>
                 <th><i class="fas fa-envelope"></i> Email</th>
-                <th><i class="fas fa-phone"></i> Số Điện Thoại</th>
-                <th><i class="fas fa-calendar"></i> Ngày Sinh</th>
+                <th><i class="fas fa-phone"></i> Phone Number</th>
+                <th><i class="fas fa-calendar"></i> Birth Date</th>
                 <th><i class="fas fa-id-card"></i> MIS ID</th>
-                <th><i class="fas fa-cogs"></i> Hành Động</th>
+                <th><i class="fas fa-cogs"></i> Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -55,31 +56,31 @@
                 <td th:text="${teacher.misID}"></td>
                 <td class="text-center">
                     <a class="btn btn-warning btn-sm" th:href="@{/SuaGiaoVien/{id}(id=${teacher.id})}">
-                        <i class="fas fa-edit"></i> Sửa
+                        <i class="fas fa-edit"></i> Edit
                     </a>
                     <a class="btn btn-danger btn-sm"
-                       onclick="return confirm('Bạn có chắc chắn muốn xóa giáo viên này?');"
+                       onclick="return confirm('Are you sure you want to delete this teacher?');"
                        th:href="@{/XoaGiaoVien/{id}(id=${teacher.id})}">
-                        <i class="fas fa-trash"></i> Xóa
+                        <i class="fas fa-trash"></i> Delete
                     </a>
                 </td>
             </tr>
             <tr th:if="${teachers == null or #lists.isEmpty(teachers)}">
                 <td class="text-center text-danger" colspan="8">
-                    <i class="fas fa-exclamation-circle"></i> Không tìm thấy giáo viên nào!
+                    <i class="fas fa-exclamation-circle"></i> No teachers found!
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
 
-    <!-- Nút điều hướng -->
+    <!-- Navigation buttons -->
     <div class="text-center mt-3">
         <a class="btn btn-primary me-2" href="/DanhSachGiaoVien">
-            <i class="fas fa-arrow-left"></i> Quay Lại Danh Sách Giáo Viên
+            <i class="fas fa-arrow-left"></i> Back to Teacher List
         </a>
         <a class="btn btn-secondary" href="/TrangChuAdmin">
-            <i class="fas fa-home"></i> Quay Lại Trang Chủ Admin
+            <i class="fas fa-home"></i> Back to Admin Home
         </a>
     </div>
 </div>

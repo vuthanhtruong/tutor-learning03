@@ -2,44 +2,44 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Thêm Phòng Học Online</title>
+    <title>Add Online Classroom</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/ThemPhongHocOnline.css}">
 </head>
 <body class="container mt-4">
 
-<h2 class="text-center"><i class="fas fa-laptop"></i> Thêm Phòng Học Online</h2>
+<h2 class="text-center"><i class="fas fa-laptop"></i> Add Online Classroom</h2>
 
-<!-- Hiển thị thông báo lỗi -->
+<!-- Display error message -->
 <div class="alert alert-danger" th:if="${error}">
     <i class="fas fa-exclamation-triangle"></i> <span th:text="${error}"></span>
 </div>
 
-<!-- Hiển thị thông báo thành công -->
+<!-- Display success message -->
 <div class="alert alert-success" th:if="${success}">
     <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
 </div>
 
-<!-- Form nhập thông tin -->
+<!-- Information input form -->
 <form class="form-container" method="post" th:action="@{/ThemPhongHocOnline}">
     <div class="mb-3">
-        <label class="form-label" for="roomId"><i class="fas fa-hashtag"></i> ID Phòng</label>
+        <label class="form-label" for="roomId"><i class="fas fa-hashtag"></i> Room ID</label>
         <input class="form-control" id="roomId" name="roomId" required type="text">
     </div>
 
     <div class="mb-3">
-        <label class="form-label" for="roomName"><i class="fas fa-door-open"></i> Tên Phòng</label>
+        <label class="form-label" for="roomName"><i class="fas fa-door-open"></i> Room Name</label>
         <input class="form-control" id="roomName" name="roomName" required type="text">
     </div>
 
-    <!-- Nút Thêm -->
+    <!-- Add Button -->
     <button class="btn btn-success" type="submit">
-        <i class="fas fa-save"></i> Lưu Phòng Học Online
+        <i class="fas fa-save"></i> Save Online Classroom
     </button>
 
-    <!-- Nút Quay Lại -->
+    <!-- Back Button -->
     <a class="btn btn-secondary" th:href="@{/DanhSachPhongHoc}">
-        <i class="fas fa-arrow-left"></i> Quay Lại
+        <i class="fas fa-arrow-left"></i> Back
     </a>
 </form>
 

@@ -2,59 +2,59 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Chỉnh Sửa Phòng Học Online</title>
+  <title>Edit Online Classroom</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" th:href="@{/SuaPhongHocOnline.css}">
 </head>
 <body class="container mt-4">
 
-<h2 class="text-center"><i class="fas fa-edit"></i> Chỉnh Sửa Phòng Học Online</h2>
+<h2 class="text-center"><i class="fas fa-edit"></i> Edit Online Classroom</h2>
 
-<!-- Hiển thị thông báo lỗi -->
+<!-- Display error message -->
 <div th:if="${param.error == 'RoomNameExists'}" class="alert alert-danger">
-  <i class="fas fa-exclamation-triangle"></i> Tên phòng đã tồn tại. Vui lòng nhập tên khác.
+  <i class="fas fa-exclamation-triangle"></i> Room name already exists. Please enter a different name.
 </div>
 
-<!-- Form cập nhật phòng học online -->
+<!-- Online classroom update form -->
 <form th:action="@{/SuaPhongHocOnline}" method="post" class="form-container">
-  <!-- ID Phòng (Ẩn) -->
+  <!-- Room ID (Hidden) -->
   <input type="hidden" name="roomId" th:value="${room.roomId}" />
 
-  <!-- Nhập Tên Phòng -->
+  <!-- Enter Room Name -->
   <div class="mb-3">
-    <label for="roomName" class="form-label"><i class="fas fa-door-open"></i> Tên Phòng</label>
+    <label for="roomName" class="form-label"><i class="fas fa-door-open"></i> Room Name</label>
     <input type="text" id="roomName" name="roomName" class="form-control"
            th:value="${param.roomName != null ? param.roomName : room.roomName}" required>
   </div>
 
-  <!-- Nhập Link Phòng -->
+  <!-- Enter Room Link -->
   <div class="mb-3">
-    <label for="link" class="form-label"><i class="fas fa-link"></i> Link Phòng Học</label>
+    <label for="link" class="form-label"><i class="fas fa-link"></i> Classroom Link</label>
     <input type="url" id="link" name="link" class="form-control"
            th:value="${param.link != null ? param.link : room.link}" required>
   </div>
 
-  <!-- Trạng Thái -->
+  <!-- Status -->
   <div class="mb-3">
-    <label for="status" class="form-label"><i class="fas fa-toggle-on"></i> Trạng Thái</label>
+    <label for="status" class="form-label"><i class="fas fa-toggle-on"></i> Status</label>
     <select id="status" name="status" class="form-select">
       <option value="true" th:selected="${param.status != null ? param.status == 'true' : room.status == true}">
-        Hoạt Động
+        Active
       </option>
       <option value="false" th:selected="${param.status != null ? param.status == 'false' : room.status == false}">
-        Không Hoạt Động
+        Inactive
       </option>
     </select>
   </div>
 
-  <!-- Nút cập nhật -->
+  <!-- Update button -->
   <button type="submit" class="btn btn-primary">
-    <i class="fas fa-save"></i> Lưu Thay Đổi
+    <i class="fas fa-save"></i> Save Changes
   </button>
 
-  <!-- Nút quay lại -->
+  <!-- Back button -->
   <a th:href="@{/DanhSachPhongHoc}" class="btn btn-secondary">
-    <i class="fas fa-arrow-left"></i> Quay Lại
+    <i class="fas fa-arrow-left"></i> Back
   </a>
 </form>
 

@@ -1,174 +1,49 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đổi Mật Khẩu</title>
-    <link rel="stylesheet" href="DoiMatKhau.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Change Password</title>
+    <link href="/DoiMatKhau.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 </head>
-
 <body>
-    <!-- Header -->
-    <div class="header">
-        <div class="header-container">
-            <div class="header-logo">
-                <img src="/api/placeholder/40/40" alt="Logo">
-                <h1>Hệ Thống</h1>
-            </div>
-            <nav class="header-nav">
-                <ul>
-                    <li><a href="/TrangChu">Trang chủ</a></li>
-                    <li><a href="/GioiThieu">Giới thiệu</a></li>
-                    <li><a href="/DichVu">Dịch vụ</a></li>
-                    <li><a href="/TrangCaNhan">Trang cá nhân</a></li>
-                </ul>
-            </nav>
-        </div>
-    </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="container">
-            <div class="welcome-section">
-                <h2><i class="fas fa-lock"></i> Đổi Mật Khẩu</h2>
-                <p>Cập nhật mật khẩu của bạn để bảo vệ tài khoản</p>
-            </div>
-            
-            <div class="form-container">
-                <form action="/XuLyDoiMatKhau" method="post">
-                    <div class="form-group">
-                        <label class="form-label" for="currentPassword"><i class="fas fa-key"></i> Mật Khẩu Hiện Tại:</label>
-                        <input class="form-control" id="currentPassword" name="currentPassword" placeholder="Nhập mật khẩu hiện tại" required type="password" autocomplete="off">
-                    </div>
+<header>
+    <h1>Change Password</h1>
+</header>
 
-                    <div class="form-group">
-                        <label class="form-label" for="newPassword"><i class="fas fa-lock"></i> Mật Khẩu Mới:</label>
-                        <input class="form-control" id="newPassword" name="newPassword" placeholder="Nhập mật khẩu mới" required type="password" autocomplete="off">
-                        <div class="password-strength" id="passwordStrength"></div>
-                        <div class="password-rules">
-                            <div class="password-rule" id="length"><i class="fas fa-circle"></i> Ít nhất 8 ký tự</div>
-                            <div class="password-rule" id="uppercase"><i class="fas fa-circle"></i> Ít nhất 1 ký tự viết hoa</div>
-                            <div class="password-rule" id="lowercase"><i class="fas fa-circle"></i> Ít nhất 1 ký tự viết thường</div>
-                            <div class="password-rule" id="number"><i class="fas fa-circle"></i> Ít nhất 1 số</div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="confirmPassword"><i class="fas fa-check"></i> Xác Nhận Mật Khẩu:</label>
-                        <input class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu mới" required type="password" autocomplete="off">
-                        <div class="password-match" id="passwordMatch"></div>
-                    </div>
-
-                    <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i> Đổi Mật Khẩu</button>
-                </form>
-                
-                <div class="navigation-section">
-                    <a class="btn btn-secondary" href="/TrangCaNhan"><i class="fas fa-arrow-left"></i> Quay Lại Trang Cá Nhân</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="footer-container">
-            <div>
-                <div class="footer-logo">
-                    <img src="/api/placeholder/40/40" alt="Logo">
-                    <div class="footer-text">
-                        <span>Hệ Thống</span>
-                        <span>Bảo mật & Đơn giản</span>
-                    </div>
-                </div>
-                <p>Chúng tôi cung cấp giải pháp đăng nhập và bảo mật an toàn cho người dùng.</p>
-                <div class="footer-copyright">
-                    &copy; 2025 Hệ Thống. Tất cả quyền được bảo lưu.
-                </div>
+<main>
+    <section class="password-reset-section">
+        <h2><i class="fas fa-lock"></i> Change Password</h2>
+        <form action="/XuLyDoiMatKhau" method="post">
+            <div class="form-group">
+                <label for="currentPassword"><i class="fas fa-key"></i> Current Password:</label>
+                <input autocomplete="off" id="currentPassword" name="currentPassword"
+                       placeholder="Enter current password"
+                       required type="password">
             </div>
 
-            <div>
-                <h4>Liên kết nhanh</h4>
-                <div class="footer-links">
-                    <a href="/TrangChu">Trang chủ</a>
-                    <a href="/GioiThieu">Giới thiệu</a>
-                    <a href="/DichVu">Dịch vụ</a>
-                    <a href="/HoTro">Hỗ trợ</a>
-                </div>
+            <div class="form-group">
+                <label for="newPassword"><i class="fas fa-lock"></i> New Password:</label>
+                <input autocomplete="off" id="newPassword" name="newPassword" placeholder="Enter new password" required
+                       type="password">
             </div>
 
-            <div>
-                <h4>Liên hệ</h4>
-                <div class="footer-links">
-                    <a href="tel:+84123456789"><i class="fas fa-phone"></i> Hotline: 0123 456 789</a>
-                    <a href="mailto:info@hethong.vn"><i class="fas fa-envelope"></i> Email: info@hethong.vn</a>
-                    <a href="#"><i class="fas fa-map-marker-alt"></i> Địa chỉ: 123 Đường ABC, Hà Nội</a>
-                </div>
+            <div class="form-group">
+                <label for="confirmPassword"><i class="fas fa-check"></i> Confirm Password:</label>
+                <input autocomplete="off" id="confirmPassword" name="confirmPassword"
+                       placeholder="Re-enter new password"
+                       required type="password">
             </div>
-        </div>
-    </footer>
 
-    <script>
-        // Validate password
-        const newPassword = document.getElementById('newPassword');
-        const confirmPassword = document.getElementById('confirmPassword');
-        const passwordMatch = document.getElementById('passwordMatch');
-        const passwordStrength = document.getElementById('passwordStrength');
-        const lengthRule = document.getElementById('length');
-        const uppercaseRule = document.getElementById('uppercase');
-        const lowercaseRule = document.getElementById('lowercase');
-        const numberRule = document.getElementById('number');
-        
-        newPassword.addEventListener('input', function() {
-            const password = this.value;
-            
-            // Check rules
-            const hasLength = password.length >= 8;
-            const hasUpperCase = /[A-Z]/.test(password);
-            const hasLowerCase = /[a-z]/.test(password);
-            const hasNumber = /[0-9]/.test(password);
-            
-            // Update rule indicators
-            lengthRule.className = hasLength ? 'password-rule valid' : 'password-rule';
-            uppercaseRule.className = hasUpperCase ? 'password-rule valid' : 'password-rule';
-            lowercaseRule.className = hasLowerCase ? 'password-rule valid' : 'password-rule';
-            numberRule.className = hasNumber ? 'password-rule valid' : 'password-rule';
-            
-            // Update icons
-            lengthRule.innerHTML = hasLength ? '<i class="fas fa-check-circle"></i> Ít nhất 8 ký tự' : '<i class="fas fa-circle"></i> Ít nhất 8 ký tự';
-            uppercaseRule.innerHTML = hasUpperCase ? '<i class="fas fa-check-circle"></i> Ít nhất 1 ký tự viết hoa' : '<i class="fas fa-circle"></i> Ít nhất 1 ký tự viết hoa';
-            lowercaseRule.innerHTML = hasLowerCase ? '<i class="fas fa-check-circle"></i> Ít nhất 1 ký tự viết thường' : '<i class="fas fa-circle"></i> Ít nhất 1 ký tự viết thường';
-            numberRule.innerHTML = hasNumber ? '<i class="fas fa-check-circle"></i> Ít nhất 1 số' : '<i class="fas fa-circle"></i> Ít nhất 1 số';
-            
-            // Password strength
-            let strength = 0;
-            if (hasLength) strength += 25;
-            if (hasUpperCase) strength += 25;
-            if (hasLowerCase) strength += 25;
-            if (hasNumber) strength += 25;
-            
-            // Update strength bar
-            passwordStrength.style.width = strength + '%';
-            passwordStrength.style.height = '4px';
-            passwordStrength.style.backgroundColor = strength < 50 ? '#ea4335' : strength < 75 ? '#fbbc05' : '#34a853';
-            passwordStrength.style.transition = 'all 0.3s ease';
-            passwordStrength.style.marginTop = '5px';
-            passwordStrength.style.marginBottom = '10px';
-        });
-        
-        // Check if passwords match
-        confirmPassword.addEventListener('input', function() {
-            if (newPassword.value === this.value) {
-                passwordMatch.textContent = 'Mật khẩu khớp';
-                passwordMatch.style.color = 'var(--secondary-color)';
-            } else {
-                passwordMatch.textContent = 'Mật khẩu không khớp';
-                passwordMatch.style.color = 'var(--warning-color)';
-            }
-            passwordMatch.style.fontSize = '0.85rem';
-            passwordMatch.style.marginTop = '5px';
-        });
-    </script>
+            <button type="submit"><i class="fas fa-save"></i> Change Password</button>
+        </form>
+    </section>
+
+    <section class="navigation-section">
+        <a class="btn" href="/TrangCaNhan"><i class="fas fa-arrow-left"></i> Back to Personal Page</a>
+    </section>
+</main>
+
 </body>
 </html>
