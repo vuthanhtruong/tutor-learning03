@@ -3,63 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Chi Tiết Lớp Học</title>
+    <title>Class Details</title>
     <link href="/ChiTietLopHocBanThamGia.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 <header>
-    <h1>Chi Tiết Lớp Học</h1>
+    <h1>Class Details</h1>
     <div class="back-buttons">
-        <a class="btn btn-back" th:href="@{/DanhSachLopHoc}">🔙 Quay lại danh sách lớp học</a>
-        <a class="btn btn-home" th:href="@{${homePage}}">🏠 Quay lại trang chủ</a>
+        <a class="btn btn-back" th:href="@{/DanhSachLopHoc}">🔙 Back to class list</a>
+        <a class="btn btn-home" th:href="@{${homePage}}">🏠 Back to home page</a>
     </div>
     <div class="feedback-section" th:if="${feedback}">
-        <h2>📢 Đánh giá giáo viên</h2>
+        <h2>📢 Teacher Feedback</h2>
         <form action="/GuiNhanXetGiaoVien" method="POST">
             <input name="roomId" th:value="${room?.roomId}" type="hidden">
             <input name="reviewerId" th:value="${#authentication.principal.username}" type="hidden">
-            <label for="teacher">👩‍🏫 Chọn giáo viên:</label>
+            <label for="teacher">👩‍🏫 Choose teacher:</label>
             <select id="teacher" name="teacherId" required>
                 <option th:each="teacher : ${teachers}" th:text="${teacher.firstName + ' ' + teacher.lastName}"
                         th:value="${teacher.teacherId}"></option>
             </select>
-            <label for="text">📝 Nhập nhận xét:</label>
-            <textarea id="text" name="text" placeholder="Nhập đánh giá của bạn..." required></textarea>
-            <button type="submit">📩 Gửi đánh giá</button>
+            <label for="text">📝 Enter feedback:</label>
+            <textarea id="text" name="text" placeholder="Enter your feedback..." required></textarea>
+            <button type="submit">📩 Send feedback</button>
         </form>
     </div>
-    <a class="btn btn-members" th:href="@{'/ThanhVienTrongLopHocCuaBan/' + ${room?.roomId}}">👥 Thành viên trong lớp</a>
+    <a class="btn btn-members" th:href="@{'/ThanhVienTrongLopHocCuaBan/' + ${room?.roomId}}">👥 Members in class</a>
 </header>
 
 <div class="container">
     <div class="class-detail">
-        <h2>Thông Tin Lớp Học</h2>
-        <p><strong>Tên lớp học:</strong> <span th:text="${room?.roomName ?: 'Không xác định'}"></span></p>
-        <p><strong>Địa chỉ/Link:</strong>
+        <h2>Class Information</h2>
+        <p><strong>Class Name:</strong> <span th:text="${room?.roomName ?: 'Not specified'}"></span></p>
+        <p><strong>Address/Link:</strong>
             <span th:if="${roomMode}" th:text="${room.link}"></span>
             <span th:text="${room.address}" th:unless="${roomMode}"></span>
         </p>
-        <p><strong>Thời gian bắt đầu:</strong>
+        <p><strong>Start Time:</strong>
             <span th:if="${room?.startTime != null}"
                   th:text="${#temporals.format(room.startTime, 'yyyy-MM-dd HH:mm')}"></span>
-            <span th:if="${room?.startTime == null}">Chưa có</span>
+            <span th:if="${room?.startTime == null}">Not specified</span>
         </p>
-        <p><strong>Thời gian kết thúc:</strong>
+        <p><strong>End Time:</strong>
             <span th:if="${room?.endTime != null}"
                   th:text="${#temporals.format(room.endTime, 'yyyy-MM-dd HH:mm')}"></span>
-            <span th:if="${room?.endTime == null}">Chưa có</span>
+            <span th:if="${room?.endTime == null}">Not specified</span>
         </p>
     </div>
 
     <div class="post-section">
-        <h2>Đăng Bài Mới</h2>
-        <a th:href="@{'/BaiDangCaNhan/' + ${room?.roomId}}"><i class="fas fa-user"></i> Bài Đăng Cá Nhân</a>
+        <h2>New Post</h2>
+        <a th:href="@{'/BaiDangCaNhan/' + ${room?.roomId}}"><i class="fas fa-user"></i> Personal Post</a>
         <form action="/BaiPost" enctype="multipart/form-data" id="postForm" method="POST">
             <input name="roomId" th:value="${room?.roomId}" type="hidden">
-            <textarea name="postContent" placeholder="Nhập nội dung bài đăng..." required></textarea>
+            <textarea name="postContent" placeholder="Write your post..." required></textarea>
             <div class="file-upload">
-                <label for="files">📎 Tải tệp lên:</label>
+                <label for="files">📎 Upload file:</label>
                 <input accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.zip,.mp4,.avi,.mov"
                        id="files"
                        name="files"
@@ -67,21 +67,21 @@
                        type="file">
                 <ul id="fileList" style="list-style: none; padding: 0;"></ul>
             </div>
-            <button type="submit">🚀 Đăng Bài</button>
+            <button type="submit">🚀 Post</button>
         </form>
     </div>
 
     <div class="post-list">
-        <h2>Bài Đăng Trong Lớp</h2>
+        <h2>Posts in Class</h2>
         <ul>
             <li th:each="post : ${posts}">
-                <p><strong>👤 Người đăng:</strong> <span
+                <p><strong>👤 Creator:</strong> <span
                         th:text="${post.creator?.firstName + ' ' + post.creator?.lastName}"></span></p>
-                <p><strong>📝 Nội dung:</strong> <span th:text="${post.content}"></span></p>
-                <p><strong>Thời gian đăng:</strong> <span
+                <p><strong>📝 Content:</strong> <span th:text="${post.content}"></span></p>
+                <p><strong>Time:</strong> <span
                         th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></span></p>
                 <div class="document-list" th:if="${not #lists.isEmpty(post.documents)}">
-                    <h4>📄 Tài liệu đính kèm:</h4>
+                    <h4>📄 Attached Documents:</h4>
                     <ul>
                         <li th:each="document : ${post.documents}">
                             <!-- Hiển thị ảnh nếu là ảnh -->
@@ -98,21 +98,21 @@
                     </ul>
                 </div>
                 <div class="comment-section">
-                    <h3>💬 Bình luận</h3>
+                    <h3>💬 Comments</h3>
                     <ul class="comment-list">
                         <li th:each="comment : ${post.comments}">
-                            <p><strong>👤 Người bình luận:</strong> <span
+                            <p><strong>👤 Commenter:</strong> <span
                                     th:text="${comment.commenter?.firstName + ' ' + comment.commenter?.lastName}"></span>
                             </p>
-                            <p><strong>💬 Nội dung:</strong> <span th:text="${comment.text}"></span></p>
-                            <p><strong>⏳ Thời gian:</strong> <span
+                            <p><strong>💬 Content:</strong> <span th:text="${comment.text}"></span></p>
+                            <p><strong>⏳ Time:</strong> <span
                                     th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></span></p>
                         </li>
                     </ul>
                     <form action="/BinhLuan" method="POST">
                         <input name="postId" th:value="${post.postId}" type="hidden">
-                        <textarea name="commentText" placeholder="Nhập bình luận..." required></textarea>
-                        <button type="submit">💬 Gửi Bình Luận</button>
+                        <textarea name="commentText" placeholder="Write your comment..." required></textarea>
+                        <button type="submit">💬 Send Comment</button>
                     </form>
                 </div>
                 <hr>

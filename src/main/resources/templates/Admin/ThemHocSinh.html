@@ -2,13 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Thêm Học Sinh</title>
+    <title>Add Student</title>
     <link href="/ThemHocSinh.css" rel="stylesheet">
     <script crossorigin="anonymous" src="https://kit.fontawesome.com/a076d05399.js"></script>
 </head>
 <body>
 <div class="container">
-    <h2>Thêm Học Sinh</h2>
+    <h2>Add Student</h2>
 
     <!-- Hiển thị lỗi từ backend -->
     <div class="alert alert-danger" th:if="${error}">
@@ -17,17 +17,17 @@
 
     <form method="post" th:action="@{/ThemHocSinh}">
         <div class="input-group">
-            <label for="studentID"><i class="fas fa-id-card"></i> ID Học Sinh</label>
+            <label for="studentID"><i class="fas fa-id-card"></i> Student ID</label>
             <input id="studentID" name="StudentID" required type="text">
         </div>
 
         <div class="input-group">
-            <label for="firstName"><i class="fas fa-user"></i> Tên</label>
+            <label for="firstName"><i class="fas fa-user"></i> First Name</label>
             <input id="firstName" name="FirstName" required type="text">
         </div>
 
         <div class="input-group">
-            <label for="lastName"><i class="fas fa-user"></i> Họ</label>
+            <label for="lastName"><i class="fas fa-user"></i> Last Name</label>
             <input id="lastName" name="LastName" required type="text">
         </div>
 
@@ -37,12 +37,12 @@
         </div>
 
         <div class="input-group">
-            <label for="phoneNumber"><i class="fas fa-phone"></i> Số Điện Thoại</label>
+            <label for="phoneNumber"><i class="fas fa-phone"></i> Phone Number</label>
             <input id="phoneNumber" name="PhoneNumber" required type="text">
         </div>
 
         <div class="input-group">
-            <label for="password"><i class="fas fa-lock"></i> Mật Khẩu</label>
+            <label for="password"><i class="fas fa-lock"></i> Password</label>
             <input id="password" name="Password" required type="password">
         </div>
 
@@ -52,18 +52,18 @@
         </div>
 
         <div class="input-group">
-            <label for="employee"><i class="fas fa-user-tie"></i> Nhân Viên Phụ Trách</label>
+            <label for="employee"><i class="fas fa-user-tie"></i> Responsible Employee</label>
             <select id="employee" name="EmployeeID">
-                <option value="">-- Chọn nhân viên (không bắt buộc) --</option>
+                <option value="">-- Choose Employee (Optional) --</option>
                 <option th:each="employee : ${employees}" th:text="${employee.firstName + ' ' + employee.lastName}"
                         th:value="${employee.id}"></option>
             </select>
         </div>
 
-        <button class="btn btn-primary" type="submit"><i class="fas fa-user-plus"></i> Thêm Học Sinh</button>
+        <button class="btn btn-primary" type="submit"><i class="fas fa-user-plus"></i> Add Student</button>
 
         <div class="btn-container">
-            <a class="btn btn-secondary" href="/DanhSachHocSinh"><i class="fas fa-arrow-left"></i> Quay Lại</a>
+            <a class="btn btn-secondary" href="/DanhSachHocSinh"><i class="fas fa-arrow-left"></i> Back to Student List</a>
         </div>
     </form>
 </div>

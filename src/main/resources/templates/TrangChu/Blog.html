@@ -18,8 +18,8 @@
             </div>
             <nav class="header-nav">
                 <ul>
-                    <li><a th:href="@{/QuayVeTrangChu}"><i class="fas fa-home"></i> Quay Về Trang Chủ</a></li>
-                    <li><a href="/BlogCaNhan"><i class="fas fa-user"></i> Blog Đã Đăng</a></li>
+                    <li><a th:href="@{/QuayVeTrangChu}"><i class="fas fa-home"></i> Back to Home</a></li>
+                    <li><a href="/BlogCaNhan"><i class="fas fa-user"></i> My Blog</a></li>
                 </ul>
             </nav>
         </div>
@@ -28,23 +28,23 @@
     <div class="main-content">
         <div class="container">
             <div class="welcome-section">
-                <h1>Blog Cá Nhân</h1>
-                <p>Chia sẻ suy nghĩ và trải nghiệm của bạn</p>
+                <h1>Personal Blog</h1>
+                <p>Share your thoughts and experiences</p>
             </div>
 
             <div class="form-container">
                 <!-- Hộp nhập Blog -->
                 <section class="create-post">
-                    <h2><i class="fas fa-edit"></i> Tạo bài viết mới</h2>
+                    <h2><i class="fas fa-edit"></i> Create New Post</h2>
                     <form action="/XuLyThemBlog" method="post">
                         <div class="post-input">
                             <input type="text" class="form-control" id="title" name="title"
-                                placeholder="Tiêu đề bài viết..." required>
-                            <textarea class="form-control" id="content" name="content" placeholder="Bạn đang nghĩ gì?"
+                                placeholder="Title of the post..." required>
+                            <textarea class="form-control" id="content" name="content" placeholder="What are you thinking?"
                                 required rows="3"></textarea>
                             <div class="post-actions">
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i>
-                                    Đăng</button>
+                                    Post</button>
                             </div>
                         </div>
                     </form>
@@ -52,7 +52,7 @@
 
                 <!-- Feed của Blog -->
                 <section class="feed">
-                    <h3><i class="fas fa-stream"></i> Bảng tin</h3>
+                    <h3><i class="fas fa-stream"></i> Blog List</h3>
 
                     <div class="posts-container">
                         <div class="post" th:each="blog : ${blogs}">
@@ -85,23 +85,23 @@
                     <i class="fas fa-blog"></i>
                     <span>Blog</span>
                 </div>
-                <p>Chia sẻ ý tưởng và kết nối với mọi người</p>
-                <p class="footer-copyright">&copy; 2025 Blog - Bản quyền được bảo lưu</p>
+                <p>Share ideas and connect with everyone</p>
+                <p class="footer-copyright">&copy; 2025 Blog - All rights reserved</p>
             </div>
 
             <div class="newsletter">
-                <p>Đăng ký nhận thông báo</p>
+                <p>Subscribe to notifications</p>
                 <div class="subscribe-form">
-                    <input type="email" placeholder="Email của bạn">
-                    <button class="subscribe-btn">Đăng ký</button>
+                    <input type="email" placeholder="Your email">
+                    <button class="subscribe-btn">Subscribe</button>
                 </div>
             </div>
 
             <div class="footer-links">
-                <a href="#"><i class="fas fa-info-circle"></i> Về chúng tôi</a>
-                <a href="#"><i class="fas fa-file-contract"></i> Điều khoản sử dụng</a>
-                <a href="#"><i class="fas fa-shield-alt"></i> Chính sách bảo mật</a>
-                <a href="#"><i class="fas fa-envelope"></i> Liên hệ</a>
+                <a href="#"><i class="fas fa-info-circle"></i> About us</a>
+                <a href="#"><i class="fas fa-file-contract"></i> Terms of use</a>
+                <a href="#"><i class="fas fa-shield-alt"></i> Privacy policy</a>
+                <a href="#"><i class="fas fa-envelope"></i> Contact</a>
             </div>
         </div>
     </footer>

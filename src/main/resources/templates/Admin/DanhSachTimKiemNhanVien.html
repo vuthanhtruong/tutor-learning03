@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Kết Quả Tìm Kiếm Nhân Viên</title>
+    <title>Search Result Employee</title>
     <!-- CSS -->
     <link href="/DanhSachTimKiemNhanVien.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
@@ -13,17 +13,17 @@
     <!-- Tiêu đề -->
     <div class="header">
         <h2 class="text-center text-primary">
-            <i class="fas fa-search"></i> Kết Quả Tìm Kiếm Nhân Viên
+            <i class="fas fa-search"></i> Search Result Employee
         </h2>
     </div>
 
     <!-- Nút Xóa Tất Cả -->
     <div class="mb-3">
-        <form method="post" onsubmit="return confirm('Bạn có chắc chắn muốn xóa tất cả nhân viên?');"
+        <form method="post" onsubmit="return confirm('Are you sure you want to delete all employees?');"
               th:action="@{/XoaTatCaNhanVienWithAttributes}">
             <input name="keyword" th:value="${keyword}" type="hidden">
             <button class="btn btn-danger" type="submit">
-                <i class="fas fa-trash"></i> Xóa Tất Cả Nhân Viên Theo Tìm Kiếm Này
+                <i class="fas fa-trash"></i> Delete All Employees By This Search
             </button>
         </form>
     </div>
@@ -34,12 +34,12 @@
             <thead class="table-dark">
             <tr>
                 <th><i class="fas fa-id-badge"></i> ID</th>
-                <th><i class="fas fa-user"></i> Họ</th>
-                <th><i class="fas fa-user"></i> Tên</th>
+                <th><i class="fas fa-user"></i> Last Name</th>
+                <th><i class="fas fa-user"></i> First Name</th>
                 <th><i class="fas fa-envelope"></i> Email</th>
-                <th><i class="fas fa-phone"></i> Số Điện Thoại</th>
-                <th><i class="fas fa-calendar"></i> Ngày Sinh</th>
-                <th><i class="fas fa-cogs"></i> Hành Động</th>
+                <th><i class="fas fa-phone"></i> Phone Number</th>
+                <th><i class="fas fa-calendar"></i> Birth Date</th>
+                <th><i class="fas fa-cogs"></i> Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -53,18 +53,18 @@
                 <td th:text="${#temporals.format(employee.birthDate, 'dd/MM/yyyy')}"></td>
                 <td class="text-center">
                     <a class="btn btn-warning btn-sm" th:href="@{/SuaNhanVien/{id}(id=${employee.id})}">
-                        <i class="fas fa-edit"></i> Sửa
+                        <i class="fas fa-edit"></i> Edit
                     </a>
                     <a class="btn btn-danger btn-sm"
-                       onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên này?');"
+                       onclick="return confirm('Are you sure you want to delete this employee?');"
                        th:href="@{/XoaNhanVien/{id}(id=${employee.id})}">
-                        <i class="fas fa-trash"></i> Xóa
+                        <i class="fas fa-trash"></i> Delete
                     </a>
                 </td>
             </tr>
             <tr th:if="${employees == null or #lists.isEmpty(employees)}">
                 <td class="text-center text-danger" colspan="7">
-                    <i class="fas fa-exclamation-circle"></i> Không tìm thấy nhân viên nào!
+                    <i class="fas fa-exclamation-circle"></i> No employee found!
                 </td>
             </tr>
             </tbody>
@@ -74,10 +74,10 @@
     <!-- Nút điều hướng -->
     <div class="text-center mt-3">
         <a class="btn btn-primary me-2" href="/DanhSachNhanVien">
-            <i class="fas fa-arrow-left"></i> Quay Lại Danh Sách Nhân Viên
+            <i class="fas fa-arrow-left"></i> Back to Employee List
         </a>
         <a class="btn btn-secondary" href="/TrangChuAdmin">
-            <i class="fas fa-home"></i> Quay Lại Trang Chủ Admin
+            <i class="fas fa-home"></i> Back to Admin Home
         </a>
     </div>
 </div>

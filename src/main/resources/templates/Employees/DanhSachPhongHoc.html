@@ -2,55 +2,55 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Danh Sách Phòng Học</title>
+    <title>Class List</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/DanhSachPhongHoc.css}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="container mt-4">
 <h2 class="text-center mb-4">
-    <i class="fas fa-school"></i> Danh Sách Phòng Học
+    <i class="fas fa-school"></i> Class List
 </h2>
 
 <!-- Thanh công cụ -->
 <div class="d-flex justify-content-between mb-3">
     <div>
         <a class="btn btn-primary me-2" th:href="@{/ThemPhongHoc}">
-            <i class="fas fa-plus-circle"></i> Thêm Phòng Học
+            <i class="fas fa-plus-circle"></i> Add Class
         </a>
         <a class="btn btn-success" th:href="@{/ThemPhongHocOnline}">
-            <i class="fas fa-globe"></i> Thêm Phòng Online
+            <i class="fas fa-globe"></i> Add Online Class
         </a>
     </div>
     <a class="btn btn-secondary" th:href="@{/TrangChuNhanVien}">
-        <i class="fas fa-arrow-left"></i> Quay Lại Trang Chủ
+        <i class="fas fa-arrow-left"></i> Back to Home
     </a>
 </div>
 
 <!-- Form tìm kiếm -->
 <form class="d-flex align-items-center mb-3" method="post" th:action="@{/DanhSachTimKiemPhongHoc}">
     <select class="form-select me-2" name="searchType">
-        <option value="name">Tìm theo Tên</option>
-        <option value="id">Tìm theo ID</option>
+        <option value="name">Search by Name</option>
+        <option value="id">Search by ID</option>
     </select>
-    <input class="form-control me-2" name="keyword" placeholder="🔍 Nhập từ khóa..." type="text">
+    <input class="form-control me-2" name="keyword" placeholder="🔍 Enter keyword..." type="text">
     <button class="btn btn-info" type="submit">
-        <i class="fas fa-search"></i> Tìm kiếm
+        <i class="fas fa-search"></i> Search
     </button>
 </form>
 
 <!-- Bộ lọc sắp xếp và số lượng -->
 <div class="d-flex mb-3">
     <form action="/DanhSachPhongHoc" class="me-3" method="get">
-        <label class="me-2">Sắp xếp:</label>
+        <label class="me-2">Sort:</label>
         <select class="form-select" name="sortOrder" onchange="this.form.submit()">
-            <option selected value="">Thứ tự ban đầu</option>
-            <option th:selected="${sortOrder == 'asc'}" value="asc">Thời gian tạo (Cũ → Mới)</option>
-            <option th:selected="${sortOrder == 'desc'}" value="desc">Thời gian tạo (Mới → Cũ)</option>
+            <option selected value="">Default</option>
+            <option th:selected="${sortOrder == 'asc'}" value="asc">Create Time (Old → New)</option>
+            <option th:selected="${sortOrder == 'desc'}" value="desc">Create Time (New → Old)</option>
         </select>
     </form>
     <form action="/DanhSachPhongHoc" method="get">
-        <label class="me-2">Số lượng:</label>
+        <label class="me-2">Number:</label>
         <select class="form-select" name="pageSize" onchange="this.form.submit()">
             <option th:selected="${pageSize == 5}" value="5">5</option>
             <option th:selected="${pageSize == 10}" value="10">10</option>
@@ -63,17 +63,17 @@
 <div class="d-flex justify-content-between align-items-center mt-3">
     <form method="get" onsubmit="return confirmDelete('offline');" th:action="@{/XoaTatCaPhongHocOffline}">
         <button class="btn btn-warning w-100">
-            <i class="fas fa-trash"></i> Xóa Tất Cả Offline
+            <i class="fas fa-trash"></i> Delete All Offline Classroom
         </button>
     </form>
     <form method="get" onsubmit="return confirmDelete('online');" th:action="@{/XoaTatCaPhongHocOnline}">
         <button class="btn btn-info w-100">
-            <i class="fas fa-trash"></i> Xóa Tất Cả Online
+            <i class="fas fa-trash"></i> Delete All Online Classroom
         </button>
     </form>
     <form method="get" onsubmit="return confirmDelete('all');" th:action="@{/XoaTatCaPhongHoc}">
         <button class="btn btn-danger w-100">
-            <i class="fas fa-trash"></i> Xóa Tất Cả
+            <i class="fas fa-trash"></i> Delete All Classroom
         </button>
     </form>
 </div>
@@ -83,17 +83,17 @@
     <!-- Phòng Học Offline -->
     <div class="col-md-6">
         <h3 class="text-center text-primary">
-            <i class="fas fa-chalkboard"></i> Phòng Học Offline
+            <i class="fas fa-chalkboard"></i> Offline Classroom
         </h3>
         <div class="table-responsive">
             <table class="table table-striped table-hover">
                 <thead class="table-dark">
                 <tr class="text-center">
                     <th>ID</th>
-                    <th>Tên Phòng</th>
-                    <th>Nhân Viên Tạo</th>
-                    <th>Thời Gian Tạo</th>
-                    <th>Thao Tác</th>
+                    <th>Class Name</th>
+                    <th>Employee Create</th>
+                    <th>Create Time</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -104,12 +104,12 @@
                     <td class="text-center" th:text="${#temporals.format(room.createdAt, 'dd-MM-yyyy HH:mm')}"></td>
                     <td class="text-center">
                         <a class="btn btn-warning btn-sm" th:href="@{/SuaPhongHocOffline/{id}(id=${room.roomId})}">
-                            <i class="fas fa-edit"></i> Sửa
+                            <i class="fas fa-edit"></i> Edit
                         </a>
                         <a class="btn btn-danger btn-sm"
                            onclick="return confirm('Bạn có chắc chắn muốn xóa?');"
                            th:href="@{/XoaPhongHoc/{id}(id=${room.roomId})}">
-                            <i class="fas fa-trash-alt"></i> Xóa
+                            <i class="fas fa-trash-alt"></i> Delete
                         </a>
                     </td>
                 </tr>
@@ -148,17 +148,17 @@
     <!-- Phòng Học Online -->
     <div class="col-md-6">
         <h3 class="text-center text-success">
-            <i class="fas fa-laptop"></i> Phòng Học Online
+            <i class="fas fa-laptop"></i> Online Classroom
         </h3>
         <div class="table-responsive">
             <table class="table table-striped table-hover">
                 <thead class="table-dark">
                 <tr class="text-center">
                     <th>ID</th>
-                    <th>Tên Phòng</th>
-                    <th>Nhân Viên Tạo</th>
-                    <th>Thời Gian Tạo</th>
-                    <th>Thao Tác</th>
+                    <th>Class Name</th>
+                    <th>Employee Create</th>
+                    <th>Create Time</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -169,12 +169,12 @@
                     <td class="text-center" th:text="${#temporals.format(room.createdAt, 'dd-MM-yyyy HH:mm')}"></td>
                     <td class="text-center">
                         <a class="btn btn-warning btn-sm" th:href="@{/SuaPhongHocOnline/{id}(id=${room.roomId})}">
-                            <i class="fas fa-edit"></i> Sửa
+                            <i class="fas fa-edit"></i> Edit
                         </a>
                         <a class="btn btn-danger btn-sm"
                            onclick="return confirm('Bạn có chắc chắn muốn xóa?');"
                            th:href="@{/XoaPhongHoc/{id}(id=${room.roomId})}">
-                            <i class="fas fa-trash-alt"></i> Xóa
+                            <i class="fas fa-trash-alt"></i> Delete
                         </a>
                     </td>
                 </tr>
@@ -213,8 +213,8 @@
 
 <script>
     function confirmDelete(type) {
-        let message = type === 'all' ? 'Bạn có chắc chắn muốn xóa tất cả phòng học?' :
-            'Bạn có chắc chắn muốn xóa tất cả phòng học ' + (type === 'offline' ? 'offline?' : 'online?');
+        let message = type === 'all' ? 'Are you sure you want to delete all classrooms?' :
+            'Are you sure you want to delete all ' + (type === 'offline' ? 'offline?' : 'online?');
         return confirm(message);
     }
 </script>

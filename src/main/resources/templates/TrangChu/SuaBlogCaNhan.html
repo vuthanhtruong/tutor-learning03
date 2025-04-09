@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✏️ Chỉnh Sửa Blog</title>
+    <title>✏️ Edit Blog</title>
     <link rel="stylesheet" href="ChinhSuaBlog.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
@@ -198,7 +198,7 @@
     <header class="header">
         <div class="header-container">
             <div class="header-logo">
-                <h1>✏️ Chỉnh Sửa Blog</h1>
+                <h1>✏️ Edit Blog</h1>
             </div>
         </div>
     </header>
@@ -206,7 +206,7 @@
     <div class="main-content">
         <div class="container">
             <div class="welcome-section">
-                <h2>✏️ Chỉnh Sửa Blog</h2>
+                <h2>✏️ Edit Blog</h2>
             </div>
             <div class="form-container">
                 <!-- Form gửi dữ liệu lên server -->
@@ -215,20 +215,20 @@
                     <input name="id" th:value="${Fixblogs.blogId}" type="hidden">
 
                     <div class="mb-3">
-                        <label for="title" class="form-label">📌 Tiêu đề:</label>
+                        <label for="title" class="form-label">📌 Title:</label>
                         <input id="title" name="title" required th:value="${Fixblogs.title}" type="text"
                             class="form-control">
                     </div>
 
                     <div class="mb-3">
-                        <label for="content" class="form-label">📝 Nội dung:</label>
+                        <label for="content" class="form-label">📝 Content:</label>
                         <textarea class="form-control" id="content" name="content" required rows="10"
                             th:text="${Fixblogs.content}"></textarea>
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">💾 Lưu thay đổi</button>
-                        <a href="/BlogCaNhan" class="btn btn-secondary">🔙 Hủy</a>
+                        <button type="submit" class="btn btn-primary">💾 Save changes</button>
+                        <a href="/BlogCaNhan" class="btn btn-secondary">🔙 Cancel</a>
                     </div>
                 </form>
             </div>

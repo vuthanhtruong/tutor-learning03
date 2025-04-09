@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Danh Sách Thông Báo Đã Gửi</title>
+    <title>Sent Notification List</title>
     <link rel="stylesheet" th:href="@{/BoTriLopHoc.css}"> <!-- Có thể tái sử dụng CSS -->
 </head>
 <body>
 <header class="text-center">
-    <h1>Danh Sách Thông Báo Đã Gửi - <span th:text="${room.roomName}"></span></h1>
+    <h1>Sent Notification List - <span th:text="${room.roomName}"></span></h1>
 </header>
 <nav class="mb-3">
-    <a class="btn btn-secondary" th:href="@{/BoTriLopHoc}">Quay Lại Bố Trí Lớp Học</a>
+    <a class="btn btn-secondary" th:href="@{/BoTriLopHoc}">Back to Classroom Arrangement</a>
 </nav>
 <main class="container">
     <section class="table-container">
         <table class="table table-bordered">
             <thead class="table-dark">
             <tr>
-                <th>ID Thông Báo</th>
-                <th>Người Nhận</th>
-                <th>Nội Dung trạng thái gửi</th>
-                <th>Người Gửi</th>
+                <th>Notification ID</th>
+                <th>Recipient</th>
+                <th>Status</th>
+                <th>Sender</th>
             </tr>
             </thead>
             <tbody>
@@ -32,7 +32,7 @@
                 <td th:text="${notification.sender.firstName + ' ' + notification.sender.lastName}"></td>
             </tr>
             <tr th:if="${#lists.isEmpty(notifications)}">
-                <td class="text-center" colspan="5">Chưa có thông báo nào được gửi.</td>
+                <td class="text-center" colspan="5">No notification has been sent.</td>
             </tr>
             </tbody>
         </table>

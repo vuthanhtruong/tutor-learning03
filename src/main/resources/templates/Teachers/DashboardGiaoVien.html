@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Giáo Viên</title>
+    <title>Teacher Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
@@ -24,7 +24,7 @@
                         <li class="nav-item">
                             <a class="nav-link active" href="/TrangChuGiaoVien">
                                 <i class="nav-icon fas fa-chart-line"></i>
-                                <p>Trang cá nhân Teacher</p>
+                                <p>Personal Teacher Page</p>
                             </a>
                         </li>
                     </ul>
@@ -34,7 +34,7 @@
         <!-- Nội dung Dashboard -->
         <div class="content-wrapper">
             <section class="content-header">
-                <h1>Dashboard Giáo Viên</h1>
+                <h1>Teacher Dashboard</h1>
             </section>
             <section class="content">
                 <div class="container-fluid">
@@ -44,7 +44,7 @@
                             <div class="small-box bg-info">
                                 <div class="inner">
                                     <h3 id="daysActive" th:text="${daysActive}">0</h3>
-                                    <p>Số ngày hoạt động</p>
+                                    <p>Active Days</p>
                                 </div>
                                 <div class="icon">
                                     <i class="fas fa-calendar"></i>
@@ -56,7 +56,7 @@
                             <div class="small-box bg-info">
                                 <div class="inner">
                                     <h3 id="totalTeacherComment" th:text="${totalTeacherComment}">0</h3>
-                                    <p>Số Comment đã tương tác</p>
+                                    <p>Number of Comments</p>
                                 </div>
                                 <div class="icon">
                                     <i class="fa-solid fa-comments"></i>
@@ -68,7 +68,7 @@
                             <div class="small-box bg-info">
                                 <div class="inner">
                                     <h3 id="totalTeacherMessage" th:text="${totalTeacherMessage}">0</h3>
-                                    <p>Số tin nhắn đã tương tác</p>
+                                    <p>Number of Messages</p>
                                 </div>
                                 <div class="icon">
                                     <i class="fa-solid fa-message"></i>
@@ -89,7 +89,7 @@
                 $("#totalTeacherComment").text(data.totalTeacherComment);
                 $("#totalTeacherMessage").text(data.totalTeacherMessage);
             }).fail(function () {
-                console.error("Không thể tải dữ liệu từ API:");
+                console.error("Cannot load data from API:");
             });
         }
         $(document).ready(function () {

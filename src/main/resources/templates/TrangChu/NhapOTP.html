@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Nhập Mã OTP</title>
+    <title>Enter OTP</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -67,12 +67,12 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="mb-0">Xác thực OTP</h3>
+                        <h3 class="mb-0">OTP Verification</h3>
                     </div>
                     <div class="card-body">
                         <p class="text-center mb-4">
-                            Mã OTP đã được gửi đến email <span class="fw-bold" th:text="${email}"></span>.
-                            Vui lòng kiểm tra và nhập mã vào ô bên dưới.
+                            OTP has been sent to email <span class="fw-bold" th:text="${email}"></span>.
+                            Please check and enter the OTP below.
                         </p>
 
                         <!-- Hiển thị thông báo lỗi nếu có -->
@@ -82,25 +82,25 @@
                             <input name="email" th:value="${email}" type="hidden">
 
                             <div class="mb-3">
-                                <label class="form-label" for="otp">Mã OTP</label>
+                                <label class="form-label" for="otp">OTP</label>
                                 <input autofocus class="form-control otp-input" id="otp" maxlength="6" name="otp"
-                                    pattern="\d{6}" required title="Mã OTP gồm 6 chữ số" type="text">
+                                    pattern="\d{6}" required title="OTP consists of 6 digits" type="text">
                                 <div class="form-text">
-                                    Mã OTP có hiệu lực trong <span class="timer" id="timer">10:00</span> phút.
+                                    OTP is valid for <span class="timer" id="timer">10:00</span> minutes.
                                 </div>
                             </div>
 
                             <div class="d-grid gap-2">
-                                <button class="btn btn-primary" type="submit">Xác nhận</button>
-                                <a class="btn btn-outline-secondary" href="/auth/QuenMatKhau">Quay lại</a>
+                                <button class="btn btn-primary" type="submit">Verify</button>
+                                <a class="btn btn-outline-secondary" href="/auth/QuenMatKhau">Back</a>
                             </div>
                         </form>
 
 
                         <div class="text-center mt-3">
-                            <p>Không nhận được mã?
+                            <p>Not received OTP?
                             <form method="post" th:action="@{/auth/resend-otp}" class="d-inline">
-                                <button type="submit" class="btn btn-link resend">Gửi lại mã</button>
+                                <button type="submit" class="btn btn-link resend">Resend OTP</button>
                             </form>
                             </p>
                         </div>

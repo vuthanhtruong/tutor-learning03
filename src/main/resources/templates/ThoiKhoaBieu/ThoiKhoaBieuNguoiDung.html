@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Thời Khóa Biểu Của Tôi</title>
+    <title>My Schedule</title>
     <link href="/ThoiKhoaBieuNguoiDung.css" rel="stylesheet">
 
 </head>
 <body>
 <header>
-    <h1>Thời Khóa Biểu Của <span th:text="${userType == 'Teacher' ? 'Giáo Viên' : 'Học Sinh'}"></span> <span
+    <h1>Schedule of <span th:text="${userType == 'Teacher' ? 'Teacher' : 'Student'}"></span> <span
             th:text="${userName}"></span></h1>
 </header>
 
 <nav class="home-button">
-    <a th:href="${URL}">Quay về trang chủ</a>
+    <a th:href="${URL}">Back to Home</a>
 </nav>
 
 
 <section class="filter-form">
     <form method="get" th:action="@{/ThoiKhoaBieuNguoiDung}">
-        <label for="year">Chọn thời điểm:</label>
+        <label for="year">Select Time:</label>
         <select id="year" name="year" onchange="this.form.submit()">
             <option th:each="y : ${#numbers.sequence(selectedYear - 5, selectedYear + 5)}"
                     th:selected="${y == selectedYear}"
@@ -44,7 +44,7 @@
 </section>
 
 <section th:if="${timetables == null or timetables.isEmpty()}">
-    <p>Không có lịch học nào cho tuần này.</p>
+    <p>No schedule for this week.</p>
 </section>
 
 <section>
