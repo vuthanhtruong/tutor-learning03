@@ -2,25 +2,25 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Kết Quả Tìm Kiếm Giáo Viên</title>
+    <title>Search Result</title>
     <link rel="stylesheet" th:href="@{/DanhSachTimKiemGiaoVienCuaBan.css}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container mt-4">
     <h1 class="text-center text-primary">
-        <i class="fas fa-search"></i> Kết Quả Tìm Kiếm Giáo Viên
+        <i class="fas fa-search"></i> Search Result
     </h1>
     <!-- Thanh điều hướng -->
     <div class="text-center mb-3">
         <a class="btn btn-secondary mx-2" th:href="@{/TrangChuNhanVien}">
-            <i class="fas fa-home"></i> Trang Chủ
+            <i class="fas fa-home"></i> Home
         </a>
         <a class="btn btn-success mx-2" th:href="@{/ThemGiaoVienCuaBan}">
-            <i class="fas fa-user-plus"></i> Thêm Học Sinh
+            <i class="fas fa-user-plus"></i> Add Student
         </a>
         <a class="btn btn-secondary mx-2" th:href="@{/DanhSachGiaoVienCuaBan}">
-            <i class="fas fa-arrow-left"></i> Quay Lại Danh Sách Đầy Đủ
+            <i class="fas fa-arrow-left"></i> Back to Full List
         </a>
     </div>
 
@@ -28,13 +28,13 @@
     <form class="d-flex justify-content-center mb-3" method="post" th:action="@{/TimKiemGiaoVienCuaBan}">
         <div class="input-group w-50">
             <select class="form-select" id="searchType" name="searchType">
-                <option th:selected="${searchType == 'name'}" value="name">🔍 Tìm theo Tên</option>
-                <option th:selected="${searchType == 'id'}" value="id">🔍 Tìm theo ID</option>
+                <option th:selected="${searchType == 'name'}" value="name">🔍 Search by Name</option>
+                <option th:selected="${searchType == 'id'}" value="id">🔍 Search by ID</option>
             </select>
             <input class="form-control" id="searchInput" name="keyword" placeholder="Nhập từ khóa..."
                    required th:value="${keyword}" type="text">
             <button class="btn btn-primary" type="submit">
-                <i class="fas fa-search"></i> Tìm Kiếm
+                    <i class="fas fa-search"></i> Search
             </button>
         </div>
     </form>
@@ -42,13 +42,13 @@
     <!-- Nút quay lại danh sách đầy đủ -->
     <div class="text-center mb-3">
         <a class="btn btn-secondary" th:href="@{/DanhSachGiaoVienCuaBan}">
-            <i class="fas fa-arrow-left"></i> Quay Lại Danh Sách Đầy Đủ
+            <i class="fas fa-arrow-left"></i> Back to Full List
         </a>
     </div>
 
     <!-- Kiểm tra nếu không có kết quả -->
     <div class="alert alert-warning text-center" th:if="${teachers.isEmpty()}">
-        <i class="fas fa-exclamation-triangle"></i> Không tìm thấy giáo viên nào phù hợp với từ khóa
+        <i class="fas fa-exclamation-triangle"></i> No teacher found matching the keyword
         "<span th:text="${keyword}"></span>".
     </div>
 
@@ -58,10 +58,10 @@
             <thead class="table-dark">
             <tr class="text-center">
                 <th>ID</th>
-                <th>Họ và Tên</th>
+                <th>First Name</th>
                 <th>Email</th>
-                <th>Số Điện Thoại</th>
-                <th>Hành Động</th>
+                <th>Phone Number</th>
+                <th>Action</th>
             </tr>
             </thead>
             <tbody>
@@ -72,12 +72,12 @@
                 <td class="text-center" th:text="${teacher.phoneNumber}"></td>
                 <td class="text-center">
                     <a class="btn btn-warning btn-sm" th:href="@{/SuaGiaoVienCuaBan/{id}(id=${teacher.id})}">
-                        <i class="fas fa-edit"></i> Sửa
+                        <i class="fas fa-edit"></i> Edit
                     </a>
                     <a class="btn btn-danger btn-sm"
-                       onclick="return confirm('Bạn có chắc muốn xóa giáo viên này không?');"
+                       onclick="return confirm('Are you sure you want to delete this teacher?');"
                        th:href="@{/XoaGiaoVienCuaBan/{id}(id=${teacher.id})}">
-                        <i class="fas fa-trash-alt"></i> Xóa
+                        <i class="fas fa-trash-alt"></i> Delete
                     </a>
                 </td>
             </tr>

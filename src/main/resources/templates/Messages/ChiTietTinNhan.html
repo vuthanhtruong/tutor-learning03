@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Chi Tiết Tin Nhắn</title>
+    <title>Message Details</title>
     <link href="/ChiTietTinNhan.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
@@ -13,20 +13,20 @@
 <div class="container">
     <!-- Danh sách liên hệ bên trái -->
     <div class="contacts">
-        <h3>Danh sách liên hệ</h3>
+        <h3>Contact List</h3>
         <ul>
             <li th:each="contact : ${contacts}">
                 <a th:href="@{/ChiTietTinNhan(id=${contact.id})}"
                    th:text="${contact.firstName + ' ' + contact.lastName}"></a>
             </li>
-            <li th:if="${#lists.isEmpty(contacts)}">Chưa có liên hệ nào.</li>
+            <li th:if="${#lists.isEmpty(contacts)}">No contact found.</li>
         </ul>
     </div>
 
     <!-- Chi tiết tin nhắn bên phải -->
     <div class="chat">
         <div class="back-button">
-            <a th:href="@{/{trangchu}(trangchu=${trangchu})}">Quay về Trang Chủ</a>
+            <a th:href="@{/{trangchu}(trangchu=${trangchu})}">Back to Home</a>
         </div>
 
         <!-- Hiển thị tin nhắn khi có chatPartner -->
@@ -45,17 +45,17 @@
         </div>
         <!-- Thông báo khi chưa chọn liên hệ -->
         <div class="text-center" style="padding: 20px;" th:if="${chatPartner == null}">
-            <p>Chọn một liên hệ từ danh sách để xem tin nhắn.</p>
+            <p>Select a contact from the list to view messages.</p>
         </div>
 
         <!-- Form gửi tin nhắn chỉ hiển thị khi có chatPartner -->
         <div class="message-form" th:if="${chatPartner != null}">
-            <h3>Gửi tin nhắn mới</h3>
+            <h3>Send a new message</h3>
             <form id="messageForm">
                 <input id="currentUserId" th:value="${currentUser.id}" type="hidden"/>
                 <input id="chatPartnerId" th:value="${chatPartner.id}" type="hidden"/>
-                <textarea id="messageText" placeholder="Nhập tin nhắn..." required></textarea>
-                <button type="submit">Gửi</button>
+                <textarea id="messageText" placeholder="Enter a message..." required></textarea>
+                <button type="submit">Send</button>
             </form>
         </div>
     </div>
@@ -66,7 +66,7 @@
         const stompClient = Stomp.over(socket);
 
         stompClient.connect({}, function (frame) {
-            console.log("🟢 WebSocket kết nối thành công: " + frame);
+            console.log("🟢 WebSocket connected successfully: " + frame);
 
             stompClient.subscribe("/user/queue/messages", function (message) {
                 const content = JSON.parse(message.body);
@@ -126,7 +126,7 @@
             const messageElement = document.getElementById(`message-${messageId}`);
             if (messageElement) {
                 const textElement = messageElement.querySelector(".message-text");
-                textElement.textContent = "Người dùng này đã xóa tin nhắn";
+                textElement.textContent = "The user has deleted the message";
                 const deleteBtn = messageElement.querySelector(".delete-btn");
                 if (deleteBtn) {
                     deleteBtn.remove(); // Xóa nút "X" sau khi tin nhắn đã bị xóa

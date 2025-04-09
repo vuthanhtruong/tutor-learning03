@@ -2,43 +2,43 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>📋 Danh Sách Người Dùng</title>
+  <title>📋 System User List</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="/DanhSachNguoiDungHeThong.css">
 </head>
 <body>
 <div class="container mt-5">
-  <h1 class="text-center text-primary"><i class="fas fa-users"></i> Danh Sách Người Dùng Hệ Thống</h1>
+  <h1 class="text-center text-primary"><i class="fas fa-users"></i> System User List</h1>
 
   <div class="text-center mt-4">
     <a th:href="@{/TrangChuNhanVien}" class="btn btn-secondary">
-      <i class="fas fa-arrow-left"></i> Quay lại
+      <i class="fas fa-arrow-left"></i> Back
     </a>
   </div>
 
   <div class="wrapper">
     <!-- Chọn số lượng bản ghi trên mỗi trang -->
     <form th:action="@{/DanhSachNguoiDungHeThong}" method="post" class="d-flex justify-content-center my-3">
-      <label for="pageSize" class="me-2">Số bản ghi mỗi trang:</label>
+      <label for="pageSize" class="me-2">Number of records per page:</label>
       <select name="pageSize" id="pageSize" class="form-select w-auto me-2">
         <option value="5" th:selected="${pageSize == 5}">5</option>
         <option value="10" th:selected="${pageSize == 10}">10</option>
         <option value="15" th:selected="${pageSize == 15}">15</option>
       </select>
-      <button type="submit" class="btn btn-primary">Áp dụng</button>
+      <button type="submit" class="btn btn-primary">Apply</button>
     </form>
 
     <!-- Nhân Viên -->
     <div class="user-section">
-      <h2 class="text-secondary"><i class="fas fa-briefcase"></i> Nhân Viên</h2>
+      <h2 class="text-secondary"><i class="fas fa-briefcase"></i> Employee</h2>
       <table class="table table-striped">
         <thead class="table-dark">
         <tr>
           <th>🆔 ID</th>
-          <th>👤 Họ và Tên</th>
+          <th>👤 First Name</th>
           <th>📧 Email</th>
-          <th>📞 Số Điện Thoại</th>
-          <th>🔗 Trang Cá Nhân</th>
+          <th>📞 Phone Number</th>
+          <th>🔗 Personal Page</th>
         </tr>
         </thead>
         <tbody>
@@ -68,16 +68,16 @@
 
     <!-- Giáo Viên -->
     <div class="user-section">
-      <h2 class="text-success"><i class="fas fa-chalkboard-teacher"></i> Giáo Viên</h2>
+      <h2 class="text-success"><i class="fas fa-chalkboard-teacher"></i> Teacher</h2>
       <table class="table table-striped">
         <thead class="table-dark">
         <tr>
           <th>🆔 ID</th>
-          <th>👤 Họ và Tên</th>
+          <th>👤 First Name</th>
           <th>📧 Email</th>
-          <th>📞 Số Điện Thoại</th>
-          <th>👑 Người Quản Lý</th>
-          <th>🔗 Trang Cá Nhân</th>
+          <th>📞 Phone Number</th>
+          <th>👑 Manager</th>
+          <th>🔗 Personal Page</th>
         </tr>
         </thead>
         <tbody>
@@ -89,7 +89,7 @@
           <td th:if="${teacher.employee}" th:text="${teacher.employee.firstName} + ' ' + ${teacher.employee.lastName}"></td>
           <td>
             <a th:href="@{/BangDieuKhienGiaoVien/{id}(id=${teacher.id})}" class="btn btn-info btn-sm">
-              <i class="fas fa-user-circle"></i> Xem Trang
+              <i class="fas fa-user-circle"></i> View Page
             </a>
           </td>
         </tr>
@@ -99,25 +99,25 @@
       <!-- Phân trang cho Giáo Viên -->
       <div class="pagination">
         <a th:href="@{/DanhSachNguoiDungHeThong(pageTeachers=${currentPageTeachers - 1}, pageSize=${pageSize})}"
-           th:if="${currentPageTeachers > 1}" class="btn btn-sm btn-outline-primary">« Trước</a>
-        <span>Trang <span th:text="${currentPageTeachers}"></span> / <span th:text="${totalPagesTeachers}"></span></span>
+           th:if="${currentPageTeachers > 1}" class="btn btn-sm btn-outline-primary">« Previous</a>
+        <span>Page <span th:text="${currentPageTeachers}"></span> / <span th:text="${totalPagesTeachers}"></span></span>
         <a th:href="@{/DanhSachNguoiDungHeThong(pageTeachers=${currentPageTeachers + 1}, pageSize=${pageSize})}"
-           th:if="${currentPageTeachers < totalPagesTeachers}" class="btn btn-sm btn-outline-primary">Sau »</a>
+           th:if="${currentPageTeachers < totalPagesTeachers}" class="btn btn-sm btn-outline-primary">Next »</a>
       </div>
     </div>
 
     <!-- Học Sinh -->
     <div class="user-section">
-      <h2 class="text-primary"><i class="fas fa-user-graduate"></i> Học Sinh</h2>
+      <h2 class="text-primary"><i class="fas fa-user-graduate"></i> Student</h2>
       <table class="table table-striped">
         <thead class="table-dark">
         <tr>
           <th>🆔 ID</th>
-          <th>👤 Họ và Tên</th>
+          <th>👤 First Name</th>
           <th>📧 Email</th>
-          <th>📞 Số Điện Thoại</th>
-          <th>👑 Người Quản Lý</th>
-          <th>🔗 Trang Cá Nhân</th>
+          <th>📞 Phone Number</th>
+          <th>👑 Manager</th>
+          <th>🔗 Personal Page</th>
         </tr>
         </thead>
         <tbody>
@@ -129,7 +129,7 @@
           <td th:if="${student.employee}" th:text="${student.employee.firstName} + ' ' + ${student.employee.lastName}"></td>
           <td>
             <a th:href="@{/BangDieuKhienHocSinh/{id}(id=${student.id})}" class="btn btn-info btn-sm">
-              <i class="fas fa-user-circle"></i> Xem Trang
+              <i class="fas fa-user-circle"></i> View Page
             </a>
           </td>
         </tr>

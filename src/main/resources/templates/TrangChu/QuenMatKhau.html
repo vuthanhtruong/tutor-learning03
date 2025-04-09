@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Quên Mật Khẩu</title>
+    <title>Forgot Password</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -52,23 +52,23 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="mb-0">Quên Mật Khẩu</h3>
+                    <h3 class="mb-0">Forgot Password</h3>
                 </div>
                 <div class="card-body">
-                    <p class="text-center mb-4">Vui lòng nhập địa chỉ email của bạn để khôi phục mật khẩu</p>
+                    <p class="text-center mb-4">Please enter your email to reset your password</p>
 
                     <!-- Hiển thị thông báo lỗi nếu có -->
                     <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
 
                     <form action="/auth/QuenMatKhau" method="post">
                         <div class="mb-3">
-                            <label class="form-label" for="email">Địa chỉ Email</label>
+                            <label class="form-label" for="email">Email Address</label>
                             <input class="form-control" id="email" name="email" required type="email">
-                            <div class="form-text">Chúng tôi sẽ gửi mã OTP đến email này.</div>
+                            <div class="form-text">We will send OTP to this email.</div>
                         </div>
                         <div class="d-grid gap-2">
-                            <button class="btn btn-primary" type="submit">Gửi Mã OTP</button>
-                            <a class="btn btn-outline-secondary" href="/TrangChu">Quay Lại Đăng Nhập</a>
+                            <button class="btn btn-primary" type="submit">Send OTP</button>
+                            <a class="btn btn-outline-secondary" href="/TrangChu">Back to Login</a>
                         </div>
                     </form>
                 </div>

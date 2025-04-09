@@ -2,16 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Sửa Học Sinh</title>
+    <title>Update Student</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/SuaHocSinhCuaBan.css}">
 </head>
 <body>
 
 <div class="container mt-5">
-    <h1 class="text-center text-primary"><i class="fas fa-edit"></i> Sửa Học Sinh</h1>
+    <h1 class="text-center text-primary"><i class="fas fa-edit"></i> Update Student</h1>
     <a class="btn btn-secondary" th:href="@{/DanhSachHocSinhCuaBan}">
-        <i class="fas fa-arrow-left"></i> Quay lại
+        <i class="fas fa-arrow-left"></i> Back
     </a>
 
     <!-- Hiển thị thông báo lỗi -->
@@ -29,12 +29,12 @@
         <input name="studentID" th:value="${student.id}" type="hidden">
 
         <div class="mb-3">
-            <label class="form-label">Họ</label>
+            <label class="form-label">First Name</label>
             <input class="form-control" name="firstName" required th:value="${student.firstName}" type="text">
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Tên</label>
+            <label class="form-label">Last Name</label>
             <input class="form-control" name="lastName" required th:value="${student.lastName}" type="text">
         </div>
 
@@ -44,18 +44,18 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Số Điện Thoại</label>
+            <label class="form-label">Phone Number</label>
             <input class="form-control" name="phoneNumber" required th:value="${student.phoneNumber}" type="text">
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Mã MIS</label>
-            <input class="form-control" name="misId" placeholder="Nhập mã MIS" th:value="${student.misId}" type="text">
+            <label class="form-label">MIS ID</label>
+            <input class="form-control" name="misId" placeholder="Enter MIS ID" th:value="${student.misId}" type="text">
         </div>
 
         <div class="text-center">
             <button class="btn btn-success" type="submit">
-                <i class="fas fa-save"></i> Lưu Thay Đổi
+                <i class="fas fa-save"></i> Save Changes
             </button>
         </div>
     </form>

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Sửa Học Sinh</title>
-  <link rel="stylesheet" href="/SuaHocSinh.css">
+    <meta charset="UTF-8">
+    <title>Edit Student</title>
+    <link rel="stylesheet" href="/SuaHocSinh.css">
 </head>
 <body>
 <div class="container">
-  <h2>Sửa Học Sinh</h2>
+    <h2>Edit Student</h2>
 
   <!-- Hiển thị lỗi nếu có -->
   <div th:if="${error}" class="alert alert-danger">
@@ -18,12 +18,12 @@
     <input type="hidden" name="studentID" th:value="${student.id}" />
 
     <div class="input-group">
-      <label for="firstName">Họ:</label>
+        <label for="firstName">First Name:</label>
       <input type="text" id="firstName" name="firstName" th:value="${student.firstName}" required />
     </div>
 
     <div class="input-group">
-      <label for="lastName">Tên:</label>
+      <label for="lastName">Last Name:</label>
       <input type="text" id="lastName" name="lastName" th:value="${student.lastName}" required />
     </div>
 
@@ -33,7 +33,7 @@
     </div>
 
     <div class="input-group">
-      <label for="phoneNumber">Số điện thoại:</label>
+      <label for="phoneNumber">Phone Number:</label>
       <input type="text" id="phoneNumber" name="phoneNumber" th:value="${student.phoneNumber}" required />
     </div>
 
@@ -43,9 +43,9 @@
     </div>
 
     <div class="input-group">
-      <label for="employee">Nhân viên phụ trách:</label>
+      <label for="employee">Responsible Employee:</label>
       <select id="employee" name="employeeID">
-        <option value="">-- Chọn nhân viên --</option>
+        <option value="">-- Choose Employee --</option>
         <option th:each="emp : ${employees}" th:value="${emp.id}"
                 th:text="${emp.firstName + ' ' + emp.lastName}"
                 th:selected="${student.employee != null and student.employee.id == emp.id}">
@@ -53,8 +53,8 @@
       </select>
     </div>
 
-    <button type="submit" class="btn btn-primary">Cập nhật</button>
-    <a href="/DanhSachHocSinh" class="btn btn-secondary">Quay lại danh sách</a>
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a href="/DanhSachHocSinh" class="btn btn-secondary">Back to Student List</a>
   </form>
 </div>
 </body>

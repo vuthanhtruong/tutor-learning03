@@ -2,13 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Thêm Nhân Viên</title>
+    <title>Add Employee</title>
     <link href="/ThemNhanVien.css" rel="stylesheet">
     <script crossorigin="anonymous" src="https://kit.fontawesome.com/a076d05399.js"></script>
 </head>
 <body>
 <div class="container">
-    <h2>Thêm Nhân Viên</h2>
+    <h2>Add Employee</h2>
 
     <!-- Hiển thị thông báo lỗi -->
     <div class="alert alert-danger" th:if="${error}">
@@ -22,17 +22,17 @@
 
     <form method="post" th:action="@{/ThemNhanVien}">
         <div class="input-group">
-            <label for="employeeID"><i class="fas fa-id-card"></i> Mã Nhân Viên</label>
+            <label for="employeeID"><i class="fas fa-id-card"></i> Employee ID</label>
             <input id="employeeID" name="EmployeeID" required type="text">
         </div>
 
         <div class="input-group">
-            <label for="firstName"><i class="fas fa-user"></i> Tên</label>
+            <label for="firstName"><i class="fas fa-user"></i> First Name</label>
             <input id="firstName" name="FirstName" required type="text">
         </div>
 
         <div class="input-group">
-            <label for="lastName"><i class="fas fa-user"></i> Họ</label>
+            <label for="lastName"><i class="fas fa-user"></i> Last Name</label>
             <input id="lastName" name="LastName" required type="text">
         </div>
 
@@ -42,19 +42,19 @@
         </div>
 
         <div class="input-group">
-            <label for="phoneNumber"><i class="fas fa-phone"></i> Số Điện Thoại</label>
+            <label for="phoneNumber"><i class="fas fa-phone"></i> Phone Number</label>
             <input id="phoneNumber" name="PhoneNumber" required type="text">
         </div>
 
         <div class="input-group">
-            <label for="password"><i class="fas fa-lock"></i> Mật Khẩu</label>
+            <label for="password"><i class="fas fa-lock"></i> Password</label>
             <input id="password" name="Password" required type="password">
         </div>
 
-        <button class="btn btn-primary" type="submit"><i class="fas fa-user-plus"></i> Thêm Nhân Viên</button>
+        <button class="btn btn-primary" type="submit"><i class="fas fa-user-plus"></i> Add Employee</button>
 
         <div class="btn-container">
-            <a class="btn btn-secondary" href="/DanhSachNhanVien"><i class="fas fa-arrow-left"></i> Quay Lại</a>
+            <a class="btn btn-secondary" href="/DanhSachNhanVien"><i class="fas fa-arrow-left"></i> Back to Employee List</a>
         </div>
     </form>
 </div>

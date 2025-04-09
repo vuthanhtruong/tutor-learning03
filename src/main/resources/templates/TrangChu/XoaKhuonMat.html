@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Xóa Khuôn Mặt</title>
+    <title>Delete Face</title>
     <link href="/css/style.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 
 <header>
-    <h1>Xóa Khuôn Mặt Hiện Có</h1>
+    <h1>Delete Face</h1>
 </header>
 
 <main>
@@ -35,21 +35,20 @@
 
     <!-- Form Xóa Khuôn Mặt -->
     <section class="face-delete-section">
-        <p>Vui lòng xác thực khuôn mặt của bạn để xóa.</p>
+        <p>Please verify your face to delete.</p>
         <form th:action="@{/XoaKhuonMat}" th:method="post">
             <video autoplay height="240" id="videoDelete" style="transform: scaleX(-1);" width="320"></video>
             <div class="mt-2">
-                <button class="btn btn-info" onclick="toggleCameraDelete()" type="button">Bật/Tắt Camera</button>
-                <button class="btn btn-success" onclick="captureFace('faceDataDelete')" type="button">Chụp Khuôn Mặt Để
-                    Xác Thực
+                <button class="btn btn-info" onclick="toggleCameraDelete()" type="button">Turn on/off camera</button>
+                <button class="btn btn-success" onclick="captureFace('faceDataDelete')" type="button">Capture face to
+                    verify
                 </button>
             </div>
             <input id="faceDataDelete" name="faceData" type="hidden">
-            <span class="text-success" id="captureStatusDelete" style="display: none;">Đã chụp khuôn mặt!</span>
-            <button class="btn btn-danger mt-2" type="submit"><i class="fas fa-trash-alt"></i> Xóa Khuôn Mặt</button>
+            <span class="text-success" id="captureStatusDelete" style="display: none;">Captured face!</span>
+            <button class="btn btn-danger mt-2" type="submit"><i class="fas fa-trash-alt"></i> Delete Face</button>
         </form>
-        <a class="btn btn-secondary mt-2" th:href="@{/TrangCaNhan}"><i class="fas fa-arrow-left"></i> Quay lại Trang Cá
-            Nhân</a>
+        <a class="btn btn-secondary mt-2" th:href="@{/TrangCaNhan}"><i class="fas fa-arrow-left"></i> Back to Personal Page</a>
     </section>
 </main>
 
@@ -69,8 +68,8 @@
                 videoDelete.srcObject = streamDelete;
             })
             .catch(function (err) {
-                console.log("Lỗi webcam xóa: " + err);
-                alert("Không thể truy cập webcam cho xóa: " + err.message);
+                console.log("Error webcam deletion: " + err);
+                alert("Cannot access webcam for deletion: " + err.message);
             });
     }
 
@@ -95,7 +94,7 @@
         let targetStatus = captureStatusDelete;
 
         if (!targetVideo.srcObject) {
-            alert("Vui lòng bật camera trước khi chụp!");
+            alert("Please turn on the camera before capturing!");
             return;
         }
         let canvas = document.createElement('canvas');

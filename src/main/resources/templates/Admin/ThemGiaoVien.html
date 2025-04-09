@@ -2,13 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Thêm Giáo Viên</title>
+    <title>Add Teacher</title>
     <link href="/ThemGiaoVien.css" rel="stylesheet">
 </head>
 <body>
 
 <div class="container mt-5">
-    <h2 class="mb-4">Thêm Giáo Viên</h2>
+    <h2 class="mb-4">Add Teacher</h2>
 
     <!-- Hiển thị thông báo lỗi -->
     <div class="alert alert-danger" th:if="${error}">
@@ -23,19 +23,19 @@
     <!-- Form thêm giáo viên -->
     <form method="post" th:action="@{/ThemGiaoVien}">
         <div class="mb-3">
-            <label class="form-label" for="teacherID">ID Giáo Viên</label>
+            <label class="form-label" for="teacherID">Teacher ID</label>
             <input class="form-control" id="teacherID" name="TeacherID" required type="text">
         </div>
         <div class="mb-3">
-            <label class="form-label" for="firstName">Tên</label>
+            <label class="form-label" for="firstName">First Name</label>
             <input class="form-control" id="firstName" name="FirstName" required type="text">
         </div>
         <div class="mb-3">
-            <label class="form-label" for="lastName">Họ</label>
+            <label class="form-label" for="lastName">Last Name</label>
             <input class="form-control" id="lastName" name="LastName" required type="text">
         </div>
         <div class="mb-3">
-            <label class="form-label" for="password">Mật khẩu</label>
+            <label class="form-label" for="password">Password</label>
             <input class="form-control" id="password" name="Password" required type="password">
         </div>
         <div class="mb-3">
@@ -43,7 +43,7 @@
             <input class="form-control" id="email" name="Email" required type="email">
         </div>
         <div class="mb-3">
-            <label class="form-label" for="phoneNumber">Số điện thoại</label>
+            <label class="form-label" for="phoneNumber">Phone Number</label>
             <input class="form-control" id="phoneNumber" name="PhoneNumber" required type="text">
         </div>
         <div class="mb-3">
@@ -51,18 +51,18 @@
             <input class="form-control" id="misID" name="MisID" type="text">
         </div>
         <div class="mb-3">
-            <label class="form-label" for="employee">Chọn Nhân Viên</label>
+            <label class="form-label" for="employee">Choose Employee</label>
             <select class="form-select" id="employee" name="EmployeeID">
-                <option value="">-- Chọn nhân viên (không bắt buộc) --</option>
+                <option value="">-- Choose Employee (Optional) --</option>
                 <option th:each="employee : ${employees}"
                         th:text="${employee.firstName + ' ' + employee.lastName}"
                         th:value="${employee.id}">
                 </option>
             </select>
         </div>
-        <button class="btn btn-primary" type="submit">Thêm Giáo Viên</button>
+        <button class="btn btn-primary" type="submit">Add Teacher</button>
         <div class="text-center mt-3">
-            <a class="btn btn-secondary" href="/DanhSachGiaoVien">Quay Lại Danh Sách Giáo Viên</a>
+            <a class="btn btn-secondary" href="/DanhSachGiaoVien">Back to Teacher List</a>
         </div>
     </form>
 </div>

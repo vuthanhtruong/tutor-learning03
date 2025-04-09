@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Trang Chủ Nhân Viên</title>
+    <title>Employee Home</title>
     <link rel="stylesheet" th:href="@{/TrangChuNhanVien.css}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 </head>
@@ -10,54 +10,54 @@
 
 <div class="container mt-5">
     <div class="text-center mb-4">
-        <h1 class="text-primary"><i class="fas fa-user-tie"></i> Trang Chủ Nhân Viên</h1>
+        <h1 class="text-primary"><i class="fas fa-user-tie"></i> Employee Home</h1>
         <h2 class="text-secondary">
-            Chào mừng, <span th:text="${employee.firstName} + ' ' + ${employee.lastName}"></span> |
-            <a class="text-info" th:href="@{/TrangCaNhan}"><i class="fas fa-user-circle"></i> Trang Cá Nhân</a> |
+            Welcome, <span th:text="${employee.firstName} + ' ' + ${employee.lastName}"></span> |
+            <a class="text-info" th:href="@{/TrangCaNhan}"><i class="fas fa-user-circle"></i> Personal Page</a> |
         </h2>
     </div>
 
     <div class="row">
         <div class="col-md-6 mb-3">
             <a class="btn btn-outline-primary w-100 p-3" th:href="@{/DanhSachGiaoVienCuaBan}">
-                <i class="fas fa-chalkboard-teacher icon"></i> Danh sách giáo viên của bạn
+                <i class="fas fa-chalkboard-teacher icon"></i> Your Teacher List
             </a>
         </div>
 
         <div class="col-md-6 mb-3">
             <a class="btn btn-outline-success w-100 p-3" th:href="@{/DanhSachHocSinhCuaBan}">
-                <i class="fas fa-user-graduate icon"></i> Danh sách học sinh của bạn
+                <i class="fas fa-user-graduate icon"></i> Your Student List
             </a>
         </div>
 
         <div class="col-md-6 mb-3">
             <a class="btn btn-outline-warning w-100 p-3" th:href="@{/DanhSachNguoiDungHeThong}">
-                <i class="fas fa-users-cog icon"></i> Danh sách người dùng hệ thống
+                <i class="fas fa-users-cog icon"></i> System User List
             </a>
         </div>
 
         <div class="col-md-6 mb-3">
             <a class="btn btn-outline-info w-100 p-3" th:href="@{/DanhSachPhongHoc}">
-                <i class="fas fa-door-open icon"></i> Danh sách phòng học
+                <i class="fas fa-door-open icon"></i> Classroom List
             </a>
         </div>
 
         <div class="col-md-6 mb-3">
             <a class="btn btn-outline-dark w-100 p-3" th:href="@{/BoTriLopHoc}">
-                <i class="fas fa-th-large icon"></i> Bố trí lớp học
+                <i class="fas fa-th-large icon"></i> Arrange Classroom
             </a>
         </div>
 
         <div class="col-md-6 mb-3">
             <a class="btn btn-outline-dark w-100 p-3" th:href="@{/ThoiKhoaBieu}">
-                <i class="fas fa-th-large icon"></i> Bố trí Thời Khóa Biểu
+                <i class="fas fa-th-large icon"></i> Arrange Schedule
             </a>
         </div>
 
         <!-- 🆕 Mục Feedback từ Học Sinh -->
         <div class="col-md-6 mb-3">
             <a class="btn btn-outline-secondary w-100 p-3" th:href="@{/FeedbackHocSinh}">
-                <i class="fas fa-comments icon"></i> Feedback Của Học Sinh
+                <i class="fas fa-comments icon"></i> Student Feedback
             </a>
         </div>
 
@@ -69,7 +69,7 @@
 
         <div class="col-md-12">
             <a class="btn btn-danger w-100 p-3" th:href="@{/DangXuat}">
-                <i class="fas fa-sign-out-alt icon"></i> Đăng xuất
+                <i class="fas fa-sign-out-alt icon"></i> Logout
             </a>
         </div>
 
