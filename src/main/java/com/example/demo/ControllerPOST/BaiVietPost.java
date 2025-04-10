@@ -4,6 +4,8 @@ import com.example.demo.ModelOOP.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,13 +27,14 @@ import java.util.List;
 @Transactional
 public class BaiVietPost {
 
+    private static final Logger logger = LoggerFactory.getLogger(BaiVietPost.class);
+
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Value("${upload.dir:uploads}")
+    @Value("${upload.dir:/var/www/uploads}") // Giá trị mặc định cho production
     private String uploadDir;
 
-    @Transactional
     @PostMapping("/BaiPost")
     public String handlePost(
             @RequestParam("postContent") String postContent,
@@ -66,11 +69,18 @@ public class BaiVietPost {
 
             if (files != null && !files.isEmpty()) {
                 File dir = new File(uploadDir);
-                if (!dir.exists())
-                    dir.mkdirs();
+                if (!dir.exists()) {
+                    boolean created = dir.mkdirs();
+                    if (!created) {
+                        throw new IOException("Không thể tạo thư mục upload: " + uploadDir);
+                    }
+                }
+                if (!dir.canWrite()) {
+                    throw new IOException("Không có quyền ghi vào thư mục: " + uploadDir);
+                }
 
                 for (MultipartFile file : files) {
-                    if (!file.isEmpty()) {
+                    if (file != null && !file.isEmpty()) {
                         byte[] fileData = file.getBytes();
                         if (fileData.length == 0) {
                             throw new IOException("Tệp rỗng hoặc không đọc được: " + file.getOriginalFilename());
@@ -79,7 +89,8 @@ public class BaiVietPost {
                         String filePath = uploadDir + File.separator + System.currentTimeMillis() + "_"
                                 + file.getOriginalFilename();
                         File destFile = new File(filePath);
-                        file.transferTo(destFile); // Ghi file ra thư mục
+                        file.transferTo(destFile);
+                        logger.info("Đã upload file: " + filePath);
 
                         Documents document = new Documents();
                         document.setDocumentTitle(file.getOriginalFilename());
@@ -99,9 +110,11 @@ public class BaiVietPost {
             redirectAttributes.addFlashAttribute("message", "Bài đăng đã được tạo thành công!");
 
         } catch (IOException e) {
+            logger.error("Lỗi khi xử lý tệp: ", e);
             redirectAttributes.addFlashAttribute("error", "Lỗi khi xử lý tệp: " + e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         } catch (Exception e) {
+            logger.error("Lỗi hệ thống: ", e);
             redirectAttributes.addFlashAttribute("error", "Lỗi hệ thống: " + e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
@@ -109,13 +122,12 @@ public class BaiVietPost {
         return "redirect:/ChiTietLopHocBanThamGia/" + roomId;
     }
 
-    @Transactional
     @PostMapping("/UpdateBaiPost")
     public String updatePost(
             @RequestParam("postId") Long postId,
             @RequestParam("postContent") String postContent,
             @RequestParam("roomId") String roomId,
-            @RequestParam(value = "file", required = false) MultipartFile file, // Thay đổi ở đây
+            @RequestParam(value = "file", required = false) MultipartFile file,
             RedirectAttributes redirectAttributes) {
 
         try {
@@ -127,26 +139,31 @@ public class BaiVietPost {
             existingPost.setContent(postContent);
             entityManager.merge(existingPost);
 
-            // Xử lý tài liệu
             List<Documents> existingDocuments = entityManager.createQuery(
-                    "SELECT d FROM Documents d WHERE d.post.postId = :postId", Documents.class)
+                            "SELECT d FROM Documents d WHERE d.post.postId = :postId", Documents.class)
                     .setParameter("postId", postId)
                     .getResultList();
 
-            // Xóa tài liệu cũ
             for (Documents doc : existingDocuments) {
                 File oldFile = new File(doc.getFilePath());
-                if (oldFile.exists())
+                if (oldFile.exists()) {
                     oldFile.delete();
+                }
                 entityManager.remove(doc);
             }
             entityManager.flush();
 
-            // Thêm tài liệu mới nếu có
             if (file != null && !file.isEmpty()) {
                 File dir = new File(uploadDir);
-                if (!dir.exists())
-                    dir.mkdirs();
+                if (!dir.exists()) {
+                    boolean created = dir.mkdirs();
+                    if (!created) {
+                        throw new IOException("Không thể tạo thư mục upload: " + uploadDir);
+                    }
+                }
+                if (!dir.canWrite()) {
+                    throw new IOException("Không có quyền ghi vào thư mục: " + uploadDir);
+                }
 
                 byte[] fileData = file.getBytes();
                 if (fileData.length == 0) {
@@ -157,6 +174,7 @@ public class BaiVietPost {
                         + file.getOriginalFilename();
                 File destFile = new File(filePath);
                 file.transferTo(destFile);
+                logger.info("Đã upload file mới: " + filePath);
 
                 Documents newDocument = new Documents();
                 newDocument.setDocumentTitle(file.getOriginalFilename());
@@ -174,14 +192,15 @@ public class BaiVietPost {
             redirectAttributes.addFlashAttribute("message", "Bài đăng đã được cập nhật thành công!");
 
         } catch (IOException e) {
+            logger.error("Lỗi khi xử lý tệp: ", e);
             redirectAttributes.addFlashAttribute("error", "Lỗi khi xử lý tệp: " + e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         } catch (Exception e) {
+            logger.error("Lỗi hệ thống: ", e);
             redirectAttributes.addFlashAttribute("error", "Lỗi hệ thống: " + e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
 
         return "redirect:/BaiDangCaNhan/" + roomId;
     }
-
 }
