@@ -48,6 +48,7 @@
                 <ul class="list-unstyled" id="document-list">
                     <li class="mb-2" th:each="doc : ${documents}">
                         <strong>Mô tả:</strong> <span th:text="${doc.event?.description ?: 'Không có mô tả'}"></span>
+                        <strong>Creator:</strong> <span th:text="${doc.getCreator().getId() ?: 'No description'}"></span>
                         <strong>Thời Gian</strong> <span
                             th:text="${doc.getPost().getCreatedAt() ?: 'Không có mô tả'}"></span>
                     </li>
@@ -124,6 +125,7 @@
                 <ul class="list-unstyled" id="message-list">
                     <li class="mb-2" th:each="msg : ${messages}">
                         <strong>Description:</strong> <span th:text="${msg.event?.description ?: 'No description'}"></span>
+                        <strong>Sender:</strong> <span th:text="${msg.getSender().getId() ?: 'No description'}"></span>
                         <strong>Time</strong> <span th:text="${msg.getDatetime() ?: 'No description'}"></span>
                     </li>
                     <li th:if="${#lists.isEmpty(messages)}">No messages.</li>
