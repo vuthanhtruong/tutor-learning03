@@ -78,10 +78,7 @@
                     } else if (content.action === "error") {
                         alert(content.content); // Hiển thị thông báo lỗi
                     } else {
-                        const currentUserId = document.getElementById("currentUserId")?.value;
-                        if (content.senderId !== currentUserId) {
-                            appendMessage(content.senderId, content.content, content.timestamp, content.messageId);
-                        }
+                        appendMessage(content.senderId, content.content, content.timestamp, content.messageId);
                     }
                 });
             }, function (error) {
@@ -104,8 +101,6 @@
                         recipientId: recipientId,
                         content: messageInput
                     }));
-
-                    appendMessage(senderId, messageInput, new Date().toISOString(), null);
                     document.getElementById("messageText").value = "";
                 }
             });
@@ -124,7 +119,7 @@
             var sentTime = new Date(timestamp);
             var now = new Date();
             var minutesElapsed = (now - sentTime) / (1000 * 60);
-            var showDeleteButton = isCurrentUser && messageId && minutesElapsed <= 1;
+            var showDeleteButton = isCurrentUser && messageId && minutesElapsed <= 30;
 
             var messageHTML = `
                 <div class="message-box ${isCurrentUser ? 'right' : 'left'}" ${messageId ? `id="message-${messageId}"` : ''}>
