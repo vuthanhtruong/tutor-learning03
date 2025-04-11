@@ -71,24 +71,17 @@ public class MessageController {
                         chatMessage.getSenderId(),
                         chatMessage.getRecipientId(),
                         chatMessage.getContent(),
-                        String.valueOf(message.getMessagesID()),
                         message.getDatetime().toString()
                 );
+                response.setMessageId(String.valueOf(message.getMessagesID()));
 
-                // Gửi tin nhắn tới người nhận
+                // Chỉ gửi tới người nhận
                 messagingTemplate.convertAndSendToUser(
                         chatMessage.getRecipientId(),
                         "/queue/messages",
                         response
                 );
-                // Gửi tin nhắn tới người gửi
-                messagingTemplate.convertAndSendToUser(
-                        chatMessage.getSenderId(),
-                        "/queue/messages",
-                        response
-                );
-
-                System.out.println("📤 Đã gửi tin nhắn tới /user/" + chatMessage.getRecipientId() + "/queue/messages và /user/" + chatMessage.getSenderId() + "/queue/messages");
+                System.out.println("📤 Đã gửi tin nhắn tới /user/" + chatMessage.getRecipientId() + "/queue/messages");
             } else {
                 System.out.println("⚠️ Người gửi hoặc người nhận không tồn tại");
             }
@@ -151,7 +144,7 @@ public class MessageController {
 
     @MessageMapping("/deleteMessage")
     @Transactional
-    public void deleteMessage(ChatMessage chatMessage) {
+    public void deleteMessage(ChatMessage chatMessage, ModelMap model) {
         try {
             Optional<Person> sender = personRepository.findById(chatMessage.getSenderId());
             Optional<Messages> messageOpt = entityManager.createQuery(
@@ -172,7 +165,6 @@ public class MessageController {
                             chatMessage.getSenderId(),
                             message.getRecipient().getId(),
                             "Tin nhắn đã gửi quá 1 phút, không thể xóa.",
-                            null, // Không có messageId cho thông báo lỗi
                             now.toString()
                     );
                     errorResponse.setAction("error");
@@ -194,10 +186,10 @@ public class MessageController {
                         chatMessage.getSenderId(),
                         message.getRecipient().getId(),
                         message.getText(),
-                        String.valueOf(message.getMessagesID()),
                         message.getDatetime().toString()
                 );
                 response.setAction("delete");
+                response.setMessageId(String.valueOf(message.getMessagesID()));
 
                 messagingTemplate.convertAndSendToUser(
                         message.getRecipient().getId(),

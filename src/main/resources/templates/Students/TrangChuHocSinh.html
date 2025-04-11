@@ -86,6 +86,7 @@
                 <ul class="list-unstyled" id="post-list">
                     <li class="mb-2" th:each="post : ${posts}">
                         <strong>Mô tả:</strong> <span th:text="${post.event?.description ?: 'Không có mô tả'}"></span>
+                        <strong>Creator:</strong> <span th:text="${post.getCreator().getId() ?: 'No description'}"></span>
                         <strong>Thời Gian</strong> <span th:text="${post.getCreatedAt() ?: 'Không có mô tả'}"></span>
                     </li>
                     <li th:if="${#lists.isEmpty(posts)}">No posts.</li>

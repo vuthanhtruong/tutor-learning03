@@ -78,7 +78,10 @@
                     } else if (content.action === "error") {
                         alert(content.content); // Hiển thị thông báo lỗi
                     } else {
-                        appendMessage(content.senderId, content.content, content.timestamp, content.messageId);
+                        const currentUserId = document.getElementById("currentUserId")?.value;
+                        if (content.senderId !== currentUserId) {
+                            appendMessage(content.senderId, content.content, content.timestamp, content.messageId);
+                        }
                     }
                 });
             }, function (error) {
@@ -101,6 +104,8 @@
                         recipientId: recipientId,
                         content: messageInput
                     }));
+
+                    appendMessage(senderId, messageInput, new Date().toISOString(), null);
                     document.getElementById("messageText").value = "";
                 }
             });
