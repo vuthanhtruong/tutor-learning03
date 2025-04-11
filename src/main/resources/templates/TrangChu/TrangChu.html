@@ -74,26 +74,6 @@
                 <div class="forgot-password">
                     <a href="/auth/QuenMatKhau"><i class="fas fa-question-circle"></i> Forgot password?</a>
                 </div>
-
-                <div class="divider">Or</div>
-
-                <div class="login-options">
-                    <!-- Form Đăng Nhập Bằng Khuôn Mặt -->
-                    <form action="/auth/verify-face-login" id="faceLoginForm" method="POST">
-                        <input id="faceData" name="image" type="hidden">
-                        <button class="btn btn-secondary" onclick="startFaceRecognition()" type="button">
-                            <i class="fas fa-camera"></i> Face
-                        </button>
-                    </form>
-
-                    <!-- Form Đăng Nhập Bằng Giọng Nói -->
-                    <form action="/DangNhapBangGiongNoi" id="voiceLoginForm" method="POST">
-                        <input id="voiceData" name="voiceData" type="hidden">
-                        <button class="btn btn-info" onclick="startVoiceRecognition()" type="button">
-                            <i class="fas fa-microphone"></i> Voice
-                        </button>
-                    </form>
-                </div>
             </div>
 
             <!-- Các liên kết đăng ký -->
