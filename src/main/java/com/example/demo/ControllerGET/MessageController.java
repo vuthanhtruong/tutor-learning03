@@ -144,7 +144,7 @@ public class MessageController {
 
     @MessageMapping("/deleteMessage")
     @Transactional
-    public void deleteMessage(ChatMessage chatMessage) {
+    public void deleteMessage(ChatMessage chatMessage, ModelMap model) {
         try {
             Optional<Person> sender = personRepository.findById(chatMessage.getSenderId());
             Optional<Messages> messageOpt = entityManager.createQuery(
@@ -155,6 +155,27 @@ public class MessageController {
 
             if (messageOpt.isPresent()) {
                 Messages message = messageOpt.get();
+                LocalDateTime now = LocalDateTime.now();
+                LocalDateTime sentTime = message.getDatetime();
+                long minutesElapsed = java.time.Duration.between(sentTime, now).toMinutes();
+
+                if (minutesElapsed > 1) {
+                    System.out.println("Tin nhắn quá 1 phút, không thể xóa: " + message.getMessagesID());
+                    ChatMessage errorResponse = new ChatMessage(
+                            chatMessage.getSenderId(),
+                            message.getRecipient().getId(),
+                            "Tin nhắn đã gửi quá 1 phút, không thể xóa.",
+                            now.toString()
+                    );
+                    errorResponse.setAction("error");
+                    messagingTemplate.convertAndSendToUser(
+                            chatMessage.getSenderId(),
+                            "/queue/messages",
+                            errorResponse
+                    );
+                    return;
+                }
+
                 message.setText("Người dùng này đã xóa tin nhắn");
                 entityManager.merge(message);
                 entityManager.flush();
@@ -175,14 +196,11 @@ public class MessageController {
                         "/queue/messages",
                         response
                 );
-                System.out.println("📤 Đã gửi thông báo xóa tới /user/" + message.getRecipient().getId() + "/queue/messages");
-
                 messagingTemplate.convertAndSendToUser(
                         chatMessage.getSenderId(),
                         "/queue/messages",
                         response
                 );
-                System.out.println("📤 Đã gửi thông báo xóa tới /user/" + chatMessage.getSenderId() + "/queue/messages");
             } else {
                 System.out.println("⚠️ Không tìm thấy tin nhắn hoặc không có quyền xóa");
             }

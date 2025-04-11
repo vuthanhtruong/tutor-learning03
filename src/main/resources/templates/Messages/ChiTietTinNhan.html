@@ -41,7 +41,8 @@
                 <div class="message-time" th:text="${#temporals.format(message.datetime, 'dd/MM/yyyy HH:mm')}"></div>
                 <div class="message-text" th:text="${message.text}"></div>
                 <span class="delete-btn" onclick="deleteMessage(this)"
-                      th:data-message-id="${message.messagesID}" th:if="${message.sender.id == currentUser.id}">X</span>
+                      th:data-message-id="${message.messagesID}"
+                      th:if="${message.sender.id == currentUser.id and #temporals.createNow().minusMinutes(30).isBefore(message.datetime)}">X</span>
             </div>
         </div>
 
@@ -74,8 +75,9 @@
                     const content = JSON.parse(message.body);
                     if (content.action === "delete") {
                         updateMessageAsDeleted(content.messageId);
+                    } else if (content.action === "error") {
+                        alert(content.content); // Hiển thị thông báo lỗi
                     } else {
-                        // Chỉ thêm tin nhắn từ người khác, không phải từ chính sender
                         const currentUserId = document.getElementById("currentUserId")?.value;
                         if (content.senderId !== currentUserId) {
                             appendMessage(content.senderId, content.content, content.timestamp, content.messageId);
@@ -103,7 +105,6 @@
                         content: messageInput
                     }));
 
-                    // Thêm tin nhắn vào giao diện ngay lập tức cho sender (không chờ messageId từ server)
                     appendMessage(senderId, messageInput, new Date().toISOString(), null);
                     document.getElementById("messageText").value = "";
                 }
@@ -112,9 +113,7 @@
 
         function appendMessage(senderId, content, timestamp, messageId) {
             const existingMessage = messageId ? document.getElementById(`message-${messageId}`) : null;
-            if (existingMessage) {
-                return; // Bỏ qua nếu tin nhắn đã tồn tại
-            }
+            if (existingMessage) return;
 
             var currentUserId = document.getElementById("currentUserId")?.value;
             var chatPartnerId = document.getElementById("chatPartnerId")?.value;
@@ -122,13 +121,17 @@
 
             var sender = senderId === currentUserId ? "Bạn" : chatPartnerName;
             var isCurrentUser = senderId === currentUserId;
+            var sentTime = new Date(timestamp);
+            var now = new Date();
+            var minutesElapsed = (now - sentTime) / (1000 * 60);
+            var showDeleteButton = isCurrentUser && messageId && minutesElapsed <= 1;
 
             var messageHTML = `
                 <div class="message-box ${isCurrentUser ? 'right' : 'left'}" ${messageId ? `id="message-${messageId}"` : ''}>
                     <div class="message-header">${sender}</div>
                     <div class="message-time">${new Date(timestamp).toLocaleString('vi-VN')}</div>
                     <div class="message-text">${escapeHtml(content)}</div>
-                    ${isCurrentUser && messageId ? `<span class="delete-btn" data-message-id="${messageId}" onclick="deleteMessage(this)">X</span>` : ''}
+                    ${showDeleteButton ? `<span class="delete-btn" data-message-id="${messageId}" onclick="deleteMessage(this)">X</span>` : ''}
                 </div>`;
 
             var messagesContainer = document.getElementById("messagesContainer");
@@ -144,26 +147,22 @@
                 const textElement = messageElement.querySelector(".message-text");
                 textElement.textContent = "Người dùng này đã xóa tin nhắn";
                 const deleteBtn = messageElement.querySelector(".delete-btn");
-                if (deleteBtn) {
-                    deleteBtn.remove();
-                }
+                if (deleteBtn) deleteBtn.remove();
             }
         }
 
         function scrollToBottom() {
             var container = document.getElementById("messagesContainer");
-            if (container) {
-                container.scrollTop = container.scrollHeight;
-            }
+            if (container) container.scrollTop = container.scrollHeight;
         }
 
         function escapeHtml(unsafe) {
             return unsafe
-                .replace(/&/g, "&")
-                .replace(/</g, "<")
-                .replace(/>/g, ">")
-                .replace(/"/g, "")
-                .replace(/'/g, "'");
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         }
 
         window.deleteMessage = function (element) {

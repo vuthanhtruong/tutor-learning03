@@ -226,7 +226,7 @@ public class NhanVienPost {
             @RequestParam(value = "misID", required = false) String misId,
             RedirectAttributes redirectAttributes) {
 
-        // Lấy thông tin nhân viên từ Authentication
+        // Lấy thông tin nhân viên từ Authenticationg
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String employeeId = authentication.getName();
         Person person = entityManager.find(Person.class, employeeId);
