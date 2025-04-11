@@ -13,6 +13,7 @@
     <!-- Cột 1: Thêm Giáo Viên & Học Sinh -->
     <div class="section">
         <h3>Add Teacher & Student</h3>
+        <div class="text-danger" th:if="${error}" th:text="${error}"></div>
 
         <form method="post" th:action="@{/ThemGiaoVienVaoLop}">
             <input name="roomId" th:value="${room.roomId}" type="hidden"/>
