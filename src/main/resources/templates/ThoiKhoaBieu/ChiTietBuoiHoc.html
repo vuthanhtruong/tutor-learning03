@@ -2,11 +2,11 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Chi Tiết Buổi Học</title>
+    <title>Attendance Details</title>
     <link href="/ChiTietBuoiHoc.css" rel="stylesheet">
 </head>
 <body>
-<h1>Chi Tiết Buổi Học</h1>
+<h1>Attendance Details</h1>
 
 <!-- Thông báo lỗi hoặc thành công -->
 <div class="error-message" th:if="${param.error}">
@@ -18,33 +18,33 @@
 
 <!-- Thông tin buổi học -->
 <div class="info-section">
-    <h2>Thông Tin Buổi Học</h2>
-    <p><strong>Giáo Viên của lớp:</strong>
+    <h2>Attendance Information</h2>
+    <p><strong>Teacher of the class:</strong>
         <span th:if="${teacher != null}" th:text="${teacher.lastName + ' ' + teacher.firstName}"></span>
-        <span th:if="${teacher == null}" th:text="${errorMessage != null ? errorMessage : 'Không có giáo viên'}"></span>
+        <span th:if="${teacher == null}" th:text="${errorMessage != null ? errorMessage : 'No teacher'}"></span>
     </p>
-    <p><strong>Mã Phòng:</strong> <span th:text="${timetable.room.roomId}"></span></p>
-    <p><strong>Tên Phòng:</strong> <span th:text="${timetable.room.roomName}"></span></p>
-    <p><strong>Ngày:</strong> <span th:text="${#temporals.format(timetable.date, 'dd/MM/yyyy')}"></span></p>
-    <p><strong>Thứ:</strong> <span th:text="${timetable.dayOfWeek}"></span></p>
-    <p><strong>Thời Gian Bắt Đầu:</strong> <span
+    <p><strong>Room Code:</strong> <span th:text="${timetable.room.roomId}"></span></p>
+    <p><strong>Room Name:</strong> <span th:text="${timetable.room.roomName}"></span></p>
+    <p><strong>Date:</strong> <span th:text="${#temporals.format(timetable.date, 'dd/MM/yyyy')}"></span></p>
+    <p><strong>Day:</strong> <span th:text="${timetable.dayOfWeek}"></span></p>
+    <p><strong>Start Time:</strong> <span
             th:text="${#temporals.format(timetable.slot.startTime, 'HH:mm')}"></span></p>
-    <p><strong>Thời Gian Kết Thúc:</strong> <span
+    <p><strong>End Time:</strong> <span
             th:text="${#temporals.format(timetable.slot.endTime, 'HH:mm')}"></span></p>
 </div>
 
 <!-- Danh sách học sinh -->
-<h2>Danh Sách Học Sinh</h2>
+    <h2>Student List</h2>
 <form method="post" th:action="@{/DiemDanh}" th:if="${!isStudent}">
     <input name="timetableId" th:value="${timetable.timetableId}" type="hidden">
     <table>
         <thead>
         <tr>
-            <th>Mã Học Sinh</th>
-            <th>Họ</th>
-            <th>Tên</th>
-            <th>Trạng Thái Điểm Danh</th>
-            <th>Ghi Chú</th>
+            <th>Student ID</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Attendance Status</th>
+            <th>Note</th>
         </tr>
         </thead>
         <tbody>
@@ -60,20 +60,20 @@
                                th:name="'status_' + ${student.id}"
                                th:value="Present"
                                type="radio">
-                        <span>Có Mặt</span>
+                        <span>Present</span>
                     </label>
                     <label class="radio-label">
                         <input th:checked="${attendanceMap[student.id]?.status == 'Absent' or attendanceMap[student.id]?.status == null}"
                                th:name="'status_' + ${student.id}"
                                th:value="Absent"
                                type="radio">
-                        <span>Vắng Mặt</span>
+                        <span>Absent</span>
                     </label>
                 </div>
                 <!-- Hiển thị trạng thái cho học sinh -->
                 <span th:classappend="${attendanceMap[student.id]?.status == 'Present' ? 'status-present' : (attendanceMap[student.id]?.status == 'Absent' ? 'status-absent' : 'status-unknown')}"
                       th:if="${isStudent}"
-                      th:text="${attendanceMap[student.id]?.status == 'Present' ? 'Có Mặt' : (attendanceMap[student.id]?.status == 'Absent' ? 'Vắng Mặt' : 'Chưa Điểm Danh')}"></span>
+                      th:text="${attendanceMap[student.id]?.status == 'Present' ? 'Present' : (attendanceMap[student.id]?.status == 'Absent' ? 'Absent' : 'Unknown')}"></span>
             </td>
             <td>
                 <input th:if="${!isStudent}" th:name="'note_' + ${student.id}"
@@ -83,11 +83,11 @@
             </td>
         </tr>
         <tr th:if="${#lists.isEmpty(students)}">
-            <td colspan="5" style="text-align: center;">Không có học sinh trong lớp này.</td>
+            <td colspan="5" style="text-align: center;">No students in this class.</td>
         </tr>
         </tbody>
     </table>
-    <button class="btn-save" th:if="${!isStudent}" type="submit">Lưu Điểm Danh</button>
+    <button class="btn-save" th:if="${!isStudent}" type="submit">Save Attendance</button>
 </form>
 
 <!-- Hiển thị cho học sinh -->
@@ -96,11 +96,11 @@
     <table>
         <thead>
         <tr>
-            <th>Mã Học Sinh</th>
-            <th>Họ</th>
-            <th>Tên</th>
-            <th>Trạng Thái Điểm Danh</th>
-            <th>Ghi Chú</th>
+            <th>Student ID</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Attendance Status</th>
+            <th>Note</th>
         </tr>
         </thead>
         <tbody>
@@ -110,22 +110,21 @@
             <td th:text="${student.firstName}"></td>
             <td>
                 <span th:classappend="${attendanceMap[student.id]?.status == 'Present' ? 'status-present' : (attendanceMap[student.id]?.status == 'Absent' ? 'status-absent' : 'status-unknown')}"
-                      th:text="${attendanceMap[student.id]?.status == 'Present' ? 'Có Mặt' : (attendanceMap[student.id]?.status == 'Absent' ? 'Vắng Mặt' : 'Chưa Điểm Danh')}"></span>
+                      th:text="${attendanceMap[student.id]?.status == 'Present' ? 'Present' : (attendanceMap[student.id]?.status == 'Absent' ? 'Absent' : 'Unknown')}"></span>
             </td>
             <td>
                 <span th:text="${attendanceMap[student.id]?.note ?: ''}"></span>
             </td>
         </tr>
         <tr th:if="${#lists.isEmpty(students)}">
-            <td colspan="5" style="text-align: center;">Không có học sinh trong lớp này.</td>
+            <td colspan="5" style="text-align: center;">No students in this class.</td>
         </tr>
         </tbody>
     </table>
 </div>
 
 <!-- Nút quay lại -->
-<a class="btn-back" th:href="@{${backUrl}(year=${#temporals.format(timetable.date, 'yyyy')}, week=${weekNumber})}">Quay
-    Lại Lịch Học</a>
+<a class="btn-back" th:href="@{${backUrl}(year=${#temporals.format(timetable.date, 'yyyy')}, week=${weekNumber})}">Back to Class Schedule</a>
 
 </body>
 </html>
