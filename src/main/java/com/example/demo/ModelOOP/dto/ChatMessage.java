@@ -1,4 +1,4 @@
-package com.example.demo.websocket.dto;
+package com.example.demo.ModelOOP.dto;
 
 public class ChatMessage {
     private String senderId;

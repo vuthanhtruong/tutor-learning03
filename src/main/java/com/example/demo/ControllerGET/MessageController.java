@@ -5,7 +5,7 @@ import com.example.demo.ModelOOP.Messages;
 import com.example.demo.ModelOOP.Person;
 import com.example.demo.ModelOOP.Students;
 import com.example.demo.Repository.PersonRepository;
-import com.example.demo.websocket.dto.ChatMessage;
+import com.example.demo.ModelOOP.dto.ChatMessage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpSession;
