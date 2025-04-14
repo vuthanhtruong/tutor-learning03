@@ -164,7 +164,7 @@ public class MessageController {
                     ChatMessage errorResponse = new ChatMessage(
                             chatMessage.getSenderId(),
                             message.getRecipient().getId(),
-                            "Message sent more than 1 minute ago, cannot be deleted.",
+                            "Message sent more than 30 minutes ago, cannot be deleted.",
                             now.toString()
                     );
                     errorResponse.setAction("error");
