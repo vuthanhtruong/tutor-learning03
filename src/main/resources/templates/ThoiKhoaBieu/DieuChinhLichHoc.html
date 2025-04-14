@@ -20,8 +20,10 @@
     </nav>
 
     <section class="messages">
-        <div class="error-message" th:if="${param.error}">
-            <p th:switch="${param.error}">
+        <!-- Error messages section -->
+        <div class="error-message" th:if="${param.error != null || error != null}">
+            <!-- Handle URL parameter errors -->
+            <p th:if="${param.error != null}" th:switch="${param.error[0]}">
                 <span th:case="'InvalidSlotOrRoom'">Invalid room or slot!</span>
                 <span th:case="'ScheduleExists'">Schedule already exists for this slot and day!</span>
                 <span th:case="'InvalidTimetable'">Schedule not found to delete!</span>
@@ -34,21 +36,37 @@
                 <span th:case="'SaveFailed'">Save schedule failed!</span>
                 <span th:case="'SlotAlreadyUsedByAnotherRoom'">Slot already used by another room!</span>
                 <span th:case="'NoSlotsSelected'">No slots selected to save!</span>
+                <span th:case="'SlotQuantityNull'">Room slot quantity is null!</span>
                 <span th:case="'DeleteFailed'">Delete schedule failed! <span
-                        th:text='${param.errorMessage}'></span></span>
+                        th:text="${param.errorMessage != null ? param.errorMessage[0] : ''}"></span>
+                </span>
+                <span th:case="*">An error occurred: <span th:text="${param.error[0]}"></span></span>
             </p>
+
+            <!-- Handle flash attribute errors -->
+            <p th:if="${error != null}" th:text="${error}"></p>
         </div>
-        <div class="success-message" th:if="${param.success}">
-            <p th:text="${param.success == 'ScheduleSaved' ? 'Lịch học đã được lưu thành công!' : ''}"></p>
-            <p th:if="${param.success == 'ScheduleSaved' and param.slotsAdded != null}">
-                <span th:text="'Added ' + ${param.slotsAdded} + ' slot.'"></span>
+
+        <!-- Success messages section -->
+        <div class="success-message" th:if="${param.success != null || success != null}">
+            <p th:if="${param.success != null}" th:switch="${param.success[0]}">
+                <span th:case="'ScheduleSaved'">The class schedule has been saved successfully!</span>
+                <span th:case="'ScheduleDeleted'">Schedule deleted successfully!</span>
+                <span th:case="*" th:text="${param.success[0]}"></span>
             </p>
-            <p th:if="${param.success == 'ScheduleSaved' and param.weeksRepeated != null}">
-                <span th:text="'Schedule repeated for ' + ${param.weeksRepeated} + ' weeks.'"></span>
+
+            <p th:if="${param.success != null && param.success[0] == 'ScheduleSaved' && param.slotsAdded != null}">
+                <span th:text="'Added ' + ${param.slotsAdded[0]} + ' slot.'"></span>
             </p>
-            <p th:text="${param.success == 'ScheduleDeleted' ? 'Schedule deleted successfully!' : ''}"></p>
+
+            <p th:if="${param.success != null && param.success[0] == 'ScheduleSaved' && param.weeksRepeated != null}">
+                <span th:text="'Schedule repeated for ' + ${param.weeksRepeated[0]} + ' weeks.'"></span>
+            </p>
+
+            <p th:if="${success != null}" th:text="${success}"></p>
         </div>
     </section>
+
 
     <section class="filter-form">
         <form method="get" th:action="@{/ThoiKhoaBieu}">

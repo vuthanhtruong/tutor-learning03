@@ -164,7 +164,7 @@ public class MessageController {
                     ChatMessage errorResponse = new ChatMessage(
                             chatMessage.getSenderId(),
                             message.getRecipient().getId(),
-                            "Tin nhắn đã gửi quá 1 phút, không thể xóa.",
+                            "Message sent more than 1 minute ago, cannot be deleted.",
                             now.toString()
                     );
                     errorResponse.setAction("error");

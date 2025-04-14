@@ -37,7 +37,7 @@ public class ThoiKhoaBieuPost {
 
         Room roomtest = entityManager.find(Room.class, roomId);
         if (roomtest.getSlotQuantity() == null) {
-            redirectAttributes.addFlashAttribute("error", "Slot Quantity is null");
+            redirectAttributes.addAttribute("error", "Slot Quantity is null");
             return "redirect:/ThoiKhoaBieu?year=" + year + "&week=" + week;
         }
 

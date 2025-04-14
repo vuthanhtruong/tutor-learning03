@@ -145,7 +145,7 @@
             const messageElement = document.getElementById(`message-${messageId}`);
             if (messageElement) {
                 const textElement = messageElement.querySelector(".message-text");
-                textElement.textContent = "Người dùng này đã xóa tin nhắn";
+                textElement.textContent = "This user deleted the message";
                 const deleteBtn = messageElement.querySelector(".delete-btn");
                 if (deleteBtn) deleteBtn.remove();
             }
