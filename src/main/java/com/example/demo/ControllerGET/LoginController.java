@@ -25,7 +25,7 @@ public class LoginController {
     @GetMapping("/login")
     public String showLoginPage(@RequestParam(value = "error", required = false) String error, Model model) {
         if (error != null) {
-            model.addAttribute("usernamePasswordError", "Tài khoản hoặc mật khẩu không chính xác");
+            model.addAttribute("usernamePasswordError", "Incorrect account or password");
         }
         return "TrangChu";  // Trả về trang login.html
     }
