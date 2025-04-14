@@ -39,7 +39,7 @@ public class ThoiKhoaBieuGet {
 
         Employees employee = entityManager.find(Employees.class, employeeId);
         if (employee == null) {
-            model.addAttribute("error", "Can't find employee!");
+            model.addAttribute("error", "Không tìm thấy nhân viên!");
             return "errorPage";
         }
 
@@ -136,7 +136,7 @@ public class ThoiKhoaBieuGet {
         // Đảm bảo teacher không null hoặc xử lý trường hợp rỗng
         Teachers teacher = !teachers.isEmpty() ? teachers.get(0) : null;
         if (teacher == null) {
-            model.addAttribute("errorMessage", "Can't find teacher for this class.");
+            model.addAttribute("errorMessage", "Không tìm thấy giáo viên cho buổi học này.");
         }
 
         // Kiểm tra vai trò người dùng
@@ -203,7 +203,7 @@ public class ThoiKhoaBieuGet {
         Students student = entityManager.find(Students.class, userId);
 
         if (teacher == null && student == null) {
-            model.addAttribute("errorMessage", "Can't find user information.");
+            model.addAttribute("errorMessage", "Không tìm thấy thông tin người dùng.");
             return "ThoiKhoaBieuNguoiDung";
         }
 
