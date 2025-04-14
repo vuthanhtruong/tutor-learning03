@@ -70,13 +70,13 @@
                         <div class="room-info">
                             <a style="color: #2980B9; text-decoration: none;"
                                th:href="@{/ChiTietBuoiHoc(timetableId=${timetable.timetableId})}"
-                               th:text="'Phòng: ' + ${timetable.room.roomName}"></a>
+                               th:text="'Room: ' + ${timetable.room.roomName}"></a>
                             <br>
                             <span th:text="'Slot: ' + ${timetable.slot.slotName}"></span>
                             <br>
-                            <span th:text="'Thời gian: ' + ${#temporals.format(timetable.slot.startTime, 'HH:mm')} + ' - ' + ${#temporals.format(timetable.slot.endTime, 'HH:mm')}"></span>
+                            <span th:text="'Time: ' + ${#temporals.format(timetable.slot.startTime, 'HH:mm')} + ' - ' + ${#temporals.format(timetable.slot.endTime, 'HH:mm')}"></span>
                             <br>
-                            <span th:text="'Ngày: ' + ${#temporals.format(timetable.date, 'dd/MM/yyyy')}"></span>
+                            <span th:text="'Date: ' + ${#temporals.format(timetable.date, 'dd/MM/yyyy')}"></span>
                         </div>
                     </div>
                 </div>
