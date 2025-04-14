@@ -34,20 +34,20 @@ public class LoginController {
     public String redirectAfterLogin(Authentication authentication, HttpServletRequest request, RedirectAttributes redirectAttributes)
             throws ServletException {
         if (authentication == null || !authentication.isAuthenticated()) {
-            redirectAttributes.addAttribute("usernamePasswordError", "Tài khoản hoặc mật khẩu không chính xác");
+            redirectAttributes.addAttribute("usernamePasswordError", "Incorrect account or password");
             return "redirect:/TrangChu";
         }
 
         System.out.println("✅ Đăng nhập: " + authentication.getName());
         authentication.getAuthorities().forEach(auth ->
-                System.out.println("🔹 Quyền: " + auth.getAuthority())
+                System.out.println("🔹 Role: " + auth.getAuthority())
         );
 
         String redirectUrl = determineRedirectUrl(authentication.getAuthorities());
         if (redirectUrl == null) {
-            System.out.println("❌ Không tìm thấy quyền hợp lệ, đăng xuất...");
+            System.out.println("❌ No valid role found, logging out...");
             request.logout();
-            redirectAttributes.addAttribute("roleError", "Không tìm thấy quyền hợp lệ");
+            redirectAttributes.addAttribute("roleError", "No valid role found");
             return "redirect:/TrangChu";
         }
 
@@ -58,7 +58,7 @@ public class LoginController {
     @PostMapping("/auth/verify-face-login")
     public String verifyFaceLogin(@RequestParam("image") String faceData, Model model) {
         if (faceData == null || faceData.isEmpty()) {
-            model.addAttribute("faceError", "Ảnh khuôn mặt không hợp lệ");
+            model.addAttribute("faceError", "Invalid face image");
             return "redirect:/TrangChu";
         }
         System.out.println("Received face data length: " + faceData.length());
@@ -73,7 +73,7 @@ public class LoginController {
             return "redirect:" + (redirectUrl != null ? redirectUrl : "/TrangChu");
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            model.addAttribute("faceError", "Không nhận diện được khuôn mặt hoặc không tìm thấy người dùng");
+            model.addAttribute("faceError", "Unable to recognize face or user not found");
             return "redirect:/TrangChu";
         }
     }
@@ -82,7 +82,7 @@ public class LoginController {
     @PostMapping("/DangNhapBangGiongNoi")
     public String dangNhapBangGiongNoi(@RequestParam("voiceData") String voiceData, RedirectAttributes redirectAttributes) {
         if (voiceData == null || voiceData.isEmpty()) {
-            redirectAttributes.addAttribute("voiceError", "Giọng nói không hợp lệ");
+            redirectAttributes.addAttribute("voiceError", "Invalid voice data");
             return "redirect:/TrangChu";
         }
         System.out.println("Received voice data length: " + voiceData.length());
@@ -97,7 +97,7 @@ public class LoginController {
             return "redirect:" + (redirectUrl != null ? redirectUrl : "/TrangChu");
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            redirectAttributes.addAttribute("voiceError", "Giọng nói không khớp hoặc không tìm thấy người dùng");
+            redirectAttributes.addAttribute("voiceError", "Voice mismatch or user not found");
             return "redirect:/TrangChu";
         }
     }
