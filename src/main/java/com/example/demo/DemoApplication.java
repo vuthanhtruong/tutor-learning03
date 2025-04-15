@@ -86,13 +86,13 @@ public class DemoApplication {
             Admin existingAdmin = entityManager.createQuery("SELECT a FROM Admin a WHERE a.id = :id", Admin.class)
                     .setParameter("id", "admin")
                     .getSingleResult();
-            System.out.println("Admin mặc định đã tồn tại.");
+            System.out.println("A single default admin already exists. ");
         } catch (NoResultException e) {
             String encodedPassword = "Admin123";
             Admin defaultAdmin = new Admin("admin", encodedPassword, "Default", "Admin", "admin@example.com", "0394444107");
             defaultAdmin.setBirthDate(LocalDateTime.of(1990, 1, 1, 0, 0).toLocalDate());
             entityManager.persist(defaultAdmin);
-            System.out.println("Đã thêm Admin mặc định.");
+            System.out.println("Added unique default Admin. ");
         }
     }
 
@@ -115,9 +115,9 @@ public class DemoApplication {
             boolean exists = checkEventExists(entityManager, event.getTitle(), event.getDescription(), event.getEventDate(), event.getEventType());
             if (!exists) {
                 entityManager.persist(event);
-                System.out.println("Đã thêm sự kiện: " + event.getTitle());
+                System.out.println("Added event to notify:" + event.getTitle());
             } else {
-                System.out.println("Sự kiện đã tồn tại: " + event.getTitle());
+                System.out.println("Event to notify already exists: " + event.getTitle());
             }
         }
     }
@@ -154,9 +154,9 @@ public class DemoApplication {
             boolean exists = checkSlotExists(entityManager, slot.getSlotName(), slot.getStartTime(), slot.getEndTime());
             if (!exists) {
                 entityManager.persist(slot);
-                System.out.println("Đã thêm slot: " + slot.getSlotName());
+                System.out.println("Added default slot: " + slot.getSlotName());
             } else {
-                System.out.println("Slot đã tồn tại: " + slot.getSlotName());
+                System.out.println("Default Slots already exist: "  + slot.getSlotName());
             }
         }
     }

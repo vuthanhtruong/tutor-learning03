@@ -166,7 +166,7 @@
         }
 
         window.deleteMessage = function (element) {
-            if (confirm("Bạn có chắc chắn muốn xóa tin nhắn này không?")) {
+            if (confirm("Are you sure you want to delete this message?")) {
                 const messageId = element.getAttribute("data-message-id");
                 const senderId = document.getElementById("currentUserId").value;
 
