@@ -82,7 +82,10 @@ public class SecurityConfig {
                                         "/ThoiKhoaBieu",
                                         "/LuuLichHocNhieuSlot",
                                         "/LuuLichHoc",
-                                        "/XoaLichHoc"
+                                        "/XoaLichHoc",
+                                        "/ThemHocSinhVaoLop/**",
+                                        "/ThemGiaoVienVaoLop/**",
+                                        "/ChiTietLopHoc/**"
                                 ).hasRole("EMPLOYEE")
                                 .requestMatchers(HttpMethod.GET,
                                         "/TinNhanCuaBan",
@@ -91,11 +94,16 @@ public class SecurityConfig {
                                         "/XoaGiongNoi",
                                         "/ChiTietBuoiHoc",
                                         "/ThoiKhoaBieu",
+                                        "/TrangCaNhan",
+                                        "/QuayVeTrangChu",
                                         "/redirect"
                                 ).hasAnyRole("TEACHER", "STUDENT", "ADMIN", "EMPLOYEE")
-                                .requestMatchers(HttpMethod.POST, "/BaiPost", "/auth/verify-face-login",
+                                .requestMatchers(HttpMethod.POST, "/BaiPost",
                                         "/BinhLuan", "/register-face", "/XoaKhuonMat", "/DangKyKhuonMat", "/DangKyGiongNoi", "/LuuThongTinCaNhan")
                                 .hasAnyRole("TEACHER", "STUDENT", "ADMIN", "EMPLOYEE")
+
+                                .requestMatchers(HttpMethod.POST, "/UpdateBaiPost", "/BaiPost")
+                                .hasAnyRole("TEACHER", "STUDENT")
 
                                 .requestMatchers(HttpMethod.POST, "/DiemDanh")
                                 .hasAnyRole("TEACHER", "EMPLOYEE")
@@ -152,8 +160,7 @@ public class SecurityConfig {
                                         "/auth/verify-otp",
                                         "/auth/DatLaiMatKhau",
                                         "/Blogs",
-                                        "/XoaTatCaHocSinh",
-                                        "/auth/verify-face-login"
+                                        "/XoaTatCaHocSinh"
                                 ).permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/verify-face-login").permitAll()
                                 .requestMatchers(HttpMethod.POST,
