@@ -78,33 +78,33 @@ public class FaceLoginController {
     @Transactional
     public String xoaKhuonMat(@RequestParam("faceData") String faceData, Model model, RedirectAttributes redirectAttributes) {
         if (faceData == null || faceData.isEmpty()) {
-            redirectAttributes.addFlashAttribute("faceDataInvalid", "Ảnh khuôn mặt không hợp lệ");
+            redirectAttributes.addFlashAttribute("faceDataInvalid", "Invalid face photo");
             return "redirect:/XoaKhuonMat";
         }
         System.out.println("Received face data length for deletion: " + faceData.length());
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getName())) {
-            redirectAttributes.addFlashAttribute("notLoggedIn", "Bạn cần đăng nhập để thực hiện thao tác này");
+            redirectAttributes.addFlashAttribute("notLoggedIn", "You need to login to perform this action.");
             return "redirect:/TrangChu";
         }
 
         String userId = authentication.getName();
         Person person = entityManager.find(Person.class, userId);
         if (person == null) {
-            redirectAttributes.addFlashAttribute("userNotFound", "Không tìm thấy thông tin người dùng");
+            redirectAttributes.addFlashAttribute("userNotFound", "User information not found");
             return "redirect:/XoaKhuonMat";
         }
 
         String currentFaceData = person.getFaceData();
         if (currentFaceData == null || currentFaceData.isEmpty()) {
-            redirectAttributes.addFlashAttribute("noFaceToDelete", "Không có dữ liệu khuôn mặt để xóa");
+            redirectAttributes.addFlashAttribute("noFaceToDelete", "No facial data to delete");
             return "redirect:/XoaKhuonMat";
         }
 
         String matchedPersonId = faceRecognitionService.findPersonIdByFace(faceData);
         if (!userId.equals(matchedPersonId)) {
-            redirectAttributes.addFlashAttribute("faceNotMatched", "Khuôn mặt không khớp với dữ liệu hiện tại");
+            redirectAttributes.addFlashAttribute("faceNotMatched", "Face does not match current data");
             return "redirect:/XoaKhuonMat";
         }
 
@@ -113,11 +113,11 @@ public class FaceLoginController {
             entityManager.merge(person);
         } catch (Exception e) {
             e.printStackTrace();
-            redirectAttributes.addFlashAttribute("faceDeleteFailed", "Xóa dữ liệu khuôn mặt thất bại");
+            redirectAttributes.addFlashAttribute("faceDeleteFailed", "Face data deletion failed");
             return "redirect:/XoaKhuonMat";
         }
 
-        redirectAttributes.addFlashAttribute("faceDeleteSuccess", "Xóa khuôn mặt thành công");
+        redirectAttributes.addFlashAttribute("faceDeleteSuccess", "Face removal successful");
         return "redirect:/TrangCaNhan";
     }
 }

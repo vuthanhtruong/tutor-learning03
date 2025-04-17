@@ -44,7 +44,7 @@ public class LoginController {
         );
 
         String redirectUrl = determineRedirectUrl(authentication.getAuthorities());
-        if (redirectUrl == null) {
+        if (redirectUrl == null || redirectUrl.isEmpty()) {
             System.out.println("❌ No valid role found, logging out...");
             request.logout();
             redirectAttributes.addAttribute("roleError", "No valid role found");
