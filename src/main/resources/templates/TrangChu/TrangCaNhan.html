@@ -197,61 +197,6 @@
         </a>
     </section>
     <!-- Mục Đăng Ký Khuôn Mặt -->
-    <section class="face-registration-section">
-        <h2><i class="fas fa-camera"></i> Face Registration</h2>
-        <p th:if="${user.faceData != null && !user.faceData.isEmpty()}"><i class="fas fa-check"></i> You have registered your face.</p>
-        <p th:unless="${user.faceData != null && !user.faceData.isEmpty()}"><i class="fas fa-times"></i> You have not registered your face yet..</p>
-        <form th:action="@{/DangKyKhuonMat}" th:method="post">
-            <video autoplay height="240" id="video" style="transform: scaleX(-1);" width="320"></video>
-            <div class="mt-2">
-                <button class="btn btn-info" onclick="toggleCamera()" type="button"><i class="fas fa-video"></i> On/Off Camera
-                </button>
-                <button class="btn btn-success" onclick="captureFace('faceData')" type="button"><i
-                        class="fas fa-camera-retro"></i> Face Capture
-                </button>
-            </div>
-            <input id="faceData" name="faceData" type="hidden">
-            <span class="text-success mt-2" id="captureStatus" style="display: none;"><i class="fas fa-check"></i> Face captured!</span>
-            <button class="btn btn-primary mt-2" type="submit">
-                <i class="fas fa-upload"></i> Register
-            </button>
-        </form>
-    </section>
-
-    <!-- Nút Xóa Khuôn Mặt -->
-    <section class="face-delete-section">
-        <h2><i class="fas fa-trash"></i> Delete Face Image</h2>
-        <a class="btn btn-danger" th:href="@{/XoaKhuonMat}">
-            <i class="fas fa-trash-alt"></i> Delete existing Face image
-        </a>
-    </section>
-
-    <!-- Mục Đăng Ký Giọng Nói -->
-    <section class="voice-registration-section">
-        <h2><i class="fas fa-microphone"></i> Voice Registration </h2>
-        <p th:if="${user.voiceData != null && !user.voiceData.isEmpty()}">
-            <i class="fas fa-check"></i> You have registered your voice: <span th:text="${user.voiceData}"></span>
-        </p>
-        <p th:unless="${user.voiceData != null && !user.voiceData.isEmpty()}"><i class="fas fa-times"></i> You have not registered your voice.</p>
-        <form th:action="@{/DangKyGiongNoi}" th:method="post">
-            <button class="btn btn-info" onclick="startVoiceRecording('voiceData')" type="button">
-                <i class="fas fa-microphone-alt"></i> Start Recording
-            </button>
-            <input id="voiceData" name="voiceData" type="hidden">
-            <span class="text-success mt-2" id="recordStatus" style="display: none;"><i class="fas fa-check"></i> Recorded!</span>
-            <button class="btn btn-primary mt-2" type="submit">
-                <i class="fas fa-upload"></i> Register
-            </button>
-        </form>
-    </section>
-
-    <!-- Nút Xóa Giọng Nói -->
-    <section class="voice-delete-section">
-        <h2><i class="fas fa-trash"></i> Voice Delete</h2>
-        <a class="btn btn-danger" th:href="@{/XoaGiongNoi}">
-            <i class="fas fa-trash-alt"></i> Delete Existing Voice
-        </a>
-    </section>
 
     <!-- Điều Hướng -->
     <section class="navigation-section">
