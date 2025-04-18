@@ -206,7 +206,7 @@
                 // Cập nhật biểu đồ nguời truy cập
                 if (visitorChart) {
                     visitorChart.data.datasets[0].data.push(data.visitor);
-                    visitorChart.data.datasets[0].label = "Tổng số người truy cập trong 24h qua: " + data.visitor;
+                    visitorChart.data.datasets[0].label = "Number of visitors in 24 hours: " + data.visitor;
                     visitorChart.data.labels.push(new Date().toLocaleTimeString());
                     if (visitorChart.data.datasets[0].data.length > 10) {
                         visitorChart.data.datasets[0].data.shift();
@@ -237,7 +237,7 @@
                 data: {
                     labels: [],
                     datasets: [{
-                        label: "Tổng số người truy cập trong 24h qua: 0",
+                        label: "Number of visitors in 24 hours: 0",
                         backgroundColor: "rgba(0,0,255,0.1)",
                         borderColor: "rgba(0,0,255,1.0)",
                         data: []
@@ -246,9 +246,9 @@
                 options: {
                     responsive: true,
                     scales: {
-                        x: { title: { display: true, text: "Thời gian" } },
+                        x: { title: { display: true, text: "Time" } },
                         y: {
-                            title: { display: true, text: "Số lượng truy cập" },
+                            title: { display: true, text: "Number of visitors" },
                             beginAtZero: true,
                             ticks: { precision: 0, Stepsize: 1 }
                         }
@@ -261,9 +261,9 @@
             newRegistrationsChart = new Chart(ctxNewRegistrations, {
                 type: "bar",
                 data: {
-                    labels: ["Nhân viên", "Giáo viên", "Học sinh"],
+                    labels: ["Employee", "Teacher", "Student"],
                     datasets: [{
-                        label: "Số lượng người đăng ký mới",
+                        label: "Number of new registrations",
                         data: [0, 0, 0], // Dữ liệu ban đầu
                         backgroundColor: [
                             "rgba(255, 159, 64, 0.7)",
@@ -281,8 +281,8 @@
                 options: {
                     responsive: true,
                     scales: {
-                        x: { title: { display: true, text: "Đối tượng" } },
-                        y: { title: { display: true, text: "Số lượng" }, beginAtZero: true, ticks: { precision: 0, Stepsize: 1 } }
+                        x: { title: { display: true, text: "Object" } },
+                        y: { title: { display: true, text: "Number" }, beginAtZero: true, ticks: { precision: 0, Stepsize: 1 } }
                     }
                 }
             });
