@@ -45,7 +45,7 @@ public class AuthController {
     public String forgotPassword(@RequestParam String email, Model model, HttpSession session) {
         Person person = findPersonByEmail(email);
         if (person == null) {
-            model.addAttribute("error", "Email không tồn tại!");
+            model.addAttribute("error", "Email did not exist!");
             return "QuenMatKhau";
         }
 
@@ -61,13 +61,13 @@ public class AuthController {
     public String resendOtp(HttpSession session, Model model) {
         String email = (String) session.getAttribute("email");
         if (email == null) {
-            model.addAttribute("error", "Không có email trong session");
+            model.addAttribute("error", "No email in session");
             return "NhapOTP";
         }
 
         Person person = findPersonByEmail(email);
         if (person == null) {
-            model.addAttribute("error", "Email không tồn tại");
+            model.addAttribute("error", "Email did not exist!");
             return "NhapOTP";
         }
 
@@ -75,7 +75,7 @@ public class AuthController {
         savePasswordResetToken(person, otp);
         sendEmail(person.getEmail(), otp);
         session.setAttribute("otp", otp);
-        model.addAttribute("message", "OTP đã được gửi lại");
+        model.addAttribute("message", "OTP has been sent again");
         return "NhapOTP";
     }
 
@@ -83,7 +83,7 @@ public class AuthController {
     public String verifyOtp(@RequestParam String otp, Model model, HttpSession session) {
         String email = (String) session.getAttribute("email");
         if (email == null || otp == null || !isValidOtp(email, otp)) {
-            model.addAttribute("error", "OTP không hợp lệ hoặc đã hết hạn!");
+            model.addAttribute("error", "OTP is not valid or expired!");
             return "NhapOTP";
         }
 
@@ -103,13 +103,13 @@ public class AuthController {
         }
 
         if (!newPassword.equals(confirmPassword)) {
-            model.addAttribute("error", "Mật khẩu xác nhận không khớp!");
+            model.addAttribute("error", "Confirm password does not match!");
             return "DatLaiMatKhau";
         }
 
         Person person = findPersonByEmail(email);
         if (person == null) {
-            model.addAttribute("error", "Email không hợp lệ!");
+            model.addAttribute("error", "Invalid email!");
             return "DatLaiMatKhau";
         }
 
@@ -186,19 +186,19 @@ public class AuthController {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setTo(email);
-            helper.setSubject("Xác nhận yêu cầu đặt lại mật khẩu");
+            helper.setSubject("Confirm password reset request");
 
             String emailContent = "<html><body style='font-family: Arial, sans-serif; color: #333;'>" +
                     "<div style='max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;'>" +
-                    "<h2 style='color: #2c3e50;'>Yêu cầu đặt lại mật khẩu</h2>" +
-                    "<p>Xin chào,</p>" +
-                    "<p>Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn. Vui lòng sử dụng mã OTP dưới đây để xác nhận yêu cầu:</p>" +
+                    "<h2 style='color: #2c3e50;'>Password reset request</h2>" +
+                    "<p>Hello,</p>" +
+                    "<p>We received a password reset request for your account. Please use the OTP below to confirm the request:</p>" +
                     "<div style='padding: 10px; font-size: 18px; font-weight: bold; text-align: center; background-color: #ecf0f1; border-radius: 5px;'>" +
                     otp +
                     "</div>" +
-                    "<p style='font-style: italic;'>Lưu ý: Mã OTP có hiệu lực trong vòng <strong>10 phút</strong>. Vui lòng không chia sẻ mã này với bất kỳ ai.</p>" +
-                    "<p>Nếu bạn không yêu cầu đặt lại mật khẩu, xin vui lòng bỏ qua email này. Tài khoản của bạn vẫn an toàn.</p>" +
-                    "<p>Trân trọng,<br>Đội ngũ hỗ trợ</p>" +
+                    "<p style='font-style: italic;'>Note: The OTP is valid for <strong>10 minutes</strong>. Please do not share this code with anyone.</p>" +
+                    "<p>If you did not request a password reset, please ignore this email. Your account is still secure.</p>" +
+                    "<p>Sincerely,<br>Support Team</p>" +
                     "</div>" +
                     "</body></html>";
 

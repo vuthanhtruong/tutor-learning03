@@ -43,7 +43,7 @@ public class TrangCaNhanPost {
         // [1] Xác thực người dùng
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getName())) {
-            redirectAttributes.addFlashAttribute("error", "Bạn cần đăng nhập để thực hiện thao tác này");
+            redirectAttributes.addFlashAttribute("error", "You need to login to perform this action");
             return "redirect:/TrangChu";
         }
 
@@ -51,21 +51,21 @@ public class TrangCaNhanPost {
         String userId = authentication.getName();
         Person person = entityManager.find(Person.class, userId);
         if (person == null) {
-            redirectAttributes.addFlashAttribute("error", "Không tìm thấy thông tin người dùng");
+            redirectAttributes.addFlashAttribute("error", "User information not found");
             return "redirect:/TrangCaNhan";
         }
 
         // [3] Validate dữ liệu cơ bản
         if (firstName.trim().isEmpty() || lastName.trim().isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Họ và tên không được để trống");
+            redirectAttributes.addFlashAttribute("error", "First and last name cannot be empty");
             return "redirect:/TrangCaNhan";
         }
         if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            redirectAttributes.addFlashAttribute("error", "Email không hợp lệ");
+            redirectAttributes.addFlashAttribute("error", "Invalid email");
             return "redirect:/TrangCaNhan";
         }
         if (!phoneNumber.matches("^\\+?[0-9]{9,15}$")) {
-            redirectAttributes.addFlashAttribute("error", "Số điện thoại không hợp lệ");
+            redirectAttributes.addFlashAttribute("error", "Invalid phone number");
             return "redirect:/TrangCaNhan";
         }
 
@@ -75,7 +75,7 @@ public class TrangCaNhanPost {
                 .setParameter("userId", userId)
                 .getSingleResult();
         if (emailCount > 0) {
-            redirectAttributes.addFlashAttribute("error", "Email này đã được sử dụng bởi người dùng khác");
+            redirectAttributes.addFlashAttribute("error", "This email is already used by another user");
             return "redirect:/TrangCaNhan";
         }
 
@@ -84,7 +84,7 @@ public class TrangCaNhanPost {
                 .setParameter("userId", userId)
                 .getSingleResult();
         if (phoneCount > 0) {
-            redirectAttributes.addFlashAttribute("error", "Số điện thoại này đã được sử dụng bởi người dùng khác");
+            redirectAttributes.addFlashAttribute("error", "This phone number is already used by another user");
             return "redirect:/TrangCaNhan";
         }
 
@@ -99,12 +99,12 @@ public class TrangCaNhanPost {
             try {
                 LocalDate parsedDate = LocalDate.parse(birthDate);
                 if (parsedDate.isAfter(LocalDate.now())) {
-                    redirectAttributes.addFlashAttribute("error", "Ngày sinh không thể là ngày trong tương lai");
+                    redirectAttributes.addFlashAttribute("error", "Birth date cannot be a future date");
                     return "redirect:/TrangCaNhan";
                 }
                 person.setBirthDate(parsedDate);
             } catch (DateTimeParseException e) {
-                redirectAttributes.addFlashAttribute("error", "Định dạng ngày sinh không hợp lệ");
+                redirectAttributes.addFlashAttribute("error", "Invalid birth date format");
                 return "redirect:/TrangCaNhan";
             }
         }
@@ -114,7 +114,7 @@ public class TrangCaNhanPost {
             try {
                 person.setGender(Gender.valueOf(gender.toUpperCase()));
             } catch (IllegalArgumentException e) {
-                redirectAttributes.addFlashAttribute("error", "Giới tính không hợp lệ");
+                redirectAttributes.addFlashAttribute("error", "Invalid gender");
                 return "redirect:/TrangCaNhan";
             }
         }
@@ -130,14 +130,14 @@ public class TrangCaNhanPost {
         // [9] Lưu vào database
         try {
             entityManager.merge(person);
-            entityManager.flush(); // Đảm bảo dữ liệu được ghi ngay lập tức
+            entityManager.flush(); // Ensure data is written immediately
         } catch (Exception e) {
             e.printStackTrace();
-            redirectAttributes.addFlashAttribute("error", "Lỗi khi lưu thông tin: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error when saving information: " + e.getMessage());
             return "redirect:/TrangCaNhan";
         }
 
-        redirectAttributes.addFlashAttribute("success", "Cập nhật thông tin thành công");
+        redirectAttributes.addFlashAttribute("success", "Information updated successfully");
         return "redirect:/TrangCaNhan";
     }
 }

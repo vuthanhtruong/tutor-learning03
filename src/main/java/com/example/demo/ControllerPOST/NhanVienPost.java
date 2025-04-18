@@ -65,18 +65,18 @@ public class NhanVienPost {
             @RequestParam(value = "PostalCode", required = false) String postalCode,
             Model model) {
 
-        System.out.println("Bắt đầu đăng ký nhân viên...");
+        System.out.println("Start registering employee...");
 
         // Kiểm tra EmployeeID đã tồn tại chưa
         if (entityManager.find(Person.class, employeeID) != null) {
-            model.addAttribute("employeeIDError", "Mã nhân viên đã tồn tại.");
+            model.addAttribute("employeeIDError", "Employee ID already exists.");
             addFormDataToModel(model, employeeID, firstName, lastName, email, phoneNumber, password, confirmPassword, dateOfBirth, gender, country, province, district, ward, street, postalCode);
             return "DangKyNhanVien";
         }
 
         // Kiểm tra Email có hợp lệ không
         if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
-            model.addAttribute("emailFormatError", "Email không hợp lệ.");
+            model.addAttribute("emailFormatError", "Invalid email.");
             addFormDataToModel(model, employeeID, firstName, lastName, email, phoneNumber, password, confirmPassword, dateOfBirth, gender, country, province, district, ward, street, postalCode);
             return "DangKyNhanVien";
         }
@@ -87,18 +87,18 @@ public class NhanVienPost {
                 .setParameter("email", email)
                 .getResultList();
         if (!existingEmployeesByEmail.isEmpty()) {
-            model.addAttribute("emailError", "Email này đã được sử dụng.");
+            model.addAttribute("emailError", "This email is already used.");
             addFormDataToModel(model, employeeID, firstName, lastName, email, phoneNumber, password, confirmPassword, dateOfBirth, gender, country, province, district, ward, street, postalCode);
             return "DangKyNhanVien";
         }
 
         // Kiểm tra định dạng số điện thoại
         if (!phoneNumber.matches("^[0-9]+$")) {
-            model.addAttribute("phoneError", "Số điện thoại chỉ được chứa chữ số!");
+            model.addAttribute("phoneError", "Phone number can only contain numbers!");
             addFormDataToModel(model, employeeID, firstName, lastName, email, phoneNumber, password, confirmPassword, dateOfBirth, gender, country, province, district, ward, street, postalCode);
             return "DangKyNhanVien";
         } else if (!phoneNumber.matches("^\\d{9,10}$")) {
-            model.addAttribute("phoneError", "Số điện thoại phải có 9-10 chữ số!");
+            model.addAttribute("phoneError", "Phone number must be 9-10 digits!");
             addFormDataToModel(model, employeeID, firstName, lastName, email, phoneNumber, password, confirmPassword, dateOfBirth, gender, country, province, district, ward, street, postalCode);
             return "DangKyNhanVien";
         }
@@ -109,21 +109,21 @@ public class NhanVienPost {
                 .setParameter("phoneNumber", phoneNumber)
                 .getResultList();
         if (!existingEmployeesByPhone.isEmpty()) {
-            model.addAttribute("phoneDuplicateError", "Số điện thoại này đã được sử dụng.");
+            model.addAttribute("phoneDuplicateError", "This phone number is already used.");
             addFormDataToModel(model, employeeID, firstName, lastName, email, phoneNumber, password, confirmPassword, dateOfBirth, gender, country, province, district, ward, street, postalCode);
             return "DangKyNhanVien";
         }
 
         // Kiểm tra mật khẩu có khớp không
         if (!password.equals(confirmPassword)) {
-            model.addAttribute("passwordError", "Mật khẩu không khớp.");
+            model.addAttribute("passwordError", "Password does not match.");
             addFormDataToModel(model, employeeID, firstName, lastName, email, phoneNumber, password, confirmPassword, dateOfBirth, gender, country, province, district, ward, street, postalCode);
             return "DangKyNhanVien";
         }
 
         // Kiểm tra độ mạnh của mật khẩu
         if (!isValidPassword(password)) {
-            model.addAttribute("passwordStrengthError", "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.");
+            model.addAttribute("passwordStrengthError", "Password must be at least 8 characters, including uppercase, lowercase, numbers and special characters.");
             addFormDataToModel(model, employeeID, firstName, lastName, email, phoneNumber, password, confirmPassword, dateOfBirth, gender, country, province, district, ward, street, postalCode);
             return "DangKyNhanVien";
         }
@@ -132,14 +132,14 @@ public class NhanVienPost {
         LocalDate today = LocalDate.now();
         int age = Period.between(dateOfBirth, today).getYears();
         if (age < 18) {
-            model.addAttribute("dobError", "Bạn phải từ 18 tuổi trở lên để đăng ký.");
+            model.addAttribute("dobError", "You must be at least 18 years old to register.");
             addFormDataToModel(model, employeeID, firstName, lastName, email, phoneNumber, password, confirmPassword, dateOfBirth, gender, country, province, district, ward, street, postalCode);
             return "DangKyNhanVien";
         }
 
         // Kiểm tra ngày sinh có hợp lệ không (phải trong quá khứ)
         if (dateOfBirth.isAfter(LocalDate.now())) {
-            model.addAttribute("dobError", "Ngày sinh không hợp lệ.");
+            model.addAttribute("dobError", "Invalid date of birth.");
             addFormDataToModel(model, employeeID, firstName, lastName, email, phoneNumber, password, confirmPassword, dateOfBirth, gender, country, province, district, ward, street, postalCode);
             return "DangKyNhanVien";
         }
@@ -147,7 +147,7 @@ public class NhanVienPost {
         // Lấy Admin
         List<Admin> admins = entityManager.createQuery("FROM Admin", Admin.class).getResultList();
         if (admins.isEmpty()) {
-            model.addAttribute("adminError", "Không tìm thấy Admin.");
+            model.addAttribute("adminError", "Admin not found.");
             addFormDataToModel(model, employeeID, firstName, lastName, email, phoneNumber, password, confirmPassword, dateOfBirth, gender, country, province, district, ward, street, postalCode);
             return "DangKyNhanVien";
         }
@@ -173,10 +173,10 @@ public class NhanVienPost {
 
         try {
             entityManager.persist(employees);
-            System.out.println("Đăng ký nhân viên thành công!");
+            System.out.println("Employee registered successfully!");
         } catch (Exception e) {
-            System.out.println("Lỗi khi lưu nhân viên: " + e.getMessage());
-            model.addAttribute("databaseError", "Lỗi khi lưu dữ liệu: " + e.getMessage());
+            System.out.println("Error saving employee: " + e.getMessage());
+            model.addAttribute("databaseError", "Error saving data: " + e.getMessage());
             addFormDataToModel(model, employeeID, firstName, lastName, email, phoneNumber, password, confirmPassword, dateOfBirth, gender, country, province, district, ward, street, postalCode);
             return "DangKyNhanVien";
         }
@@ -231,7 +231,7 @@ public class NhanVienPost {
         String employeeId = authentication.getName();
         Person person = entityManager.find(Person.class, employeeId);
         if (!(person instanceof Employees employee)) {
-            redirectAttributes.addFlashAttribute("error", "Bạn không có quyền thêm giáo viên!");
+            redirectAttributes.addFlashAttribute("error", "You do not have permission to add a teacher!");
             return "redirect:/ThemGiaoVienCuaBan";
         }
 
@@ -242,19 +242,19 @@ public class NhanVienPost {
                 .findFirst()
                 .orElse(null);
         if (admin == null) {
-            redirectAttributes.addFlashAttribute("errorAdmin", "Không tìm thấy Admin!");
+            redirectAttributes.addFlashAttribute("errorAdmin", "Admin not found!");
             return "redirect:/ThemGiaoVienCuaBan";
         }
 
         // Kiểm tra TeacherID đã tồn tại chưa
         if (entityManager.find(Person.class, teacherID) != null) {
-            redirectAttributes.addFlashAttribute("errorTeacherID", "Mã giáo viên đã tồn tại!");
+            redirectAttributes.addFlashAttribute("errorTeacherID", "Teacher ID already exists!");
             return "redirect:/ThemGiaoVienCuaBan";
         }
 
         // Kiểm tra Email hợp lệ
         if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-            redirectAttributes.addFlashAttribute("errorEmail", "Email không hợp lệ!");
+            redirectAttributes.addFlashAttribute("errorEmail", "Invalid email!");
             return "redirect:/ThemGiaoVienCuaBan";
         }
 
@@ -264,16 +264,16 @@ public class NhanVienPost {
                 .setParameter("email", email)
                 .getSingleResult();
         if (emailExists) {
-            redirectAttributes.addFlashAttribute("errorEmail", "Email này đã được sử dụng!");
+            redirectAttributes.addFlashAttribute("errorEmail", "This email is already used!");
             return "redirect:/ThemGiaoVienCuaBan";
         }
 
         // Kiểm tra định dạng số điện thoại
         if (!phoneNumber.matches("^[0-9]+$")) {
-            redirectAttributes.addFlashAttribute("errorPhone", "Số điện thoại chỉ được chứa chữ số!");
+            redirectAttributes.addFlashAttribute("errorPhone", "Phone number can only contain numbers!");
             return "redirect:/ThemGiaoVienCuaBan";
         } else if (!phoneNumber.matches("^\\d{9,10}$")) {
-            redirectAttributes.addFlashAttribute("errorPhone", "Số điện thoại phải có 9-10 chữ số!");
+            redirectAttributes.addFlashAttribute("errorPhone", "Phone number must be 9-10 digits!");
             return "redirect:/ThemGiaoVienCuaBan";
         }
 
@@ -283,13 +283,13 @@ public class NhanVienPost {
                 .setParameter("phoneNumber", phoneNumber)
                 .getSingleResult();
         if (phoneExists) {
-            redirectAttributes.addFlashAttribute("errorPhone", "Số điện thoại này đã được sử dụng!");
+            redirectAttributes.addFlashAttribute("errorPhone", "This phone number is already used!");
             return "redirect:/ThemGiaoVienCuaBan";
         }
 
         // Kiểm tra mật khẩu
         if (!isValidPassword(password)) {
-            redirectAttributes.addFlashAttribute("errorPassword", "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
+            redirectAttributes.addFlashAttribute("errorPassword", "Password must be at least 8 characters, including uppercase, lowercase, numbers and special characters!");
             return "redirect:/ThemGiaoVienCuaBan";
         }
 
@@ -297,7 +297,7 @@ public class NhanVienPost {
         String formattedFirstName = formatName(firstName);
         String formattedLastName = formatName(lastName);
         if (formattedFirstName == null || formattedLastName == null) {
-            redirectAttributes.addFlashAttribute("errorName", "Họ và tên chỉ được chứa chữ cái!");
+            redirectAttributes.addFlashAttribute("errorName", "Name can only contain letters!");
             return "redirect:/ThemGiaoVienCuaBan";
         }
 
@@ -316,7 +316,7 @@ public class NhanVienPost {
         // Lưu giáo viên vào database
         entityManager.persist(teacher);
 
-        redirectAttributes.addFlashAttribute("successMessage", "Thêm giáo viên thành công!");
+        redirectAttributes.addFlashAttribute("successMessage", "Teacher added successfully!");
         return "redirect:/DanhSachGiaoVienCuaBan";
     }
 
@@ -328,7 +328,7 @@ public class NhanVienPost {
             entityManager.merge(room);
         }
         if (room.getSlotQuantity() == null || room.getSlotQuantity() <= 0) {
-            redirectAttributes.addFlashAttribute("error", "Số lượng slot không được null hoặc bé hơn 0");
+            redirectAttributes.addFlashAttribute("error", "Slot quantity cannot be null or less than 0");
             return "redirect:/BoTriLopHoc";
         }
         return "redirect:/BoTriLopHoc";
@@ -351,7 +351,7 @@ public class NhanVienPost {
         String employeeId = authentication.getName();
         Person person = entityManager.find(Person.class, employeeId);
         if (!(person instanceof Employees employee)) {
-            redirectAttributes.addFlashAttribute("error", "Bạn không có quyền thêm học sinh!");
+            redirectAttributes.addFlashAttribute("error", "You do not have permission to add a student!");
             return "redirect:/ThemHocSinhCuaBan";
         }
 
@@ -362,19 +362,19 @@ public class NhanVienPost {
                 .findFirst()
                 .orElse(null);
         if (admin == null) {
-            redirectAttributes.addFlashAttribute("errorAdmin", "Không tìm thấy Admin!");
+            redirectAttributes.addFlashAttribute("errorAdmin", "Admin not found!");
             return "redirect:/ThemHocSinhCuaBan";
         }
 
         // Kiểm tra StudentID đã tồn tại chưa
         if (entityManager.find(Person.class, studentID) != null) {
-            redirectAttributes.addFlashAttribute("errorStudentID", "Mã học sinh đã tồn tại!");
+            redirectAttributes.addFlashAttribute("errorStudentID", "Student ID already exists!");
             return "redirect:/ThemHocSinhCuaBan";
         }
 
         // Kiểm tra định dạng Email
         if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-            redirectAttributes.addFlashAttribute("errorEmail", "Email không hợp lệ!");
+            redirectAttributes.addFlashAttribute("errorEmail", "Invalid email!");
             return "redirect:/ThemHocSinhCuaBan";
         }
 
@@ -384,17 +384,17 @@ public class NhanVienPost {
                 .setParameter("email", email)
                 .getSingleResult();
         if (emailExists) {
-            redirectAttributes.addFlashAttribute("errorEmail", "Email này đã được sử dụng!");
+            redirectAttributes.addFlashAttribute("errorEmail", "This email is already used!");
             return "redirect:/ThemHocSinhCuaBan";
         }
 
 
         // Kiểm tra định dạng số điện thoại
         if (!phoneNumber.matches("^[0-9]+$")) {
-            redirectAttributes.addFlashAttribute("errorPhone", "Số điện thoại chỉ được chứa chữ số!");
+            redirectAttributes.addFlashAttribute("errorPhone", "Phone number can only contain numbers!");
             return "redirect:/ThemHocSinhCuaBan";
         } else if (!phoneNumber.matches("^\\d{9,10}$")) {
-            redirectAttributes.addFlashAttribute("errorPhone", "Số điện thoại phải có 9-10 chữ số!");
+            redirectAttributes.addFlashAttribute("errorPhone", "Phone number must be 9-10 digits!");
             return "redirect:/ThemHocSinhCuaBan";
         }
 
@@ -404,13 +404,13 @@ public class NhanVienPost {
                 .setParameter("phoneNumber", phoneNumber)
                 .getSingleResult();
         if (phoneExists) {
-            redirectAttributes.addFlashAttribute("errorPhone", "Số điện thoại này đã được sử dụng!");
+            redirectAttributes.addFlashAttribute("errorPhone", "This phone number is already used!");
             return "redirect:/ThemHocSinhCuaBan";
         }
 
         // Kiểm tra mật khẩu
         if (!isValidPassword(password)) {
-            redirectAttributes.addFlashAttribute("errorPassword", "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
+            redirectAttributes.addFlashAttribute("errorPassword", "Password must be at least 8 characters, including uppercase, lowercase, numbers and special characters!");
             return "redirect:/ThemHocSinhCuaBan";
         }
 
@@ -418,7 +418,7 @@ public class NhanVienPost {
         String formattedFirstName = formatName(firstName);
         String formattedLastName = formatName(lastName);
         if (formattedFirstName == null || formattedLastName == null) {
-            redirectAttributes.addFlashAttribute("errorName", "Họ và tên chỉ được chứa chữ cái!");
+            redirectAttributes.addFlashAttribute("errorName", "Name can only contain letters!");
             return "redirect:/ThemHocSinhCuaBan";
         }
 
@@ -438,7 +438,7 @@ public class NhanVienPost {
         entityManager.persist(student);
 
         // Chuyển hướng với thông báo thành công
-        redirectAttributes.addFlashAttribute("successMessage", "Thêm học sinh thành công!");
+        redirectAttributes.addFlashAttribute("successMessage", "Student added successfully!");
         return "redirect:/DanhSachHocSinhCuaBan";
     }
 
@@ -477,19 +477,19 @@ public class NhanVienPost {
 
         // Kiểm tra định dạng email
         if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-            redirectAttributes.addFlashAttribute("error", "Email không hợp lệ!");
+            redirectAttributes.addFlashAttribute("error", "Invalid email!");
             return "redirect:/SuaGiaoVienCuaBan/" + teacherID;  // Redirect back to the edit page with error message
         }
 
         // Kiểm tra định dạng số điện thoại (chỉ gồm 10-11 chữ số)
         if (!phoneNumber.matches("^\\d{10,11}$")) {
-            redirectAttributes.addFlashAttribute("error", "Số điện thoại không hợp lệ!");
+            redirectAttributes.addFlashAttribute("error", "Invalid phone number!");
             return "redirect:/SuaGiaoVienCuaBan/" + teacherID;  // Redirect back to the edit page with error message
         }
 
         // Kiểm tra định dạng tên (chỉ chứa chữ cái và khoảng trắng)
         if (!firstName.matches("^[A-Za-zÀ-ỹ\\s]+$") || !lastName.matches("^[A-Za-zÀ-ỹ\\s]+$")) {
-            redirectAttributes.addFlashAttribute("error", "Họ và tên chỉ được chứa chữ cái!");
+            redirectAttributes.addFlashAttribute("error", "Name can only contain letters!");
             return "redirect:/SuaGiaoVienCuaBan/" + teacherID;  // Redirect back to the edit page with error message
         }
 
@@ -500,7 +500,7 @@ public class NhanVienPost {
         // Tìm giáo viên theo ID
         Person teacher = entityManager.find(Person.class, teacherID);
         if (teacher == null) {
-            redirectAttributes.addFlashAttribute("error", "Không tìm thấy giáo viên!");
+            redirectAttributes.addFlashAttribute("error", "Teacher not found!");
             return "redirect:/DanhSachGiaoVienCuaBan";  // Redirect to the list page if teacher not found
         }
 
@@ -512,7 +512,7 @@ public class NhanVienPost {
                 .getResultList();
 
         if (!teachersWithEmail.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Email này đã được sử dụng bởi giáo viên khác!");
+            redirectAttributes.addFlashAttribute("error", "This email is already used by another teacher!");
             return "redirect:/SuaGiaoVienCuaBan/" + teacherID;  // Redirect back to the edit page with error message
         }
 
@@ -524,7 +524,7 @@ public class NhanVienPost {
                 .getResultList();
 
         if (!teachersWithPhone.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Số điện thoại này đã được sử dụng bởi giáo viên khác!");
+            redirectAttributes.addFlashAttribute("error", "This phone number is already used by another teacher!");
             return "redirect:/SuaGiaoVienCuaBan/" + teacherID;  // Redirect back to the edit page with error message
         }
 
@@ -536,7 +536,7 @@ public class NhanVienPost {
 
         entityManager.merge(teacher); // Lưu vào database
 
-        redirectAttributes.addFlashAttribute("successMessage", "Cập nhật giáo viên thành công!");
+        redirectAttributes.addFlashAttribute("successMessage", "Teacher updated successfully!");
         return "redirect:/DanhSachGiaoVienCuaBan";  // Redirect to the list page after success
     }
 
@@ -552,19 +552,19 @@ public class NhanVienPost {
 
         // Kiểm tra định dạng email
         if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-            redirectAttributes.addFlashAttribute("error", "Email không hợp lệ!");
+            redirectAttributes.addFlashAttribute("error", "Invalid email!");
             return "redirect:/SuaHocSinhCuaBan/" + studentID;  // Redirect back to the edit page
         }
 
         // Kiểm tra định dạng số điện thoại
         if (!phoneNumber.matches("^\\d{10,11}$")) {
-            redirectAttributes.addFlashAttribute("error", "Số điện thoại không hợp lệ!");
+            redirectAttributes.addFlashAttribute("error", "Invalid phone number!");
             return "redirect:/SuaHocSinhCuaBan/" + studentID;  // Redirect back to the edit page
         }
 
         // Kiểm tra định dạng tên (chỉ chứa chữ cái và khoảng trắng)
         if (!firstName.matches("^[A-Za-zÀ-ỹ\\s]+$") || !lastName.matches("^[A-Za-zÀ-ỹ\\s]+$")) {
-            redirectAttributes.addFlashAttribute("error", "Họ và tên chỉ được chứa chữ cái!");
+            redirectAttributes.addFlashAttribute("error", "Name can only contain letters!");
             return "redirect:/SuaHocSinhCuaBan/" + studentID;  // Redirect back to the edit page
         }
 
@@ -575,7 +575,7 @@ public class NhanVienPost {
         // Tìm học sinh theo ID
         Students student = entityManager.find(Students.class, studentID);
         if (student == null) {
-            redirectAttributes.addFlashAttribute("error", "Không tìm thấy học sinh!");
+            redirectAttributes.addFlashAttribute("error", "Student not found!");
             return "redirect:/DanhSachHocSinhCuaBan";  // Redirect to the list page if student not found
         }
 
@@ -587,7 +587,7 @@ public class NhanVienPost {
                 .getResultList();
 
         if (!studentsWithEmail.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Email này đã được sử dụng bởi học sinh khác!");
+            redirectAttributes.addFlashAttribute("error", "This email is already used by another student!");
             return "redirect:/SuaHocSinhCuaBan/" + studentID;  // Redirect back to the edit page
         }
 
@@ -599,7 +599,7 @@ public class NhanVienPost {
                 .getResultList();
 
         if (!studentsWithPhone.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Số điện thoại này đã được sử dụng bởi học sinh khác!");
+            redirectAttributes.addFlashAttribute("error", "This phone number is already used by another student!");
             return "redirect:/SuaHocSinhCuaBan/" + studentID;  // Redirect back to the edit page
         }
 
@@ -612,7 +612,7 @@ public class NhanVienPost {
 
         entityManager.merge(student); // Lưu vào database
 
-        redirectAttributes.addFlashAttribute("successMessage", "Cập nhật học sinh thành công!");
+        redirectAttributes.addFlashAttribute("successMessage", "Student updated successfully!");
         return "redirect:/DanhSachHocSinhCuaBan";  // Redirect to the list page after success
     }
 
@@ -629,7 +629,7 @@ public class NhanVienPost {
         // Kiểm tra trùng ID
         Rooms existingRoomById = entityManager.find(Rooms.class, roomId);
         if (existingRoomById != null) {
-            redirectAttributes.addFlashAttribute("error", "ID phòng đã tồn tại!");
+            redirectAttributes.addFlashAttribute("error", "Room ID already exists!");
             return "redirect:/ThemPhongHoc";
         }
 
@@ -639,7 +639,7 @@ public class NhanVienPost {
         query.setParameter("roomName", roomName);
         List<Rooms> existingRoomsByName = query.getResultList();
         if (!existingRoomsByName.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Tên phòng đã tồn tại!");
+            redirectAttributes.addFlashAttribute("error", "Room name already exists!");
             return "redirect:/ThemPhongHoc";
         }
 
@@ -651,7 +651,7 @@ public class NhanVienPost {
         newRoom.setCreatedAt(LocalDateTime.now());
         entityManager.persist(newRoom);
 
-        redirectAttributes.addFlashAttribute("success", "Thêm phòng học thành công!");
+        redirectAttributes.addFlashAttribute("success", "Room added successfully!");
         return "redirect:/DanhSachPhongHoc";
     }
 
@@ -666,14 +666,14 @@ public class NhanVienPost {
         String employeeId = authentication.getName();
         Person person = entityManager.find(Person.class, employeeId);
         if (!(person instanceof Employees employee)) {
-            redirectAttributes.addFlashAttribute("error", "Bạn không có quyền thêm phòng học.");
+            redirectAttributes.addFlashAttribute("error", "You do not have permission to add a room!");
             return "redirect:/ThemPhongHocOnline";
         }
 
         // Kiểm tra ID phòng
         OnlineRooms existingRoomById = entityManager.find(OnlineRooms.class, roomId);
         if (existingRoomById != null) {
-            redirectAttributes.addFlashAttribute("error", "ID phòng học đã tồn tại.");
+            redirectAttributes.addFlashAttribute("error", "Room ID already exists!");
             return "redirect:/ThemPhongHocOnline";
         }
 
@@ -682,7 +682,7 @@ public class NhanVienPost {
                 "SELECT r FROM OnlineRooms r WHERE r.roomName = :roomName", OnlineRooms.class);
         query.setParameter("roomName", roomName);
         if (!query.getResultList().isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Tên phòng học đã tồn tại.");
+            redirectAttributes.addFlashAttribute("error", "Room name already exists!");
             return "redirect:/ThemPhongHocOnline";
         }
 
@@ -692,7 +692,7 @@ public class NhanVienPost {
             GoogleCalendarService calendarService = new GoogleCalendarService();
             meetLink = calendarService.createGoogleMeetLink(roomName, LocalDateTime.now());
         } catch (IOException | GeneralSecurityException e) {
-            redirectAttributes.addFlashAttribute("error", "Lỗi tạo link Google Meet: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error creating Google Meet link: " + e.getMessage());
             return "redirect:/ThemPhongHocOnline";
         }
 
@@ -793,16 +793,16 @@ public class NhanVienPost {
         // Tìm Room theo roomId
         Room room = entityManager.find(Room.class, roomId);
         if (room == null) {
-            throw new IllegalArgumentException("Không tìm thấy phòng với ID: " + roomId);
+            throw new IllegalArgumentException("Room not found with ID: " + roomId);
         }
 
         if (teacherIds == null || teacherIds.isEmpty() || teacherIds.size() == 0) {
-            redirectAttributes.addFlashAttribute("error", "Vui lòng chọn ít nhất 1 giáo viên");
+            redirectAttributes.addFlashAttribute("error", "Please select at least 1 teacher");
             return "redirect:/ChiTietLopHoc/" + roomId;
         }
 
         if (teacherIds.size() > 1) {
-            redirectAttributes.addFlashAttribute("error", "Chỉ được phép thêm duy nhất 1 giáo viên");
+            redirectAttributes.addFlashAttribute("error", "Only one teacher can be added");
             return "redirect:/ChiTietLopHoc/" + roomId;
         }
 
@@ -810,7 +810,7 @@ public class NhanVienPost {
             // Tìm Teacher theo teacherId
             Person teacher = entityManager.find(Person.class, teacherId);
             if (teacher == null || !(teacher instanceof Teachers)) {
-                throw new IllegalArgumentException("Không tìm thấy giáo viên với ID: " + teacherId);
+                throw new IllegalArgumentException("Teacher not found with ID: " + teacherId);
             }
 
             // Kiểm tra xem giáo viên đã có trong lớp chưa
@@ -829,27 +829,27 @@ public class NhanVienPost {
                 entityManager.persist(classroomDetail);
 
                 // Gửi email thông báo cho giáo viên
-                String subject = "Chào Mừng Thầy/Cô Đến Với Nhiệm Vụ Cao Quý Tại " + room.getRoomName();
+                String subject = "Welcome to the " + room.getRoomName() + " at xAI Education";
 
                 String message = "<html><body style='font-family: Georgia, serif; line-height: 1.8; color: #333333; max-width: 700px; margin: 0 auto; background-color: #F9F9F9; padding: 20px;'>" +
-                        "<p style='font-size: 18px; color: #1A3C5E;'><b>Kính thưa " + teacher.getFullName() + ", người dẫn đường đáng kính,</b></p>" +
-                        "<p style='color: #4A4A4A;'>Trước hết, cho phép chúng tôi gửi tới Thầy/Cô những lời chào trân trọng nhất, như ánh trăng rằm soi sáng con đường tri thức, mang theo lòng biết ơn sâu sắc vì sự hiện diện của Thầy/Cô trong hành trình giáo dục của chúng tôi. Hôm nay là một dịp đặc biệt, khi Thầy/Cô chính thức gia nhập lớp học <i style='color: #D35400;'>" + room.getRoomName() + "</i> tại Hệ Thống Quản Lý Giáo Dục - xAI Education, mở ra một chương mới đầy ý nghĩa trong sứ mệnh cao cả của Thầy/Cô.</p>" +
-                        "<p style='color: #4A4A4A;'>Sự góp mặt của Thầy/Cô không chỉ là một niềm vinh dự lớn lao đối với chúng tôi, mà còn là ngọn lửa thắp sáng những tâm hồn trẻ, là ngọn hải đăng dẫn lối cho những ước mơ bay xa. Đây là khoảnh khắc khởi đầu cho một hành trình nơi tài năng, tâm huyết và kinh nghiệm của Thầy/Cô sẽ trở thành nguồn cảm hứng bất tận, góp phần vẽ nên bức tranh giáo dục sống động và trọn vẹn.</p>" +
-                        "<p style='color: #4A4A4A;'>Để Thầy/Cô có thể hình dung rõ hơn về nhiệm vụ mới này, chúng tôi xin phép ghi lại vài nét thông tin, như những dòng chữ được khắc trên tấm bia kỷ niệm của một chặng đường đáng nhớ:</p>" +
+                        "<p style='font-size: 18px; color: #1A3C5E;'><b>Dear " + teacher.getFullName() + ", esteemed guide,</b></p>" +
+                        "<p style='color: #4A4A4A;'>First of all, we would like to extend our most sincere greetings to you, as the moonlit path of knowledge shines brightly. We are grateful for your presence in our educational journey, and today marks a special occasion when you officially join the <i style='color: #D35400;'>" + room.getRoomName() + "</i> at xAI Education, opening a new chapter of significance in your mission.</p>" +
+                        "<p style='color: #4A4A4A;'>Your presence is not only a great honor for us, but also a flame that lights up the hearts of young talents, guiding the way for their dreams. This is the beginning of a journey where your talent, passion, and experience will become an endless source of inspiration, contributing to the vibrant and complete education landscape.</p>" +
+                        "<p style='color: #4A4A4A;'>To help you better understand this new mission, we would like to share some information, as the words engraved on the memorial stone of a memorable journey:</p>" +
                         "<ul style='list-style-type: none; padding-left: 20px; color: #4A4A4A;'>" +
-                        "   <li><b style='color: #2E7D32;'>✦ Mã lớp học:</b> " + roomId + "</li>" +
-                        "   <li><b style='color: #2E7D32;'>✦ Tên lớp học:</b> " + room.getRoomName() + "</li>" +
-                        "   <li><b style='color: #2E7D32;'>✦ Thời gian gia nhập:</b> " + new java.util.Date() + "</li>" +
-                        "   <li><b style='color: #2E7D32;'>✦ Lời chào từ chúng tôi:</b> Trân trọng chào mừng Thầy/Cô đến với ngôi nhà tri thức mới, nơi mỗi bài giảng của Thầy/Cô sẽ là một viên gạch xây dựng tương lai.</li>" +
+                        "   <li><b style='color: #2E7D32;'>✦ Classroom Code:</b> " + roomId + "</li>" +
+                        "   <li><b style='color: #2E7D32;'>✦ Classroom Name:</b> " + room.getRoomName() + "</li>" +
+                        "   <li><b style='color: #2E7D32;'>✦ Time of joining:</b> " + new java.util.Date() + "</li>" +
+                        "   <li><b style='color: #2E7D32;'>✦ Message from us:</b> We warmly welcome you to the new knowledge house, where each lecture of you will be a brick building the future.</li>" +
                         "</ul>" +
-                        "<p style='color: #4A4A4A;'>Chúng tôi hiểu rằng, mỗi vai trò mới đều đi kèm với những kỳ vọng và trách nhiệm lớn lao. Vì vậy, nếu Thầy/Cô có bất kỳ câu hỏi nào về lớp học này, hay chỉ đơn giản muốn trao đổi để chuẩn bị cho hành trình phía trước, xin đừng ngần ngại liên hệ với chúng tôi qua <a href='mailto:vuthanhtruong1280@gmail.com' style='color: #2980B9; text-decoration: none; font-weight: bold;'>vuthanhtruong1280@gmail.com</a> hoặc số điện thoại <b style='color: #C0392B;'>0394444107</b>. Đội ngũ của chúng tôi luôn sẵn sàng đồng hành cùng Thầy/Cô, với tất cả sự tận tâm và tôn kính.</p>" +
-                        "<p style='color: #4A4A4A;'>Thưa Thầy/Cô, hành trình giáo dục là một bản giao hưởng dài, và Thầy/Cô chính là nhạc trưởng tài hoa, người sẽ dẫn dắt những nốt nhạc tri thức vang lên trong lòng học trò. Chúng tôi tin tưởng rằng, với sự tận tụy và lòng nhiệt thành của Thầy/Cô, lớp học này sẽ trở thành một mảnh đất màu mỡ, nơi những hạt giống tri thức được gieo trồng và nở hoa rực rỡ.</p>" +
-                        "<p style='color: #4A4A4A;'>Trước khi khép lại lá thư này, chúng tôi xin gửi tới Thầy/Cô lời chúc tốt đẹp nhất: Chúc Thầy/Cô luôn dồi dào sức khỏe, tràn đầy cảm hứng, và tìm thấy niềm vui bất tận trong sứ mệnh cao quý của mình. Thầy/Cô không chỉ là một người giáo viên, mà còn là ngọn gió nâng cánh những ước mơ, là ánh sáng soi đường cho thế hệ trẻ.</p>" +
-                        "<p style='margin-top: 30px; text-align: center; color: #7F8C8D;'><i>Trân trọng kính thư,</i></p>" +
+                        "<p style='color: #4A4A4A;'>We understand that each new role comes with great expectations and responsibilities. Therefore, if you have any questions about this class, or simply want to exchange ideas to prepare for the journey ahead, please do not hesitate to contact us via <a href='mailto:vuthanhtruong1280@gmail.com' style='color: #2980B9; text-decoration: none; font-weight: bold;'>vuthanhtruong1280@gmail.com</a> or phone number <b style='color: #C0392B;'>0394444107</b>. Our team is always ready to accompany you, with all our dedication and respect.</p>" +
+                        "<p style='color: #4A4A4A;'>Dear Teacher, the educational journey is a long symphony, and you are the conductor of the talented, leading the notes of knowledge to resonate in the hearts of the students. We believe that, with your dedication and enthusiasm, this class will become a fertile ground where knowledge seeds are planted and bloom brightly.</p>" +
+                        "<p style='color: #4A4A4A;'>Before closing this letter, we send you our warmest wishes: May you always be healthy, full of inspiration, and find endless joy in your noble mission. You are not just a teacher, but a dream-lifting light, a guiding star for the generations.</p>" +
+                        "<p style='margin-top: 30px; text-align: center; color: #7F8C8D;'><i>Respectfully,</i></p>" +
                         "<p style='text-align: center; color: #34495E;'>" +
                         "<b>" + employee.getFirstName() + " " + employee.getLastName() + "</b><br>" +
-                        "Quản Trị Viên Hệ Thống<br>" +
-                        "Hệ Thống Quản Lý Giáo Dục - xAI Education<br>" +
+                        "System Administrator<br>" +
+                        "Education Management System - xAI Education<br>" +
                         "Email: <a href='mailto:vuthanhtruong1280@gmail.com' style='color: #2980B9; text-decoration: none;'>support@xaiedu.com</a> | Hotline: <span style='color: #C0392B;'>0394444107</span></p>" +
                         "</body></html>";
                 sendNotification(teacher.getId(), room.getRoomId(), "Sent", employee, teacher.getEmail());
@@ -864,13 +864,13 @@ public class NhanVienPost {
         // Tìm đối tượng Person từ memberId
         Person member = entityManager.find(Person.class, memberId);
         if (member == null) {
-            throw new IllegalArgumentException("Không tìm thấy thành viên với ID: " + memberId);
+            throw new IllegalArgumentException("Member not found with ID: " + memberId);
         }
 
         // Tìm đối tượng Room từ roomId
         Room room = entityManager.find(Room.class, roomId);
         if (room == null) {
-            throw new IllegalArgumentException("Không tìm thấy phòng với ID: " + roomId);
+            throw new IllegalArgumentException("Room not found with ID: " + roomId);
         }
 
         // Tạo thông báo mới
@@ -882,7 +882,7 @@ public class NhanVienPost {
         entityManager.persist(scheduleNotifications);
 
         // Gửi email
-        sendEmail(email, "Thông báo lịch trình học", message);
+        sendEmail(email, "Notification of schedule", message);
     }
 
     @PostMapping("/ThemHocSinhVaoLop")
@@ -896,23 +896,23 @@ public class NhanVienPost {
         // Tìm Room theo roomId
 
         if (studentIds == null || studentIds.isEmpty() || studentIds.size() == 0) {
-            System.out.println("Danh sách học sinh nhận được: " + studentIds);
+            System.out.println("List of students received: " + studentIds);
 
-            redirectAttributes.addFlashAttribute("error", "Vui lòng chọn 1 hoặc nhiều học sinh");
+            redirectAttributes.addFlashAttribute("error", "Please select 1 or more students");
             return "redirect:/ChiTietLopHoc/" + roomId;
         }
 
 
         Room room = entityManager.find(Room.class, roomId);
         if (room == null) {
-            throw new IllegalArgumentException("Không tìm thấy phòng với ID: " + roomId);
+            throw new IllegalArgumentException("Room not found with ID: " + roomId);
         }
 
         for (String studentId : studentIds) {
             // Tìm Student theo studentId
             Person student = entityManager.find(Person.class, studentId);
             if (student == null || !(student instanceof Students)) {
-                throw new IllegalArgumentException("Không tìm thấy học sinh với ID: " + studentId);
+                throw new IllegalArgumentException("Student not found with ID: " + studentId);
             }
 
             // Kiểm tra xem học sinh đã có trong lớp chưa
@@ -931,27 +931,27 @@ public class NhanVienPost {
                 entityManager.persist(classroomDetail);
 
                 // Gửi email thông báo cho học sinh
-                String subject = "Chào Mừng Bạn Đến Với Hành Trình Học Tập Mới - " + room.getRoomName();
+                String subject = "Welcome to the " + room.getRoomName() + " at xAI Education";
 
                 String message = "<html><body style='font-family: Georgia, serif; line-height: 1.8; color: #333333; max-width: 700px; margin: 0 auto; background-color: #F5F6F5; padding: 20px;'>" +
-                        "<p style='font-size: 18px; color: #154360;'><b>Thân gửi " + student.getFullName() + ", người bạn đồng hành mới đáng quý,</b></p>" +
-                        "<p style='color: #4A4A4A;'>Trước tiên, chúng tôi xin gửi tới bạn một lời chào ấm áp, như ngọn gió xuân khẽ lùa qua những cánh hoa đang hé nở, mang theo niềm vui và hy vọng. Hôm nay là một ngày đặc biệt, ngày mà bạn chính thức trở thành một phần của đại gia đình học tập tại lớp <i style='color: #D35400;'>" + room.getRoomName() + "</i> trong Hệ Thống Quản Lý Giáo Dục - xAI Education.</p>" +
-                        "<p style='color: #4A4A4A;'>Đây không chỉ là một sự khởi đầu, mà là một cánh cửa rộng mở dẫn bạn đến những chân trời tri thức mới, nơi mỗi bước đi của bạn sẽ được ghi dấu bằng sự nỗ lực, đam mê và những ước mơ rực rỡ. Chúng tôi vô cùng vinh dự được chào đón bạn, một mảnh ghép quan trọng, để cùng nhau viết nên những trang sử đẹp đẽ trong hành trình giáo dục đầy ý nghĩa này.</p>" +
-                        "<p style='color: #4A4A4A;'>Để bạn có thể hình dung rõ hơn về ngôi nhà học tập mới của mình, chúng tôi xin phép gửi tới bạn đôi dòng thông tin như những nét phác thảo đầu tiên trên hành trình khám phá:</p>" +
+                        "<p style='font-size: 18px; color: #154360;'><b>Dear " + student.getFullName() + ", a new companion worth celebrating,</b></p>" +
+                        "<p style='color: #4A4A4A;'>First of all, we send you a warm greeting, like a spring breeze passing through blooming flowers, carrying joy and hope. Today is a special day, when you officially become a part of the <i style='color: #D35400;'>" + room.getRoomName() + "</i> at xAI Education, the Education Management System.</p>" +
+                        "<p style='color: #4A4A4A;'>This is not just the beginning, but an open door leading you to new horizons of knowledge, where each step of yours will be marked by effort, passion, and bright dreams. We are extremely honored to welcome you, a precious piece, to join us in writing beautiful stories in this meaningful educational journey.</p>" +
+                        "<p style='color: #4A4A4A;'>To help you better understand this new mission, we would like to share some information, as the words engraved on the memorial stone of a memorable journey:</p>" +
                         "<ul style='list-style-type: none; padding-left: 20px; color: #4A4A4A;'>" +
-                        "   <li><b style='color: #2E7D32;'>✦ Mã lớp học:</b> " + roomId + "</li>" +
-                        "   <li><b style='color: #2E7D32;'>✦ Tên lớp học:</b> " + room.getRoomName() + "</li>" +
-                        "   <li><b style='color: #2E7D32;'>✦ Thời gian gia nhập:</b> " + new java.util.Date() + "</li>" +
-                        "   <li><b style='color: #2E7D32;'>✦ Thông điệp từ chúng tôi:</b> Chào mừng bạn đến với một hành trình đầy cảm hứng, nơi bạn sẽ tỏa sáng theo cách riêng của mình.</li>" +
+                        "   <li><b style='color: #2E7D32;'>✦ Classroom Code:</b> " + roomId + "</li>" +
+                        "   <li><b style='color: #2E7D32;'>✦ Classroom Name:</b> " + room.getRoomName() + "</li>" +
+                        "   <li><b style='color: #2E7D32;'>✦ Time of joining:</b> " + new java.util.Date() + "</li>" +
+                        "   <li><b style='color: #2E7D32;'>✦ Message from us:</b> We warmly welcome you to the new knowledge house, where each lecture of you will be a brick building the future.</li>" +
                         "</ul>" +
-                        "<p style='color: #4A4A4A;'>Chúng tôi tin rằng, với tài năng, nhiệt huyết và khát khao học hỏi của bạn, lớp học này sẽ trở thành một mảnh đất màu mỡ để bạn gieo những hạt giống tri thức, chờ ngày nở rộ thành những bông hoa rực rỡ. Nếu bạn có bất kỳ thắc mắc nào về hành trình sắp tới, hay chỉ đơn giản muốn trò chuyện để làm quen, xin đừng ngần ngại liên hệ với chúng tôi qua <a href='mailto:vuthanhtruong1280@gmail.com' style='color: #2980B9; text-decoration: none; font-weight: bold;'>vuthanhtruong1280@gmail.com</a> hoặc số điện thoại <b style='color: #C0392B;'>0394444107</b>. Đội ngũ của chúng tôi luôn sẵn sàng đồng hành, lắng nghe và hỗ trợ bạn như những người bạn thân thiết nhất.</p>" +
-                        "<p style='color: #4A4A4A;'>Thân gửi bạn, con đường học tập phía trước là một bản nhạc dài, và bạn chính là nghệ sĩ tài hoa sẽ tạo nên những giai điệu độc đáo của riêng mình. Chúng tôi hy vọng rằng, tại ngôi nhà mới này, bạn sẽ tìm thấy niềm vui, sự tự tin và động lực để chinh phục những đỉnh cao tri thức mà bạn hằng mơ ước.</p>" +
-                        "<p style='color: #4A4A4A;'>Trước khi khép lại lá thư này, chúng tôi xin gửi tới bạn lời chúc nồng nhiệt nhất: Chúc bạn luôn mạnh mẽ như ngọn sóng biển, rực rỡ như ánh bình minh, và tràn đầy năng lượng để viết tiếp câu chuyện tuyệt vời của tuổi trẻ. Chào mừng bạn, một lần nữa, đến với <i style='color: #D35400;'>" + room.getRoomName() + "</i>!</p>" +
-                        "<p style='margin-top: 30px; text-align: center; color: #7F8C8D;'><i>Trân trọng gửi tới bạn,</i></p>" +
+                        "<p style='color: #4A4A4A;'>We believe that, with your talent, passion, and thirst for knowledge, this class will become a fertile ground where you plant knowledge seeds, waiting for the day to bloom into beautiful flowers. If you have any questions about the journey ahead, or simply want to chat to get to know each other, please do not hesitate to contact us via <a href='mailto:vuthanhtruong1280@gmail.com' style='color: #2980B9; text-decoration: none; font-weight: bold;'>vuthanhtruong1280@gmail.com</a> or phone number <b style='color: #C0392B;'>0394444107</b>. Our team is always ready to accompany you, with all our dedication and respect.</p>" +
+                        "<p style='color: #4A4A4A;'>Dear Student, the educational journey is a long symphony, and you are the conductor of the talented, leading the notes of knowledge to resonate in the hearts of the students. We believe that, with your dedication and enthusiasm, this class will become a fertile ground where knowledge seeds are planted and bloom brightly.</p>" +
+                        "<p style='color: #4A4A4A;'>Before closing this letter, we send you our warmest wishes: May you always be strong as the waves of the sea, radiant as the sunrise, and full of energy to write the wonderful story of youth. Welcome back, once again, to <i style='color: #D35400;'>" + room.getRoomName() + "</i>!</p>" +
+                        "<p style='margin-top: 30px; text-align: center; color: #7F8C8D;'><i>Respectfully,</i></p>" +
                         "<p style='text-align: center; color: #34495E;'>" +
                         "<b>" + employee.getFirstName() + " " + employee.getLastName() + "</b><br>" +
-                        "Quản Trị Viên Hệ Thống<br>" +
-                        "Hệ Thống Quản Lý Giáo Dục - xAI Education<br>" +
+                        "System Administrator<br>" +
+                        "Education Management System - xAI Education<br>" +
                         "Email: <a href='mailto:vuthanhtruong1280@gmail.com' style='color: #2980B9; text-decoration: none;'>support@xaiedu.com</a> | Hotline: <span style='color: #C0392B;'>0394444107</span></p>" +
                         "</body></html>";
                 sendNotification(student.getId(), room.getRoomId(), "Sent", employee, student.getEmail());
@@ -1154,10 +1154,9 @@ public class NhanVienPost {
             helper.setFrom("vuthanhtruong1280@gmail.com");
 
             mailSender.send(mimeMessage);
-            System.out.println("Email HTML đã được gửi thành công!");
         } catch (MessagingException e) {
             e.printStackTrace();
-            System.out.println("Gửi email thất bại: " + e.getMessage());
+            System.out.println("Sending email failed: " + e.getMessage());
         }
     }
 

@@ -26,15 +26,15 @@ public class Person {
     private String lastName;
 
     @Column(name = "Email", nullable = false, unique = true, length = 255)
-    @Email(message = "Email không hợp lệ")
+    @Email(message = "Invalid email")
     private String email;
 
     @Column(name = "PhoneNumber", nullable = false, unique = true, length = 20)
-    @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Số điện thoại không hợp lệ")
+    @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Invalid phone number")
     private String phoneNumber;
 
     @Column(name = "BirthDate", nullable = true)
-    @Past(message = "Ngày sinh phải là một ngày trong quá khứ")
+    @Past(message = "Birth date must be a past date")
     private LocalDate birthDate;
 
     @Column(name = "Gender", nullable = true)
@@ -50,7 +50,7 @@ public class Person {
     private String voiceData;
 
     @Column(name = "Country", nullable = true, length = 100)
-    private String country; // Quốc gia
+    private String country; // Country
 
     @Column(name = "Province", nullable = true, length = 100)
     private String province; // Tỉnh/Bang
