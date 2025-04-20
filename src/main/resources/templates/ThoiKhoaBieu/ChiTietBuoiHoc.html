@@ -12,11 +12,11 @@
 <div class="error-message" th:if="${param.error != null || error != null}">
     <!-- Handle URL parameter errors -->
     <p th:if="${param.error != null}" th:switch="${param.error[0]}">
-        <span th:case="'SaveFailed'">Lưu điểm danh thất bại!</span>
-        <span th:case="'TimetableNotFound'">Không tìm thấy lịch học!</span>
-        <span th:case="'TeacherNotFound'">Không tìm thấy giáo viên!</span>
-        <span th:case="'UserNotFound'">Không tìm thấy người dùng!</span>
-        <span th:case="*">Có lỗi xảy ra: <span th:text="${param.error[0]}"></span></span>
+        <span th:case="'SaveFailed'">Failed to save attendance!</span>
+        <span th:case="'TimetableNotFound'">No class schedule found!</span>
+        <span th:case="'TeacherNotFound'">Teacher not found!</span>
+        <span th:case="'UserNotFound'">User not found!</span>
+        <span th:case="*">An error occurred: <span th:text="${param.error[0]}"></span></span>
     </p>
 
     <!-- Handle flash attribute errors -->
@@ -26,7 +26,7 @@
 <div class="success-message" th:if="${param.success != null || success != null}">
     <!-- Handle URL parameter success messages -->
     <p th:if="${param.success != null}" th:switch="${param.success[0]}">
-        <span th:case="'AttendanceSaved'">Điểm danh đã được lưu thành công!</span>
+        <span th:case="'AttendanceSaved'">Attendance saved successfully!</span>
         <span th:case="*" th:text="${param.success[0]}"></span>
     </p>
 

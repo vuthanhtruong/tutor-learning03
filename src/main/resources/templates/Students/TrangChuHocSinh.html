@@ -47,7 +47,7 @@
                 <h3><i class="fas fa-file-alt"></i> Documents</h3>
                 <ul class="list-unstyled" id="document-list">
                     <li class="mb-2" th:each="doc : ${documents}">
-                        <strong>Mô tả:</strong> <span th:text="${doc.event?.description ?: 'Không có mô tả'}"></span>
+                        <strong>Description:</strong> <span th:text="${doc.event?.description ?: 'Không có mô tả'}"></span>
                         <strong>Creator:</strong> <span th:text="${doc.getCreator().getId() ?: 'No description'}"></span>
                         <strong>Thời Gian</strong> <span
                             th:text="${doc.getPost().getCreatedAt() ?: 'Không có mô tả'}"></span>
