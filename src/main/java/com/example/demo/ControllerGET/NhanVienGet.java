@@ -580,28 +580,27 @@ public class NhanVienGet {
                 return "redirect:/ChiTietLopHoc/" + roomId + "?error=TeacherNotFound";
             }
 
-
-            String subject = "Thông Báo Quan Trọng Về Sự Điều Chỉnh Thành Viên Lớp Học - Một Hành Trình Mới";
+            String subject = "Important Notification Regarding Class Membership Adjustment - A New Journey";
 
             String message = "<html><body style='font-family: Georgia, serif; line-height: 1.8; color: #333333; max-width: 700px; margin: 0 auto; background-color: #F9F9F9; padding: 20px;'>" +
-                    "<p style='font-size: 18px; color: #1A3C5E;'><b>Kính thưa " + teacher.getFullName() + ", người đồng hành đáng kính,</b></p>" +
-                    "<p style='color: #4A4A4A;'>Trước hết, cho phép chúng tôi được gửi tới Thầy/Cô những lời chào trân trọng nhất, những lời tri ân sâu sắc nhất, như một khúc nhạc mở đầu cho bản giao hưởng của sự biết ơn. Chính sự hiện diện của Thầy/Cô trong hành trình giáo dục của chúng tôi đã tô điểm thêm những gam màu rực rỡ, những giá trị cao quý mà không ngôn từ nào có thể diễn tả trọn vẹn. Chúng tôi luôn trân quý từng khoảnh khắc Thầy/Cô đồng hành, từng nỗ lực Thầy/Cô đã dành cho hệ thống quản lý lớp học của xAI Education.</p>" +
-                    "<p style='color: #4A4A4A;'>Hôm nay, với tất cả sự kính cẩn và chân thành, chúng tôi xin được phép chia sẻ một cập nhật quan trọng – một bước ngoặt nhỏ trong hành trình dài mà chúng ta cùng nhau vun đắp. Theo định hướng chiến lược và kế hoạch tối ưu hóa hệ thống, tài khoản của Thầy/Cô, với sự cân nhắc kỹ lưỡng, đã được điều chỉnh để không còn nằm trong danh sách thành viên của lớp học <i style='color: #D35400;'>" + room.getRoomName() + "</i>. Đây không phải là một sự kết thúc, mà là một chương mới, một sự thay đổi mang tính xây dựng, nhằm đảm bảo rằng mọi mảnh ghép trong bức tranh giáo dục đều được đặt đúng chỗ, đúng thời điểm, vì lợi ích lớn lao của tất cả chúng ta.</p>" +
-                    "<p style='color: #4A4A4A;'>Để Thầy/Cô có thể hình dung rõ hơn về sự thay đổi này, chúng tôi xin được trình bày đôi nét thông tin chi tiết, như những dòng chữ được khắc trên tấm bia kỷ niệm của một chặng đường:</p>" +
+                    "<p style='font-size: 18px; color: #1A3C5E;'><b>Dear " + teacher.getFullName() + ", our esteemed colleague,</b></p>" +
+                    "<p style='color: #4A4A4A;'>First and foremost, allow us to extend our warmest greetings and deepest gratitude, like the opening notes of a symphony dedicated to appreciation. Your presence in our educational journey has added vibrant colors and noble values that words can scarcely capture. We cherish every moment of your companionship and every effort you have devoted to xAI Education’s classroom management system.</p>" +
+                    "<p style='color: #4A4A4A;'>Today, with utmost respect and sincerity, we wish to share an important update—a small turning point in the long journey we have built together. As part of our strategic vision and system optimization plan, your account, after careful consideration, has been adjusted and is no longer listed as a member of the class <i style='color: #D35400;'>" + room.getRoomName() + "</i>. This is not an end, but rather a new chapter, a constructive change aimed at ensuring every piece of our educational mosaic is placed in the right position at the right time, for the greater benefit of all.</p>" +
+                    "<p style='color: #4A4A4A;'>To provide you with a clearer picture of this change, we would like to outline some key details, like inscriptions on a milestone marking this phase of our journey:</p>" +
                     "<ul style='list-style-type: none; padding-left: 20px; color: #4A4A4A;'>" +
-                    "   <li><b style='color: #2E7D32;'>✦ Mã lớp học:</b> " + roomId + "</li>" +
-                    "   <li><b style='color: #2E7D32;'>✦ Tên lớp học:</b> " + room.getRoomName() + "</li>" +
-                    "   <li><b style='color: #2E7D32;'>✦ Thời gian cập nhật:</b> " + new java.util.Date() + "</li>" +
-                    "   <li><b style='color: #2E7D32;'>✦ Nguyên nhân sâu xa:</b> Một nỗ lực không ngừng nghỉ để tái cấu trúc và tối ưu hóa hệ thống, hướng tới mục tiêu cao cả của sự hài hòa và hiệu quả.</li>" +
+                    "   <li><b style='color: #2E7D32;'>✦ Class Code:</b> " + roomId + "</li>" +
+                    "   <li><b style='color: #2E7D32;'>✦ Class Name:</b> " + room.getRoomName() + "</li>" +
+                    "   <li><b style='color: #2E7D32;'>✦ Update Time:</b> " + new java.util.Date() + "</li>" +
+                    "   <li><b style='color: #2E7D32;'>✦ Underlying Reason:</b> An unwavering effort to restructure and optimize the system, striving for the noble goals of harmony and efficiency.</li>" +
                     "</ul>" +
-                    "<p style='color: #4A4A4A;'>Chúng tôi hiểu rằng, mỗi sự thay đổi, dù nhỏ bé đến đâu, cũng có thể gợi lên những cảm xúc, những câu hỏi trong lòng người nhận tin. Vì vậy, chúng tôi xin được bày tỏ sự thấu hiểu và mong mỏi rằng Thầy/Cô sẽ đón nhận điều này với sự bao dung và thông cảm – những phẩm chất cao đẹp mà chúng tôi luôn trân trọng ở Thầy/Cô. Nếu có bất kỳ điều gì khiến Thầy/Cô trăn trở, hay chỉ đơn giản là một mong muốn được lắng nghe, xin đừng ngần ngại kết nối với chúng tôi qua <a href='mailto:vuthanhtruong1280@gmail.com' style='color: #2980B9; text-decoration: none; font-weight: bold;'>vuthanhtruong1280@gmail.com</a> hoặc đường dây nóng <b style='color: #C0392B;'>0394444107</b>. Đội ngũ của chúng tôi, với tất cả sự tận tâm, luôn sẵn sàng đồng hành cùng Thầy/Cô, như những người bạn chân thành trên con đường tri thức.</p>" +
-                    "<p style='color: #4A4A4A;'>Thưa Thầy/Cô, hành trình của chúng ta không dừng lại ở đây. Sự điều chỉnh này chỉ là một nốt trầm nhẹ trong bản nhạc dài của sự hợp tác. Chúng tôi tin tưởng rằng, với tài năng, tâm huyết và lòng nhiệt thành của Thầy/Cô, cánh cửa của những cơ hội mới sẽ sớm rộng mở, và chúng tôi hy vọng sẽ tiếp tục được đồng hành cùng Thầy/Cô trong những chương tiếp theo của câu chuyện giáo dục đầy cảm hứng này.</p>" +
-                    "<p style='color: #4A4A4A;'>Trước khi khép lại lá thư này, cho phép chúng tôi được gửi tới Thầy/Cô lời chúc tốt đẹp nhất – không chỉ là sức khỏe dồi dào, thành công rực rỡ, mà còn là niềm vui bất tận, sự an nhiên trong tâm hồn, và những ngày tháng tràn đầy ý nghĩa. Thầy/Cô không chỉ là một người giáo viên, mà còn là một ngọn hải đăng soi sáng hành trình của chúng tôi.</p>" +
-                    "<p style='margin-top: 30px; text-align: center; color: #7F8C8D;'><i>Trân trọng kính thư,</i></p>" +
+                    "<p style='color: #4A4A4A;'>We understand that any change, no matter how small, may evoke emotions or questions in the heart of the recipient. Therefore, we wish to express our empathy and hope that you will receive this news with the generosity and understanding—qualities we have always admired in you. Should you have any concerns or simply wish to be heard, please do not hesitate to reach out to us at <a href='mailto:vuthanhtruong1280@gmail.com' style='color: #2980B9; text-decoration: none; font-weight: bold;'>vuthanhtruong1280@gmail.com</a> or via our hotline at <b style='color: #C0392B;'>0394444107</b>. Our team, with utmost dedication, is always ready to support you, as true companions on this path of knowledge.</p>" +
+                    "<p style='color: #4A4A4A;'>Dear Teacher, our journey does not end here. This adjustment is merely a soft pause in the long melody of our collaboration. We firmly believe that with your talent, dedication, and passion, new opportunities will soon unfold, and we look forward to continuing our partnership in the next chapters of this inspiring educational story.</p>" +
+                    "<p style='color: #4A4A4A;'>Before closing this letter, allow us to offer our heartfelt wishes—not only for abundant health and brilliant success but also for boundless joy, inner peace, and days filled with meaning. You are not only a teacher but also a beacon illuminating our path.</p>" +
+                    "<p style='margin-top: 30px; text-align: center; color: #7F8C8D;'><i>With utmost respect,</i></p>" +
                     "<p style='text-align: center; color: #34495E;'>" +
                     "<b>" + employee.getFirstName() + " " + employee.getLastName() + "</b><br>" +
-                    "Quản Trị Viên Hệ Thống<br>" +
-                    "Hệ Thống Quản Lý Giáo Dục - xAI Education<br>" +
+                    "System Administrator<br>" +
+                    "xAI Education Management System<br>" +
                     "Email: <a href='mailto:vuthanhtruong1280@gmail.com' style='color: #2980B9; text-decoration: none;'>support@xaiedu.com</a> | Hotline: <span style='color: #C0392B;'>0394444107</span></p>" +
                     "</body></html>";
 
@@ -645,27 +644,27 @@ public class NhanVienGet {
                 return "redirect:/ChiTietLopHoc/" + roomId + "?error=StudentNotFound";
             }
 
-            String subject = "Thông Báo Quan Trọng Về Hành Trình Học Tập - Một Chương Mới Dành Cho Bạn";
+            String subject = "Important Notification About Your Learning Journey - A New Chapter Awaits";
 
             String message = "<html><body style='font-family: Georgia, serif; line-height: 1.8; color: #333333; max-width: 700px; margin: 0 auto; background-color: #F5F6F5; padding: 20px;'>" +
-                    "<p style='font-size: 18px; color: #154360;'><b>Thân gửi " + student.getFullName() + ", người bạn đồng hành đáng quý,</b></p>" +
-                    "<p style='color: #4A4A4A;'>Trước tiên, cho phép chúng tôi gửi tới bạn một lời chào nồng ấm, như ánh nắng ban mai khẽ chạm vào những giấc mơ tươi đẹp của tuổi trẻ. Hành trình học tập của bạn tại Hệ Thống Quản Lý Giáo Dục - xAI Education luôn là một câu chuyện đầy cảm hứng, nơi mỗi bước chân của bạn đều góp phần viết nên những trang sử rực rỡ cho chính bản thân và cộng đồng.</p>" +
-                    "<p style='color: #4A4A4A;'>Hôm nay, với tất cả sự trân trọng và niềm tin vào tương lai của bạn, chúng tôi xin được chia sẻ một cập nhật nhỏ nhưng mang ý nghĩa lớn lao. Theo kế hoạch tối ưu hóa và định hướng chiến lược của hệ thống, tài khoản của bạn đã được điều chỉnh để tạm thời không còn nằm trong danh sách thành viên của lớp học <i style='color: #D35400;'>" + room.getRoomName() + "</i>. Đây không phải là dấu chấm hết, mà là một dấu phẩy – một khoảnh khắc dừng lại để mở ra cánh cửa cho những cơ hội mới, những trải nghiệm mới, phù hợp hơn với hành trình phía trước của bạn.</p>" +
-                    "<p style='color: #4A4A4A;'>Để bạn có thể hình dung rõ hơn về sự thay đổi này, chúng tôi xin phép được ghi lại vài nét phác thảo như những dòng chữ trên cuốn sổ tay của một nhà thám hiểm:</p>" +
+                    "<p style='font-size: 18px; color: #154360;'><b>Dear " + student.getFullName() + ", our valued companion,</b></p>" +
+                    "<p style='color: #4A4A4A;'>First and foremost, allow us to send you a warm greeting, like the morning sunlight gently touching the vibrant dreams of youth. Your learning journey with xAI Education’s Management System has always been an inspiring story, where each of your steps contributes to writing brilliant chapters for yourself and our community.</p>" +
+                    "<p style='color: #4A4A4A;'>Today, with deep respect and unwavering belief in your future, we wish to share a small but significant update. As part of our system’s optimization and strategic vision, your account has been temporarily adjusted and is no longer listed as a member of the class <i style='color: #D35400;'>" + room.getRoomName() + "</i>. This is not an end, but a pause—a moment to open the door to new opportunities and experiences better suited to your path ahead.</p>" +
+                    "<p style='color: #4A4A4A;'>To help you better understand this change, we’d like to sketch out a few details, like notes in an explorer’s journal:</p>" +
                     "<ul style='list-style-type: none; padding-left: 20px; color: #4A4A4A;'>" +
-                    "   <li><b style='color: #2E7D32;'>✦ Mã lớp học:</b> " + roomId + "</li>" +
-                    "   <li><b style='color: #2E7D32;'>✦ Tên lớp học:</b> " + room.getRoomName() + "</li>" +
-                    "   <li><b style='color: #2E7D32;'>✦ Thời gian cập nhật:</b> " + new java.util.Date() + "</li>" +
-                    "   <li><b style='color: #2E7D32;'>✦ Lý do:</b> Một bước điều chỉnh cần thiết để tái định hình hệ thống, mang lại giá trị tốt nhất cho hành trình học tập của bạn và tất cả mọi người.</li>" +
+                    "   <li><b style='color: #2E7D32;'>✦ Class Code:</b> " + roomId + "</li>" +
+                    "   <li><b style='color: #2E7D32;'>✦ Class Name:</b> " + room.getRoomName() + "</li>" +
+                    "   <li><b style='color: #2E7D32;'>✦ Update Time:</b> " + new java.util.Date() + "</li>" +
+                    "   <li><b style='color: #2E7D32;'>✦ Reason:</b> A necessary adjustment to reshape the system, delivering the greatest value to your learning journey and everyone involved.</li>" +
                     "</ul>" +
-                    "<p style='color: #4A4A4A;'>Chúng tôi hiểu rằng, mỗi thay đổi đều có thể mang theo những cảm xúc lẫn lộn – có thể là chút ngỡ ngàng, chút tò mò, hay thậm chí là chút tiếc nuối. Nhưng xin bạn hãy tin rằng, đằng sau quyết định này là cả một tấm lòng và sự tận tụy của chúng tôi, với mong muốn bạn luôn được đặt trong những điều kiện tốt nhất để tỏa sáng. Nếu bạn có bất kỳ câu hỏi nào, hay chỉ đơn giản muốn chia sẻ suy nghĩ của mình, đừng ngần ngại liên lạc với chúng tôi qua <a href='mailto:vuthanhtruong1280@gmail.com' style='color: #2980B9; text-decoration: none; font-weight: bold;'>vuthanhtruong1280@gmail.com</a> hoặc số điện thoại <b style='color: #C0392B;'>0394444107</b>. Chúng tôi luôn ở đây, sẵn sàng lắng nghe bạn như những người bạn đồng hành chân thành.</p>" +
-                    "<p style='color: #4A4A4A;'>Thân mến gửi đến bạn, hành trình học tập không bao giờ là một đường thẳng. Nó là những khúc quanh, những ngã rẽ, và những chân trời mới đang chờ bạn khám phá. Sự thay đổi này chỉ là một nốt nhạc trầm trong bản giao hưởng tuổi trẻ của bạn – một nốt nhạc mở đường cho những giai điệu rực rỡ hơn. Chúng tôi tin rằng, với tài năng, nhiệt huyết và khát vọng của bạn, bầu trời rộng lớn phía trước sẽ là nơi bạn vẽ nên những ước mơ của mình.</p>" +
-                    "<p style='color: #4A4A4A;'>Trước khi khép lại lá thư này, chúng tôi muốn gửi tới bạn lời chúc nồng nhiệt nhất: Chúc bạn luôn mạnh mẽ như ngọn gió, rực sáng như ánh sao, và hạnh phúc trong từng khoảnh khắc của cuộc sống. Bạn không chỉ là một sinh viên, mà là một phần không thể thiếu trong câu chuyện lớn lao mà chúng tôi cùng nhau xây dựng.</p>" +
-                    "<p style='margin-top: 30px; text-align: center; color: #7F8C8D;'><i>Trân trọng gửi tới bạn,</i></p>" +
+                    "<p style='color: #4A4A4A;'>We understand that every change can bring a mix of emotions—perhaps a touch of surprise, curiosity, or even a hint of nostalgia. But please rest assured that behind this decision lies our heartfelt dedication, with the sole aim of placing you in the best conditions to shine. If you have any questions or simply wish to share your thoughts, please don’t hesitate to reach out to us at <a href='mailto:vuthanhtruong1280@gmail.com' style='color: #2980B9; text-decoration: none; font-weight: bold;'>vuthanhtruong1280@gmail.com</a> or by phone at <b style='color: #C0392B;'>0394444107</b>. We are here, ready to listen as true companions on your journey.</p>" +
+                    "<p style='color: #4A4A4A;'>Dear friend, a learning journey is never a straight path. It is full of twists, turns, and new horizons waiting for you to explore. This change is merely a soft note in the symphony of your youth—a note that paves the way for brighter melodies. We believe that with your talent, passion, and aspirations, the vast sky ahead is yours to paint with your dreams.</p>" +
+                    "<p style='color: #4A4A4A;'>Before closing this letter, we want to extend our warmest wishes: May you remain strong like the wind, shine bright like the stars, and find joy in every moment of life. You are not just a student but an essential part of the grand story we are building together.</p>" +
+                    "<p style='margin-top: 30px; text-align: center; color: #7F8C8D;'><i>With heartfelt regards,</i></p>" +
                     "<p style='text-align: center; color: #34495E;'>" +
                     "<b>" + employee.getFirstName() + " " + employee.getLastName() + "</b><br>" +
-                    "Quản Trị Viên Hệ Thống<br>" +
-                    "Hệ Thống Quản Lý Giáo Dục - xAI Education<br>" +
+                    "System Administrator<br>" +
+                    "xAI Education Management System<br>" +
                     "Email: <a href='mailto:vuthanhtruong1280@gmail.com' style='color: #2980B9; text-decoration: none;'>support@xaiedu.com</a> | Hotline: <span style='color: #C0392B;'>0394444107</span></p>" +
                     "</body></html>";
 

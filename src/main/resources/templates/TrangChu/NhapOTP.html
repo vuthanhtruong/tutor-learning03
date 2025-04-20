@@ -111,5 +111,38 @@
 
     </div>
 </body>
+<script>
+    // Set the countdown duration to 10 minutes (600 seconds)
+    let timeLeft = 600;
 
+    // Get the timer element
+    const timerElement = document.getElementById('timer');
+
+    // Function to update the timer display
+    function updateTimer() {
+        // Calculate minutes and seconds
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+
+        // Format the time as MM:SS
+        timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+        // Decrease time by 1 second
+        timeLeft--;
+
+        // Check if time is up
+        if (timeLeft < 0) {
+            timerElement.textContent = '00:00';
+            clearInterval(timerInterval);
+            // Optionally, you could disable the form or show a message
+            // alert('OTP has expired. Please request a new one.');
+        }
+    }
+
+    // Update timer immediately
+    updateTimer();
+
+    // Set interval to update timer every second
+    const timerInterval = setInterval(updateTimer, 1000);
+</script>
 </html>
