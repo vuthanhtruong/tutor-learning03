@@ -224,7 +224,7 @@ public class StudentPost {
 
     @PostMapping("/GuiNhanXetGiaoVien")
     @Transactional
-    public String guiNhanXetGiaoVien(@RequestParam("teacherId") Long teacherId,
+    public String guiNhanXetGiaoVien(@RequestParam("teacherId") String teacherId,
                                      @RequestParam("roomId") String roomId,
                                      @RequestParam("text") String text,
                                      HttpSession session,

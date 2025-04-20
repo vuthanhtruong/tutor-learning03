@@ -72,8 +72,11 @@ public class DanhSachLopHocGet {
     }
 
     @GetMapping("ChiTietLopHocBanThamGia/{id}")
-    public String ChiTietLopHocBanThamGia(@PathVariable String id, Model model, Authentication authentication) {
+    public String ChiTietLopHocBanThamGia(@PathVariable String id, Model model) {
+        // Lấy thông tin xác thực từ SecurityContextHolder
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        // Tính toán điều kiện feedback
         Boolean feedback = false;
         long totalSessions = entityManager.createQuery(
                         "SELECT COUNT(t) FROM Timetable t WHERE t.room.roomId = :roomId", Long.class)
@@ -85,41 +88,51 @@ public class DanhSachLopHocGet {
                         Long.class)
                 .setParameter("roomId", id)
                 .getSingleResult();
+
+        System.out.println("Total Sessions: " + totalSessions);
+        System.out.println("Completed Sessions: " + completedSessions);
+
         if (totalSessions > 0) {
             double progress = ((double) completedSessions / totalSessions) * 100;
-
-            if (progress >= 25.0) { // Chỉ cần >= 25% là cho phép feedback
+            System.out.println("Progress: " + progress + "%");
+            if (progress >= 25.0) {
                 feedback = true;
             }
         }
+
+        // Lấy danh sách giáo viên liên quan đến lớp học
         if (feedback) {
             List<Teachers> teachers = entityManager.createQuery(
-                            "FROM Teachers", Teachers.class)
+                            "SELECT t FROM Teachers t JOIN ClassroomDetails cd ON cd.member.id = t.id WHERE cd.room.roomId = :roomId",
+                            Teachers.class)
+                    .setParameter("roomId", id)
                     .getResultList();
-            List<ClassroomDetails> classroomDetails = entityManager.createQuery("from ClassroomDetails ", ClassroomDetails.class).getResultList();
-            for (ClassroomDetails classroomDetail : classroomDetails) {
-                for (Teachers teacher : teachers) {
-                    if (classroomDetail.getMember().getId() == teacher.getId()) {
-                        model.addAttribute("teachers", teachers);
-                    }
-                }
+            System.out.println("Teachers: " + teachers);
+            if (teachers.isEmpty()) {
+                feedback = false; // Ẩn feedback nếu không có giáo viên
+            } else {
+                model.addAttribute("teachers", teachers);
             }
         }
         model.addAttribute("feedback", feedback);
 
+        // Lấy thông tin người dùng
+        String userId = authentication.getName();
+        Person person = entityManager.find(Person.class, userId);
 
-        String username = authentication.getName();
-
-        Person member = entityManager.find(Person.class, username);
-        if (member instanceof Students) {
+        if (person instanceof Students) {
+            model.addAttribute("studentId", person.getId());
             model.addAttribute("homePage", "/TrangChuHocSinh");
         } else {
             model.addAttribute("homePage", "/TrangChuGiaoVien");
         }
 
+        // Lấy thông tin lớp học và bài đăng
         Room room = entityManager.find(Room.class, id);
+        if (room == null) {
+            return "redirect:/DanhSachLopHoc"; // Nếu không tìm thấy room, chuyển hướng về danh sách lớp học
+        }
         Boolean roomMode = true;
-
         if (room instanceof Rooms) {
             roomMode = false;
         }

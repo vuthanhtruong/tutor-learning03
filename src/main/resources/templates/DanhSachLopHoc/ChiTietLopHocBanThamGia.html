@@ -18,11 +18,11 @@
         <h2>📢 Teacher Feedback</h2>
         <form action="/GuiNhanXetGiaoVien" method="POST">
             <input name="roomId" th:value="${room?.roomId}" type="hidden">
-            <input name="reviewerId" th:value="${#authentication.principal.username}" type="hidden">
+            <input name="reviewerId" th:value="${studentId}" type="hidden">
             <label for="teacher">👩‍🏫 Choose teacher:</label>
             <select id="teacher" name="teacherId" required>
                 <option th:each="teacher : ${teachers}" th:text="${teacher.firstName + ' ' + teacher.lastName}"
-                        th:value="${teacher.teacherId}"></option>
+                        th:value="${teacher.getId()}"></option>
             </select>
             <label for="text">📝 Enter feedback:</label>
             <textarea id="text" name="text" placeholder="Enter your feedback..." required></textarea>
