@@ -852,37 +852,12 @@ public class NhanVienPost {
                         "Education Management System - xAI Education<br>" +
                         "Email: <a href='mailto:vuthanhtruong1280@gmail.com' style='color: #2980B9; text-decoration: none;'>support@xaiedu.com</a> | Hotline: <span style='color: #C0392B;'>0394444107</span></p>" +
                         "</body></html>";
-                sendNotification(teacher.getId(), room.getRoomId(), "Sent", employee, teacher.getEmail());
+                sendNotification(teacher.getId(), room.getRoomId(), "Sent a notification to this user", employee, teacher.getEmail());
                 sendEmail(teacher.getEmail(), subject, message);
             }
         }
 
         return "redirect:/ChiTietLopHoc/" + roomId + "?success=updated";
-    }
-
-    private void sendNotification(String memberId, String roomId, String message, Employees sender, String email) {
-        // Tìm đối tượng Person từ memberId
-        Person member = entityManager.find(Person.class, memberId);
-        if (member == null) {
-            throw new IllegalArgumentException("Member not found with ID: " + memberId);
-        }
-
-        // Tìm đối tượng Room từ roomId
-        Room room = entityManager.find(Room.class, roomId);
-        if (room == null) {
-            throw new IllegalArgumentException("Room not found with ID: " + roomId);
-        }
-
-        // Tạo thông báo mới
-        ScheduleNotifications scheduleNotifications = new ScheduleNotifications();
-        scheduleNotifications.setMember(member);
-        scheduleNotifications.setRoom(room);
-        scheduleNotifications.setMessage(message);
-        scheduleNotifications.setSender(sender);
-        entityManager.persist(scheduleNotifications);
-
-        // Gửi email
-        sendEmail(email, "Notification of schedule", message);
     }
 
     @PostMapping("/ThemHocSinhVaoLop")
@@ -954,7 +929,7 @@ public class NhanVienPost {
                         "Education Management System - xAI Education<br>" +
                         "Email: <a href='mailto:vuthanhtruong1280@gmail.com' style='color: #2980B9; text-decoration: none;'>support@xaiedu.com</a> | Hotline: <span style='color: #C0392B;'>0394444107</span></p>" +
                         "</body></html>";
-                sendNotification(student.getId(), room.getRoomId(), "Sent", employee, student.getEmail());
+                sendNotification(student.getId(), room.getRoomId(), "Sent a notification to this user", employee, student.getEmail());
                 sendEmail(student.getEmail(), subject, message);
             }
         }
@@ -1160,5 +1135,26 @@ public class NhanVienPost {
         }
     }
 
+    private void sendNotification(String memberId, String roomId, String message, Employees sender, String email) {
+        // Tìm đối tượng Person từ memberId
+        Person member = entityManager.find(Person.class, memberId);
+        if (member == null) {
+            throw new IllegalArgumentException("Member not found with ID: " + memberId);
+        }
+
+        // Tìm đối tượng Room từ roomId
+        Room room = entityManager.find(Room.class, roomId);
+        if (room == null) {
+            throw new IllegalArgumentException("Room not found with ID: " + roomId);
+        }
+
+        // Tạo thông báo mới
+        ScheduleNotifications scheduleNotifications = new ScheduleNotifications();
+        scheduleNotifications.setMember(member);
+        scheduleNotifications.setRoom(room);
+        scheduleNotifications.setMessage(message);
+        scheduleNotifications.setSender(sender);
+        entityManager.persist(scheduleNotifications);
+    }
 
 }

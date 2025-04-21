@@ -713,12 +713,12 @@ public class NhanVienGet {
                 // Xác định nội dung tin nhắn dựa vào loại phòng học
                 String messageContent;
                 if (room instanceof OnlineRooms onlineRoom) {
-                    messageContent = "Lịch trình học Online của bạn bắt đầu từ " +
-                            onlineRoom.getStartTime() + " đến hết " + onlineRoom.getEndTime() + "tại đường Link " + onlineRoom.getLink();
+                    messageContent = "Your online class schedule starts from " +
+                            onlineRoom.getStartTime() + " to the end " + onlineRoom.getEndTime() + "at the Link " + onlineRoom.getLink();
                 } else {
                     Rooms rooms = (Rooms) room;
-                    messageContent = "Lịch trình học của bạn bắt đầu từ " +
-                            room.getStartTime() + " đến hết " + room.getEndTime() + "tại địa chỉ " + rooms.getAddress();
+                    messageContent = "Your study schedule starts from " +
+                            room.getStartTime() + " đến hết " + room.getEndTime() + "at the address " + rooms.getAddress();
                 }
                 // Gửi thông báo
                 sendNotification(member.getId(), room.getRoomId(), messageContent, employee, recipientEmail);
