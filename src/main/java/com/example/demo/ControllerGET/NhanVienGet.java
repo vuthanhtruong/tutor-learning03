@@ -676,7 +676,6 @@ public class NhanVienGet {
         }
     }
 
-
     @GetMapping("/GuiThongBao/{id}")
     public String GuiThongBao(@PathVariable("id") String id, HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -718,7 +717,7 @@ public class NhanVienGet {
                 } else {
                     Rooms rooms = (Rooms) room;
                     messageContent = "Your study schedule starts from " +
-                            room.getStartTime() + " đến hết " + room.getEndTime() + "at the address " + rooms.getAddress();
+                            room.getStartTime() + " to the end " + room.getEndTime() + " at the address " + rooms.getAddress();
                 }
                 // Gửi thông báo
                 sendNotification(member.getId(), room.getRoomId(), messageContent, employee, recipientEmail);
@@ -727,7 +726,6 @@ public class NhanVienGet {
 
         return "redirect:/BoTriLopHoc";
     }
-
 
     private void sendNotification(String memberId, String roomId, String message, Employees sender, String email) {
         // Tìm đối tượng Person từ memberId
@@ -753,7 +751,7 @@ public class NhanVienGet {
         entityManager.persist(scheduleNotifications);
 
         // Gửi email
-        sendEmail(email, "Thông báo lịch trình học", message);
+        sendEmail(email, "Notice of study schedule", message);
     }
 
 

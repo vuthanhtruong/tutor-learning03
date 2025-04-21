@@ -705,7 +705,7 @@ public class NhanVienPost {
         newRoom.setLink(meetLink);
 
         entityManager.persist(newRoom);
-        redirectAttributes.addFlashAttribute("success", "Thêm phòng học thành công với link: " + meetLink);
+        redirectAttributes.addFlashAttribute("success", "Add classroom successfully with link: " + meetLink);
 
         return "redirect:/DanhSachPhongHoc";
     }
@@ -852,7 +852,7 @@ public class NhanVienPost {
                         "Education Management System - xAI Education<br>" +
                         "Email: <a href='mailto:vuthanhtruong1280@gmail.com' style='color: #2980B9; text-decoration: none;'>support@xaiedu.com</a> | Hotline: <span style='color: #C0392B;'>0394444107</span></p>" +
                         "</body></html>";
-                sendNotification(teacher.getId(), room.getRoomId(), "Sent a notification to this user", employee, teacher.getEmail());
+                sendNotification(teacher.getId(), room.getRoomId(), "Automatically send notifications when adding users to class", employee, teacher.getEmail());
                 sendEmail(teacher.getEmail(), subject, message);
             }
         }
@@ -929,7 +929,7 @@ public class NhanVienPost {
                         "Education Management System - xAI Education<br>" +
                         "Email: <a href='mailto:vuthanhtruong1280@gmail.com' style='color: #2980B9; text-decoration: none;'>support@xaiedu.com</a> | Hotline: <span style='color: #C0392B;'>0394444107</span></p>" +
                         "</body></html>";
-                sendNotification(student.getId(), room.getRoomId(), "Sent a notification to this user", employee, student.getEmail());
+                sendNotification(student.getId(), room.getRoomId(), "Automatically send notifications when adding users to class", employee, student.getEmail());
                 sendEmail(student.getEmail(), subject, message);
             }
         }
