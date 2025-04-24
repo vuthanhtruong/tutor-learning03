@@ -61,7 +61,7 @@
                 <tbody>
                 <tr th:each="student : ${students}">
                     <td class="text-center" th:text="${student.id}"></td>
-                    <td th:text="${student.firstName + ' ' + student.lastName}"></td>
+                    <td th:text="${student.firstName}"></td>
                     <td th:text="${student.lastName}"></td>
                     <td th:text="${student.email}"></td>
                     <td class="text-center" th:text="${student.phoneNumber}"></td>
