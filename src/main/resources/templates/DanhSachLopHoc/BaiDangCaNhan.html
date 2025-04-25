@@ -1,42 +1,234 @@
-<div class="post-list">
-    <h2>Posts in Class</h2>
-    <ul>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Posts in Class</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        h2 {
+            color: #0d6efd;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dee2e6;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        h2:before {
+            content: "\f07c";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            margin-right: 10px;
+            color: #0d6efd;
+        }
+
+        /* Post List Container */
+        .post-list {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Back Link */
+        .post-list > a {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #0d6efd;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .post-list > a:hover {
+            color: #0a58ca;
+            text-decoration: underline;
+        }
+
+        .post-list > a i {
+            margin-right: 5px;
+        }
+
+        /* List Styling */
+        .post-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .post-list li {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Post Content */
+        .post-list p {
+            margin-bottom: 10px;
+        }
+
+        .post-list strong {
+            color: #495057;
+        }
+
+        /* Document List */
+        .document-list {
+            margin-top: 15px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #0d6efd;
+        }
+
+        .document-list h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+
+        .document-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .document-list li {
+            box-shadow: none;
+            padding: 5px 0;
+            background: transparent;
+            margin-bottom: 5px;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-download {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-download:hover {
+            background-color: #218838;
+            color: white;
+        }
+
+        .btn-edit {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .btn-edit:hover {
+            background-color: #e0a800;
+            color: #212529;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+            color: white;
+        }
+
+        /* Action Buttons Container */
+        .edit-post, .delete-post {
+            display: inline-block;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .post-list li {
+                padding: 15px;
+            }
+            
+            .btn {
+                display: block;
+                width: 100%;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+            
+            .edit-post, .delete-post {
+                display: block;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="post-list">
+        <h2>Posts in Class</h2>
         <a th:href="@{'/ChiTietLopHocBanThamGia/' + ${room?.roomId}}">
-            <i class="fas fa-user"></i> Back to
+            <i class="fas fa-arrow-left"></i> Back to Class
         </a>
-        <li th:each="post : ${posts}">
-            <p><strong>👤 Creator:</strong> <span
-                    th:text="${post.creator?.firstName + ' ' + post.creator?.lastName}"></span></p>
-            <p><strong>📝 Content:</strong> <span th:text="${post.content}"></span></p>
-            <p><strong>Posted at:</strong> <span
-                    th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></span></p>
+        <ul>
+            <li th:each="post : ${posts}">
+                <p><strong>👤 Creator:</strong> <span
+                        th:text="${post.creator?.firstName + ' ' + post.creator?.lastName}"></span></p>
+                <p><strong>📝 Content:</strong> <span th:text="${post.content}"></span></p>
+                <p><strong>Posted at:</strong> <span
+                        th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></span></p>
 
-            <!-- 📂 Tài liệu đính kèm -->
-            <div class="document-list" th:if="${not #lists.isEmpty(post.documents)}">
-                <h4>📄 Attached Documents:</h4>
-                <ul>
-                    <li th:each="document : ${post.documents}">
-                        <a class="btn btn-download" th:download="${document.documentTitle}"
-                            th:href="@{'/api/files/download/' + ${document.documentId}}">
-                            📥 Download
+                <!-- 📂 Tài liệu đính kèm -->
+                <div class="document-list" th:if="${not #lists.isEmpty(post.documents)}">
+                    <h4>📄 Attached Documents:</h4>
+                    <ul>
+                        <li th:each="document : ${post.documents}">
+                            <a class="btn btn-download" th:download="${document.documentTitle}"
+                                th:href="@{'/api/files/download/' + ${document.documentId}}">
+                                📥 Download
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="post-actions">
+                    <div class="edit-post">
+                        <a class="btn btn-edit" th:href="@{'/SuaBaiDangCaNhan/' + ${post.postId}}">
+                            ✏️ Edit Post
                         </a>
-                    </li>
-                </ul>
-            </div>
+                    </div>
 
-            <!-- Nút sửa bài đăng -->
-            <div class="edit-post">
-                <a class="btn btn-edit" th:href="@{'/SuaBaiDangCaNhan/' + ${post.postId}}">
-                    ✏️ Edit Post
-                </a>
-            </div>
+                    <div class="delete-post">
+                        <a class="btn btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa bài đăng này?');"
+                            th:href="@{'/XoaBaiDangCaNhan/' + ${post.postId} + '?roomId=' + ${post.room.roomId}}">
+                            🗑️ Delete Post
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</body>
 
-            <div class="delete-post">
-                <a class="btn btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa bài đăng này?');"
-                    th:href="@{'/XoaBaiDangCaNhan/' + ${post.postId} + '?roomId=' + ${post.room.roomId}}">
-                    🗑️ Delete Post
-                </a>
-            </div>
-        </li>
-    </ul>
-</div>
+</html>

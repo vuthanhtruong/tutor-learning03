@@ -1,6 +1,139 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
+
+<style>
+    /* Reset and Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Header Styles */
+h1 {
+    color: #0d6efd;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #dee2e6;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+h1:before {
+    content: "\f007";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 10px;
+    color: #0d6efd;
+}
+
+/* Form Styles */
+form {
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #495057;
+}
+
+textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-family: inherit;
+    resize: vertical;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+input[type="file"] {
+    display: block;
+    margin-bottom: 20px;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    width: 100%;
+}
+
+button[type="submit"] {
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+button[type="submit"]:hover {
+    background-color: #0b5ed7;
+}
+
+/* Links */
+a {
+    color: #0d6efd;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+a:hover {
+    color: #0a58ca;
+    text-decoration: underline;
+}
+
+/* File Display */
+div p {
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+/* Back Link with Icon */
+a i {
+    margin-right: 5px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    form {
+        padding: 15px;
+    }
+    
+    textarea {
+        min-height: 120px;
+    }
+}
+</style>
+
+
 <head>
     <link href="/SuaBaiDangCaNhan.css" rel="stylesheet">
     <meta charset="UTF-8">
