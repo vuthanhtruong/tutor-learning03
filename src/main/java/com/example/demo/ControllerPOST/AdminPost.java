@@ -40,14 +40,14 @@ public class AdminPost {
 
             Employees employee = entityManager.find(Employees.class, employeeID);
             if (employee == null) {
-                redirectAttributes.addFlashAttribute("error", "Nhân viên không tồn tại!");
+                redirectAttributes.addFlashAttribute("error", "Employee does not exist!");
                 return "redirect:/ThemGiaoVien";
             }
 
             // Kiểm tra trùng TeacherID
             Person existingTeacher = entityManager.find(Person.class, teacherID);
             if (existingTeacher != null) {
-                redirectAttributes.addFlashAttribute("error", "ID giáo viên đã tồn tại!");
+                redirectAttributes.addFlashAttribute("error", "Teacher ID already exists!");
                 return "redirect:/ThemGiaoVien";
             }
 
@@ -61,11 +61,11 @@ public class AdminPost {
                     .getResultList().isEmpty();
 
             if (emailExists) {
-                redirectAttributes.addFlashAttribute("error", "Email đã tồn tại!");
+                redirectAttributes.addFlashAttribute("error", "Email already exists!");
                 return "redirect:/ThemGiaoVien";
             }
             if (phoneExists) {
-                redirectAttributes.addFlashAttribute("error", "Số điện thoại đã tồn tại!");
+                redirectAttributes.addFlashAttribute("error", "Phone number already exists!");
                 return "redirect:/ThemGiaoVien";
             }
 
@@ -83,10 +83,10 @@ public class AdminPost {
 
             entityManager.persist(newTeacher);
 
-            redirectAttributes.addFlashAttribute("successMessage", "Thêm giáo viên thành công!");
+            redirectAttributes.addFlashAttribute("successMessage", "Add teacher successfully!");
             return "redirect:/DanhSachGiaoVien";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Lỗi hệ thống! Vui lòng thử lại.");
+            redirectAttributes.addFlashAttribute("error", "System error! Please try again.");
             return "redirect:/ThemGiaoVien";
         }
     }
@@ -111,7 +111,7 @@ public class AdminPost {
         // Kiểm tra Admin có tồn tại không
         List<Admin> admins = entityManager.createQuery("from Admin", Admin.class).getResultList();
         if (admins.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Không tìm thấy Admin trong hệ thống!");
+            redirectAttributes.addFlashAttribute("error", "Admin not found in the system!");
             return "redirect:/ThemHocSinh";
         }
         Admin admin = admins.get(0);
@@ -119,13 +119,13 @@ public class AdminPost {
         // Kiểm tra Employee có tồn tại không
         Employees employee = entityManager.find(Employees.class, employeeID);
         if (employee == null) {
-            redirectAttributes.addFlashAttribute("error", "Nhân viên không tồn tại!");
+            redirectAttributes.addFlashAttribute("error", "Employee does not exist!");
             return "redirect:/ThemHocSinh";
         }
 
         // Kiểm tra trùng lặp ID học sinh
         if (entityManager.find(Person.class, studentID) != null) {
-            redirectAttributes.addFlashAttribute("error", "ID học sinh đã tồn tại!");
+            redirectAttributes.addFlashAttribute("error", "Student ID already exists!");
             return "redirect:/ThemHocSinh";
         }
 
@@ -134,7 +134,7 @@ public class AdminPost {
                 .setParameter("email", email)
                 .getResultList().isEmpty();
         if (emailExists) {
-            redirectAttributes.addFlashAttribute("error", "Email này đã được sử dụng!");
+            redirectAttributes.addFlashAttribute("error", "This email is already in use!");
             return "redirect:/ThemHocSinh";
         }
 
@@ -143,7 +143,7 @@ public class AdminPost {
                 .setParameter("phoneNumber", phoneNumber)
                 .getResultList().isEmpty();
         if (phoneExists) {
-            redirectAttributes.addFlashAttribute("error", "Số điện thoại này đã được sử dụng!");
+            redirectAttributes.addFlashAttribute("error", "This phone number is already in use!");
             return "redirect:/ThemHocSinh";
         }
 
@@ -153,7 +153,7 @@ public class AdminPost {
                     .setParameter("misID", misID)
                     .getResultList().isEmpty();
             if (misIdExists) {
-                redirectAttributes.addFlashAttribute("error", "MIS ID đã tồn tại!");
+                redirectAttributes.addFlashAttribute("error", "MIS ID already exists!");
                 return "redirect:/ThemHocSinh";
             }
         }
@@ -174,7 +174,7 @@ public class AdminPost {
         entityManager.persist(student);
 
         // Chuyển hướng đến danh sách học sinh với thông báo thành công
-        redirectAttributes.addFlashAttribute("success", "Học sinh đã được thêm thành công!");
+        redirectAttributes.addFlashAttribute("success", "Student added successfully!");
         return "redirect:/DanhSachHocSinh";
     }
 
@@ -211,7 +211,7 @@ public class AdminPost {
                 .getResultList().isEmpty();
 
         if (phoneExists) {
-            redirectAttributes.addFlashAttribute("error", "Số điện thoại này đã tồn tại!");
+            redirectAttributes.addFlashAttribute("error", "This phone number already exists!");
             return "redirect:/ThemNhanVien";
         }
 
@@ -226,7 +226,7 @@ public class AdminPost {
 
         entityManager.persist(employees);
 
-        redirectAttributes.addFlashAttribute("success", "Thêm nhân viên thành công!");
+        redirectAttributes.addFlashAttribute("success", "Add employee successfully!");
         return "redirect:/DanhSachNhanVien";
     }
 
@@ -369,7 +369,7 @@ public class AdminPost {
             if (employee != null) {
                 teacher.setEmployee(employee);
             } else {
-                redirectAttributes.addFlashAttribute("error", "Nhân viên không tồn tại!");
+                redirectAttributes.addFlashAttribute("error", "Employee does not exist!");
                 return "redirect:/SuaGiaoVien/" + id;
             }
         } else {
@@ -378,7 +378,7 @@ public class AdminPost {
 
         // Lưu thay đổi
         entityManager.merge(teacher);
-        redirectAttributes.addFlashAttribute("success", "Cập nhật thành công!");
+        redirectAttributes.addFlashAttribute("success", "Update successful!");
 
         return "redirect:/DanhSachGiaoVien";
     }
@@ -390,7 +390,7 @@ public class AdminPost {
 
         Employees existingEmployee = entityManager.find(Employees.class, id);
         if (existingEmployee == null) {
-            redirectAttributes.addFlashAttribute("error", "Nhân viên không tồn tại!");
+            redirectAttributes.addFlashAttribute("error", "Employee does not exist!");
             return "redirect:/DanhSachNhanVien";
         }
 
@@ -401,7 +401,7 @@ public class AdminPost {
         emailQuery.setParameter("id", id);
         List<Person> emailList = emailQuery.getResultList();
         if (!emailList.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Email đã tồn tại!");
+            redirectAttributes.addFlashAttribute("error", "Email already exists!");
             return "redirect:/SuaNhanVien/" + id;
         }
 
@@ -412,7 +412,7 @@ public class AdminPost {
         phoneQuery.setParameter("id", id);
         List<Person> phoneList = phoneQuery.getResultList();
         if (!phoneList.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Số điện thoại đã tồn tại!");
+            redirectAttributes.addFlashAttribute("error", "Phone number already exists!");
             return "redirect:/SuaNhanVien/" + id;
         }
 
@@ -424,7 +424,7 @@ public class AdminPost {
 
         entityManager.merge(existingEmployee);
 
-        redirectAttributes.addFlashAttribute("success", "Cập nhật nhân viên thành công!");
+        redirectAttributes.addFlashAttribute("success", "Employee update successful!");
         return "redirect:/DanhSachNhanVien";
     }
 
@@ -527,7 +527,7 @@ public class AdminPost {
                 .setParameter("keyword", "%" + keyword + "%")
                 .executeUpdate();
 
-        redirectAttributes.addFlashAttribute("message", "Đã xóa " + deletedCount + " học sinh.");
+        redirectAttributes.addFlashAttribute("message", "Deleted " + deletedCount + " student.");
         return "redirect:/DanhSachHocSinh";
     }
 
@@ -540,7 +540,7 @@ public class AdminPost {
                 .setParameter("keyword", "%" + keyword + "%")
                 .executeUpdate();
 
-        redirectAttributes.addFlashAttribute("message", "Đã xóa " + deletedCount + " giáo viên.");
+        redirectAttributes.addFlashAttribute("message", "Deleted " + deletedCount + " teacher.");
         return "redirect:/DanhSachGiaoVien";
     }
 
