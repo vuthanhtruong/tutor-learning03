@@ -56,14 +56,14 @@ public class StudentPost {
 
         // Kiểm tra mật khẩu khớp nhau
         if (!password.equals(confirmPassword)) {
-            model.addAttribute("errorPassword", "Mật khẩu nhập lại không khớp!");
+            model.addAttribute("errorPassword", "Re-enter password does not match!");
             addFormDataToModel(model, studentID, firstName, lastName, email, phoneNumber, birthDate, misId, gender, country, province, district, ward, street, postalCode);
             return "DangKyHocSinh";
         }
 
         // Kiểm tra StudentID đã tồn tại chưa
         if (entityManager.find(Person.class, studentID) != null) {
-            model.addAttribute("errorStudentID", "Mã học sinh đã tồn tại!");
+            model.addAttribute("errorStudentID", "Student code already exists!");
             addFormDataToModel(model, studentID, firstName, lastName, email, phoneNumber, birthDate, misId, gender, country, province, district, ward, street, postalCode);
             return "DangKyHocSinh";
         }
@@ -81,11 +81,11 @@ public class StudentPost {
 
         // Kiểm tra định dạng số điện thoại
         if (!phoneNumber.matches("^[0-9]+$")) {
-            model.addAttribute("errorPhone", "Số điện thoại chỉ được chứa chữ số!");
+            model.addAttribute("errorPhone", "Phone numbers must contain only numbers!");
             addFormDataToModel(model, studentID, firstName, lastName, email, phoneNumber, birthDate, misId, gender, country, province, district, ward, street, postalCode);
             return "DangKyHocSinh";
         } else if (!phoneNumber.matches("^\\d{9,10}$")) {
-            model.addAttribute("errorPhone", "Số điện thoại phải có 9-10 chữ số!");
+            model.addAttribute("errorPhone", "Phone number must be 9-10 digits!");
             addFormDataToModel(model, studentID, firstName, lastName, email, phoneNumber, birthDate, misId, gender, country, province, district, ward, street, postalCode);
             return "DangKyHocSinh";
         }
@@ -96,14 +96,14 @@ public class StudentPost {
                 .setParameter("phoneNumber", phoneNumber)
                 .getResultList().isEmpty();
         if (phoneExists) {
-            model.addAttribute("errorPhone", "Số điện thoại đã được đăng ký!");
+            model.addAttribute("errorPhone", "Phone number is already registered!");
             addFormDataToModel(model, studentID, firstName, lastName, email, phoneNumber, birthDate, misId, gender, country, province, district, ward, street, postalCode);
             return "DangKyHocSinh";
         }
 
         // Kiểm tra mật khẩu có đủ mạnh không
         if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$")) {
-            model.addAttribute("errorPassword", "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
+            model.addAttribute("errorPassword", "Password must be at least 8 characters, including uppercase, lowercase, numbers and special characters!");
             addFormDataToModel(model, studentID, firstName, lastName, email, phoneNumber, birthDate, misId, gender, country, province, district, ward, street, postalCode);
             return "DangKyHocSinh";
         }
@@ -111,14 +111,14 @@ public class StudentPost {
         // Kiểm tra ngày sinh có hợp lệ không (phải trong quá khứ)
         LocalDate today = LocalDate.now();
         if (birthDate.isAfter(today)) {
-            model.addAttribute("errorBirthDate", "Ngày sinh không hợp lệ!");
+            model.addAttribute("errorBirthDate", "Invalid date of birth!");
             addFormDataToModel(model, studentID, firstName, lastName, email, phoneNumber, birthDate, misId, gender, country, province, district, ward, street, postalCode);
             return "DangKyHocSinh";
         }
 
         // Kiểm tra độ tuổi hợp lệ (ít nhất 6 tuổi)
         if (ChronoUnit.YEARS.between(birthDate, today) < 6) {
-            model.addAttribute("errorBirthDate", "Học sinh phải từ 6 tuổi trở lên!");
+            model.addAttribute("errorBirthDate", "Students must be 6 years of age or older!");
             addFormDataToModel(model, studentID, firstName, lastName, email, phoneNumber, birthDate, misId, gender, country, province, district, ward, street, postalCode);
             return "DangKyHocSinh";
         }
@@ -135,7 +135,7 @@ public class StudentPost {
         // Tìm nhân viên có ít học sinh nhất
         Employees selectedEmployee = findEmployeeWithFewestStudents();
         if (selectedEmployee == null) {
-            model.addAttribute("errorEmployee", "Không tìm thấy nhân viên nào để phân bổ!");
+            model.addAttribute("errorEmployee", "No staff found to allocate!");
             addFormDataToModel(model, studentID, firstName, lastName, email, phoneNumber, birthDate, misId, gender, country, province, district, ward, street, postalCode);
             return "DangKyHocSinh";
         }
@@ -163,15 +163,15 @@ public class StudentPost {
         // Lưu vào database
         try {
             entityManager.persist(student);
-            System.out.println("Đăng ký học sinh thành công! Gán cho nhân viên: " + selectedEmployee.getId());
+            System.out.println("Student registration successful! Assign to employee: " + selectedEmployee.getId());
         } catch (Exception e) {
             System.out.println("Lỗi khi lưu học sinh: " + e.getMessage());
-            model.addAttribute("error", "Lỗi khi lưu dữ liệu: " + e.getMessage());
+            model.addAttribute("error", "Error saving data: " + e.getMessage());
             addFormDataToModel(model, studentID, firstName, lastName, email, phoneNumber, birthDate, misId, gender, country, province, district, ward, street, postalCode);
             return "DangKyHocSinh";
         }
 
-        model.addAttribute("successMessage", "Đăng ký thành công! Vui lòng đăng nhập.");
+        model.addAttribute("successMessage", "Registration successful! Please login.");
         return "redirect:/TrangChu";
     }
 
@@ -280,7 +280,7 @@ public class StudentPost {
             log.info("✅ Nhận xét đã được lưu thành công.");
 
             // Gửi thông báo về giao diện
-            redirectAttributes.addFlashAttribute("message", "Nhận xét của bạn đã được gửi!");
+            redirectAttributes.addFlashAttribute("message", "Your comment has been submitted!");
 
         } catch (IllegalArgumentException e) {
             log.warn("⚠️ Lỗi kiểm tra dữ liệu: {}", e.getMessage());
@@ -289,7 +289,7 @@ public class StudentPost {
 
         } catch (Exception e) {
             log.error("❌ Lỗi khi gửi nhận xét: {}", e.getMessage(), e);
-            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra, vui lòng thử lại.");
+            redirectAttributes.addFlashAttribute("error", "An error occurred, please try again.");
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
         return "redirect:/TrangChuHocSinh";
