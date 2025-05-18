@@ -35,13 +35,13 @@ public class CommmentPost {
 
         // Kiểm tra nếu không tìm thấy người dùng
         if (commenter == null) {
-            throw new IllegalArgumentException("Người dùng không hợp lệ hoặc không tồn tại.");
+            throw new IllegalArgumentException("User is invalid or does not exist.");
         }
 
         // Lấy thông tin bài đăng
         Posts post = entityManager.find(Posts.class, postId);
         if (post == null) {
-            throw new IllegalArgumentException("Không tìm thấy bài đăng với ID: " + postId);
+            throw new IllegalArgumentException("No posts found with ID: " + postId);
         }
 
         // Kiểm tra nội dung bình luận có hợp lệ không
