@@ -4,153 +4,416 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Reset Password</title>
-    <link rel="stylesheet" href="DatLaiMatKhau.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --primary-light: #e8f0fe;
+            --primary-dark: #0d47a1;
+            --secondary-color: #34a853;
+            --accent-color: #fbbc05;
+            --warning-color: #ea4335;
+            --text-color: #202124;
+            --text-light: #5f6368;
+            --white: #ffffff;
+            --gray-100: #f8f9fa;
+            --gray-200: #f1f3f4;
+            --gray-300: #dadce0;
+            --gray-400: #bdc1c6;
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --border-radius-sm: 50px;
+            --border-radius: 50px;
+            --border-radius-lg: 50px;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --box-shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: var(--gray-100);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: var(--white);
+            box-shadow: var(--box-shadow);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md) var(--spacing-xl);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-logo img {
+            height: 40px;
+            margin-right: var(--spacing-sm);
+        }
+
+        .header-logo h1 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .header-nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        .header-nav li {
+            margin-left: var(--spacing-lg);
+        }
+
+        .header-nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: var(--spacing-xs) 0;
+            position: relative;
+        }
+
+        .header-nav a:hover {
+            color: var(--primary-color);
+        }
+
+        .header-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .header-nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding-top: 100px;
+            min-height: calc(100vh - 200px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: var(--spacing-xl);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            margin: 0 var(--spacing-md);
+        }
+
+        .welcome-section {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: var(--spacing-lg) var(--spacing-xl);
+            text-align: center;
+        }
+
+        .welcome-section h3 {
+            font-size: 1.8rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--white);
+        }
+
+        .form-container {
+            padding: var(--spacing-lg) var(--spacing-xl);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius-sm);
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .btn i {
+            margin-right: var(--spacing-xs);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+            width: 100%;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: var(--gray-200);
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--gray-300);
+        }
+
+        /* Footer */
+        .site-footer {
+            background-color: var(--primary-dark);
+            color: var(--white);
+            padding: var(--spacing-lg) 0;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-xl);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-xl);
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .footer-logo img {
+            height: 40px;
+            margin-right: var(--spacing-sm);
+        }
+
+        .footer-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-text span:first-child {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .header-nav {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 0 var(--spacing-xs);
+            }
+
+            .form-container {
+                padding: var(--spacing-md);
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <div class="header-container">
-            <div class="header-logo">
+<!-- Header -->
+<div class="header">
+    <div class="header-container">
+        <div class="header-logo">
+            <img src="/api/placeholder/40/40" alt="Logo">
+            <h1>System</h1>
+        </div>
+        <nav class="header-nav">
+            <ul>
+                <li><a href="/TrangChu">Home</a></li>
+                <li><a href="/GioiThieu">About</a></li>
+                <li><a href="/DichVu">Service</a></li>
+                <li><a href="/LienHe">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="container">
+        <div class="welcome-section">
+            <h3>Reset Password</h3>
+            <p>Please enter a new password for your account</p>
+        </div>
+
+        <div class="form-container">
+            <!-- Hiển thị thông báo lỗi nếu có -->
+            <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
+            <!-- Hiển thị thông báo thành công nếu có -->
+            <div class="alert alert-success" role="alert" th:if="${success}" th:text="${success}"></div>
+
+            <form method="post" th:action="@{/auth/reset-password}">
+                <input name="email" th:value="${email}" type="hidden">
+                <input name="otp" th:value="${otp}" type="hidden">
+
+                <div class="mb-3">
+                    <label class="form-label" for="newPassword">New Password</label>
+                    <input class="form-control" id="newPassword" minlength="8" name="newPassword" required type="password">
+                    <div class="password-strength"></div>
+                    <div class="password-message"></div>
+                    <div class="password-rules">
+                        <div class="password-rule" id="length"><i class="fas fa-circle"></i> At least 8 characters</div>
+                        <div class="password-rule" id="uppercase"><i class="fas fa-circle"></i> At least 1 uppercase letter</div>
+                        <div class="password-rule" id="lowercase"><i class="fas fa-circle"></i> At least 1 lowercase letter</div>
+                        <div class="password-rule" id="number"><i class="fas fa-circle"></i> At least 1 number</div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="confirmPassword">Confirm Password</label>
+                    <input class="form-control" id="confirmPassword" name="confirmPassword" required type="password">
+                    <div class="form-text" id="passwordMatch"></div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary" id="submitBtn" type="submit">Reset Password</button>
+                    <a class="btn btn-secondary" href="/TrangChu">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="footer-container">
+        <div>
+            <div class="footer-logo">
                 <img src="/api/placeholder/40/40" alt="Logo">
-                <h1>System</h1>
+                <div class="footer-text">
+                    <span>System</span>
+                    <span>Security & Simple</span>
+                </div>
             </div>
-            <nav class="header-nav">
-                <ul>
-                    <li><a href="/TrangChu">Home</a></li>
-                    <li><a href="/GioiThieu">About</a></li>
-                    <li><a href="/DichVu">Service</a></li>
-                    <li><a href="/LienHe">Contact</a></li>
-                </ul>
-            </nav>
+            <p>We provide secure login solutions for users.</p>
         </div>
-    </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="container">
-            <div class="welcome-section">
-                <h3>Reset Password</h3>
-                <p>Please enter a new password for your account</p>
+        <div>
+            <h4>Links</h4>
+            <div class="footer-links">
+                <a href="/TrangChu">Home</a>
+                <a href="/GioiThieu">About</a>
+                <a href="/DichVu">Service</a>
+                <a href="/HoTro">Support</a>
             </div>
-            
-            <div class="form-container">
-                <!-- Hiển thị thông báo lỗi nếu có -->
-                <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
-                <!-- Hiển thị thông báo thành công nếu có -->
-                <div class="alert alert-success" role="alert" th:if="${success}" th:text="${success}"></div>
+        </div>
 
-                <form method="post" th:action="@{/auth/reset-password}">
-                    <input name="email" th:value="${email}" type="hidden">
-                    <input name="otp" th:value="${otp}" type="hidden">
-
-                    <div class="mb-3">
-                        <label class="form-label" for="newPassword">New Password</label>
-                        <input class="form-control" id="newPassword" minlength="8" name="newPassword" required type="password">
-                        <div class="password-strength"></div>
-                        <div class="password-message"></div>
-                        <div class="password-rules">
-                            <div class="password-rule" id="length"><i class="fas fa-circle"></i> At least 8 characters</div>
-                            <div class="password-rule" id="uppercase"><i class="fas fa-circle"></i> At least 1 uppercase letter</div>
-                            <div class="password-rule" id="lowercase"><i class="fas fa-circle"></i> At least 1 lowercase letter</div>
-                            <div class="password-rule" id="number"><i class="fas fa-circle"></i> At least 1 number</div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label" for="confirmPassword">Confirm Password</label>
-                        <input class="form-control" id="confirmPassword" name="confirmPassword" required type="password">
-                        <div class="form-text" id="passwordMatch"></div>
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-primary" id="submitBtn" type="submit">Reset Password</button>
-                        <a class="btn btn-secondary" href="/TrangChu">Cancel</a>
-                    </div>
-                </form>
+        <div>
+            <h4>Contact</h4>
+            <div class="footer-links">
+                <a href="tel:+84123456789">Hotline: 024.730 66788</a>
+                <a href="mailto:info@hethong.vn">Email: acad.gre.hn@fe.edu.vn</a>
+                <a href="#">Address: Golden Park Building, No. 2 Pham Van Bach Street, Yen Hoa Ward, Cau Giay District, Hanoi.</a>
             </div>
         </div>
     </div>
+</footer>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="footer-container">
-            <div>
-                <div class="footer-logo">
-                    <img src="/api/placeholder/40/40" alt="Logo">
-                    <div class="footer-text">
-                        <span>System</span>
-                        <span>Security & Simple</span>
-                    </div>
-                </div>
-                <p>We provide secure login solutions for users.</p>
-            </div>
+<script>
+    // Validate password strength
+    const newPassword = document.getElementById('newPassword');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const passwordMatch = document.getElementById('passwordMatch');
+    const submitBtn = document.getElementById('submitBtn');
+    const lengthRule = document.getElementById('length');
+    const uppercaseRule = document.getElementById('uppercase');
+    const lowercaseRule = document.getElementById('lowercase');
+    const numberRule = document.getElementById('number');
 
-            <div>
-                <h4>Links</h4>
-                <div class="footer-links">
-                    <a href="/TrangChu">Home</a>
-                    <a href="/GioiThieu">About</a>
-                    <a href="/DichVu">Service</a>
-                    <a href="/HoTro">Support</a>
-                </div>
-            </div>
+    newPassword.addEventListener('input', function() {
+        const password = this.value;
 
-            <div>
-                <h4>Contact</h4>
-                <div class="footer-links">
-                    <a href="tel:+84123456789">Hotline: 024.730 66788</a>
-                    <a href="mailto:info@hethong.vn">Email: acad.gre.hn@fe.edu.vn</a>
-                    <a href="#">Address: Golden Park Building, No. 2 Pham Van Bach Street, Yen Hoa Ward, Cau Giay District, Hanoi.</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+        // Check rules
+        const hasLength = password.length >= 8;
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
 
-    <script>
-        // Validate password strength
-        const newPassword = document.getElementById('newPassword');
-        const confirmPassword = document.getElementById('confirmPassword');
-        const passwordMatch = document.getElementById('passwordMatch');
-        const submitBtn = document.getElementById('submitBtn');
-        const lengthRule = document.getElementById('length');
-        const uppercaseRule = document.getElementById('uppercase');
-        const lowercaseRule = document.getElementById('lowercase');
-        const numberRule = document.getElementById('number');
-        
-        newPassword.addEventListener('input', function() {
-            const password = this.value;
-            
-            // Check rules
-            const hasLength = password.length >= 8;
-            const hasUpperCase = /[A-Z]/.test(password);
-            const hasLowerCase = /[a-z]/.test(password);
-            const hasNumber = /[0-9]/.test(password);
-            
-            // Update rule indicators
-            lengthRule.className = hasLength ? 'password-rule valid' : 'password-rule';
-            uppercaseRule.className = hasUpperCase ? 'password-rule valid' : 'password-rule';
-            lowercaseRule.className = hasLowerCase ? 'password-rule valid' : 'password-rule';
-            numberRule.className = hasNumber ? 'password-rule valid' : 'password-rule';
-            
-            // Update icon
-            lengthRule.innerHTML = hasLength ? '<i class="fas fa-check-circle"></i> At least 8 characters' : '<i class="fas fa-circle"></i> At least 8 characters';
-            uppercaseRule.innerHTML = hasUpperCase ? '<i class="fas fa-check-circle"></i> At least 1 uppercase letter' : '<i class="fas fa-circle"></i> At least 1 uppercase letter';
-            lowercaseRule.innerHTML = hasLowerCase ? '<i class="fas fa-check-circle"></i> At least 1 lowercase letter' : '<i class="fas fa-circle"></i> At least 1 lowercase letter';
-            numberRule.innerHTML = hasNumber ? '<i class="fas fa-check-circle"></i> At least 1 number' : '<i class="fas fa-circle"></i> At least 1 number';
-        });
-        
-        // Check if passwords match
-        confirmPassword.addEventListener('input', function() {
-            if (newPassword.value === this.value) {
-                passwordMatch.textContent = 'Passwords match';
-                passwordMatch.style.color = 'var(--secondary-color)';
-            } else {
-                passwordMatch.textContent = 'Passwords do not match';
-                passwordMatch.style.color = 'var(--warning-color)';
-            }
-        });
-    </script>
-</body>
-</html>
+        // Update rule indicators
+        lengthRule.className = hasLength ? 'password-rule valid' : 'password-rule
