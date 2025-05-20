@@ -145,19 +145,6 @@
             <artifactId>json</artifactId>
             <version>20231013</version>
         </dependency>
-
-        <!-- Google Cloud & APIs -->
-        <dependency>
-            <groupId>com.google.cloud</groupId>
-            <artifactId>spring-cloud-gcp-starter-storage</artifactId>
-            <version>${spring-cloud-gcp.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
